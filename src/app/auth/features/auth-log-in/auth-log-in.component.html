@@ -1,35 +1,36 @@
-<section class="bg-gray-50 dark:bg-gray-900">
-    <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
-        <a routerLink="/" class="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white">
-            <img class="w-8 h-8 mr-2" src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/logo.svg" alt="logo">
-            Flowbite
-        </a>
+<section class="absolute inset-0 -z-10 h-full w-full bg-white bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px]">
+    <div class="flex flex-col md:flex-wrap-reverse items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
+        <div class= "flex justify-center">
+            <a routerLink="/" class="flex items-center">
+                <img class= "md:w-[397px]" src="https://raw.githubusercontent.com/SexAtTheTerminal/mis-imagenes/refs/heads/main/logo_corregido.svg" alt="logo">
+            </a>
+        </div>
         <div
-            class="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
-            <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
-                <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
+            class="w-full max-w-md p-6 bg-slate-100 rounded-lg shadow">
+            <div class="p-6 space-y-4 md:space-y-6 sm:p-8 ">
+                <h1 class="text-xl font-bold leading-tight tracking-tight text-slate-900 md:text-2xl">
                     Sign in to your account
                 </h1>
-                <form class="space-y-4 md:space-y-6" [formGroup]="form" (ngSubmit)="submit()">
+                <form class=" space-y-4 md:space-y-6" [formGroup]="form" (ngSubmit)="submit()">
 
                     <div>
-                        <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your
+                        <label for="email" class="block mb-2 text-sm font-medium text-slate-700">Your
                             email</label>
                         <input type="email" name="email" id="email"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                            placeholder="name@company.com" required="" formControlName="email">
+                            class="bg-white border border-slate-300 rounded-md text-gray-900 rounded-lg focus:ring-emerald-600 focus:border-emerald-600 block w-full p-2.5 placeholder-gray-400"
+                            placeholder="user@email.com" required="" formControlName="email">
 
                     </div>
 
                     <div>
                         <label for="password"
-                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
+                            class="block mb-2 text-sm font-medium text-slate-700">Password</label>
                         <input type="password" name="password" id="password" placeholder="••••••••"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            class="bg-white border border-slate-300 rounded-md text-gray-900 rounded-lg focus:ring-emerald-600 focus:border-emerald-600 block w-full p-2.5 placeholder-gray-400"
                             required="" formControlName="password">
                     </div>
 
-                    <div class="flex items-center justify-between">
+                    <div class="flex items-center justify-between text-slate-600">
                         <div class="flex items-start">
                             <div class="flex items-center h-5">
                                 <input id="remember" aria-describedby="remember" type="checkbox"
@@ -37,22 +38,19 @@
                                     required="">
                             </div>
                             <div class="ml-3 text-sm">
-                                <label for="remember" class="text-gray-500 dark:text-gray-300">Remember me</label>
+                                <label for="remember" class="text-slate-600">Remember me</label>
                             </div>
                         </div>
-                        <a 
-                            class="text-sm font-medium text-white hover:underline dark:text-white">Forgot
-                            password?</a>
                     </div>
 
                     <button type="submit"
-                        class="w-full text-white bg-green-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
+                        class="w-full text-white bg-amber-400 hover:bg-amber-500 focus:ring-4 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
                         Sign in
                     </button>
 
-                    <p class="text-sm font-light text-gray-500 dark:text-gray-400">
+                    <p class="text-sm font-light text-gray-500">
                         Don’t have an account yet? 
-                        <a routerLink="/auth/sign-up"  class="font-medium text-green-600 hover:underline dark:text-green-500">
+                        <a routerLink="/auth/sign-up"  class="font-medium text-slate-700 hover:underline">
                             Sign up
                         </a>
                     </p>
