@@ -1,18 +1,68 @@
-<section class="bg-gray-50 dark:bg-gray-900">
-    <button data-drawer-target="default-sidebar" data-drawer-toggle="default-sidebar" aria-controls="default-sidebar"
-        type="button"
-        class="inline-flex items-center p-2 mt-2 ms-3 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600">
-        <span class="sr-only">Open sidebar</span>
-        <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-            <path clip-rule="evenodd" fill-rule="evenodd"
-                d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z">
-            </path>
-        </svg>
-    </button>
-</section>
+<!-- Icons -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
 
-<section class="bg-gray-50 dark:bg-gray-900 min-h-screen">
-    <aside id="default-sidebar"
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;700&display=swap" rel="stylesheet">
+
+<section class="absolute inset-0 -z-10 h-full w-full bg-gray-200 bg-[radial-gradient(#B8B8B8_1px,transparent_1px)] [background-size:16px_16px]">
+
+    <aside id="sidebar" class="fixed w-3xs min-h-full bg-white">
+
+        <!-- Sidebar-Header -->
+        <header id="sidebar-header" class=" relative box-border fixed items-center justify-between px-2 py-8
+        ">
+            <a routerLink="/" id="header-logo" class="">
+                <img class="h-10 w-15 block object-contain rounded-md " src="https://raw.githubusercontent.com/SexAtTheTerminal/mis-imagenes/refs/heads/main/swsLogo.svg" alt="headerlogo">
+            </a>
+
+            <button id="sidebar-toggler" class="absolute px-20">
+                <span class ="material-symbols-rounded bg-gray-200">arrow_menu_open</span>
+            </button>
+        </header>
+
+        <!-- Sidebar-Nav -->
+        <nav id="sidebar-nav" class="">
+
+            <!-- Primary top nav -->
+            <ul id="nav-list primary-nav" class="font-[Ubuntu] font-bold">
+                <li id="nav-item" class="">
+                    <a routerLink="/" id="nav-link" class="text-indigo-500">
+                        <span class="material-symbols-rounded">home</span>
+                        <span id="nav-label">Inicio</span>
+                        </a>
+                </li>
+                <li id="nav-item" class="">
+                    <a routerLink="/" id="nav-link" class="text-indigo-500">
+                        <span class="material-symbols-rounded">flatware</span>
+                        <span id="nav-label">Pedidos</span>
+                    </a>
+                </li>
+            </ul>
+
+            <!-- Secondary Bottom nav -->
+            <ul id="nav-list secondary-nav" class="font-[Ubuntu] font-bold">
+                <li id="nav-item" class="">
+                    <a routerLink="/" id="nav-link" class="text-indigo-500">
+                        <span class="material-symbols-rounded">account_circle</span>
+                        <span id="nav-label">Usuario</span>
+                    </a>
+                </li>
+                <li id="nav-item" class="">
+                    <a (click)="logOut()" id="nav-link" class="text-indigo-500">
+                        <span class="material-symbols-rounded">logout</span>
+                        <span id="nav-label">Log Out</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </aside>
+    <!-- <aside id="default-sidebar"
         class="fixed top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0"
         aria-label="Sidebar">
         <div class="h-full px-3 py-4 overflow-y-auto bg-gray-50 dark:bg-gray-800">
@@ -102,7 +152,7 @@
                 </li>
             </ul>
         </div>
-    </aside>
+    </aside> -->
     
     <section class="max-w-screen-xl mx-auto">
         <div class="sm:ml-64 relative overflow-x-auto shadow-md sm:rounded-lg pt-10">
