@@ -25,4 +25,9 @@ export default class NoteListComponent implements AfterViewInit{
   ngAfterViewInit() {
     this.notesService.getAllNotes();
   }
+
+  toggleSidebar(): void {
+    const sidebar = document.querySelector('#sidebar');
+    sidebar?.classList.toggle('collapsed');
+  }
 }
