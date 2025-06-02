@@ -31,66 +31,120 @@
       'ml-[240px]': !sidebarCollapsed
     }"
   >
-    <div class="relative bg-white rounded-xl border p-30 space-y-2">
-      <span class="absolute top-0 left-0 w-3xs mt-3 ml-3 text-lg font-semibold">
+    <div class="relative bg-white rounded-xl border p-6">
+      <span class="absolute top-0 left-0 mt-4 ml-4 text-lg font-semibold">
         Gestión de Pedidos
       </span>
-      <!-- Registrar y Consultar -->
-      <div class="flex flex-col gap-8 space-y-2">
-        <!-- Cada tarjeta -->
-        <div class="flex justify-between items-center rounded border p-3">
-          <div class="flex items-center gap-2">
-            <i class="icon-pencil"></i>
-            Registrar Pedidos
+
+      <div class="flex flex-col gap-6 mt-10">
+        <!-- Tarjeta 1 -->
+        <div
+          class="bg-[#e6f0f4] w-full rounded-xl p-6 flex items-center justify-between shadow-sm"
+        >
+          <div class="flex items-center gap-4 mr-5">
+            <span class="material-symbols-rounded text-2xl text-blue-500"
+              >content_paste_search</span
+            >
+            <span class="text-base font-medium text-gray-800"
+              >Consultar Pedidos</span
+            >
           </div>
-          <button class="bg-gray-200 px-2 py-1 rounded">Ver</button>
+          <button
+            class="flex items-center gap-2 bg-white text-gray-600 text-sm font-medium px-4 py-2 rounded-lg shadow border border-gray-200 hover:bg-gray-300 transition duration-400 ease-in-out"
+          >
+            <span class="material-symbols-rounded text-base">visibility</span>
+            Ver
+          </button>
         </div>
-        <div class="flex justify-between items-center rounded border p-3">
-          <div class="flex items-center gap-2">
-            <i class="icon-clipboard"></i>
-            Consultar Pedidos
+
+        <!-- Tarjeta 2 -->
+        <div
+          class="bg-[#e6f0f4] w-full rounded-xl p-6 flex items-center justify-between shadow-sm"
+        >
+          <div class="flex items-center gap-4 mr-5">
+            <span class="material-symbols-rounded text-2xl text-blue-500"
+              >edit_note</span
+            >
+            <span class="text-base font-medium text-gray-800"
+              >Registrar Pedidos</span
+            >
           </div>
-          <button class="bg-gray-200 px-2 py-1 rounded">Ver</button>
+          <button
+            class="flex items-center gap-2 bg-white text-gray-600 text-sm font-medium px-4 py-2 rounded-lg shadow border border-gray-200 hover:bg-gray-300 transition duration-400 ease-in-out"
+          >
+            <span class="material-symbols-rounded text-base">visibility</span>
+            Ver
+          </button>
         </div>
       </div>
     </div>
 
-    <div class="relative bg-white rounded-xl border p-30">
-      <span class="absolute top-0 left-0 w-3xs mt-3 ml-3 text-lg font-semibold">
+    <div class="relative bg-white rounded-xl border p-6 shadow-sm">
+      <span
+        class="absolute top-0 left-0 mt-4 ml-4 text-lg font-semibold text-gray-800"
+      >
         Gestión de Pagos
       </span>
-      <div class="flex justify-between items-center mt-2 rounded border p-3">
-        <div class="flex items-center gap-2">
-          <i class="icon-cash"></i>
-          Registrar Cobro
+
+      <div
+        class="mt-12 bg-[#e6f0f4] rounded-xl p-6 flex items-center justify-between shadow-sm w-full"
+      >
+        <div
+          class="flex items-center gap-4 text-base font-medium text-gray-800"
+        >
+          <span class="material-symbols-rounded text-2xl text-blue-500"
+            >add_business</span
+          >
+          <span class="text-base font-medium text-gray-800"
+            >Registrar Cobro</span
+          >
         </div>
-        <button class="bg-gray-200 px-2 py-1 rounded">Ver</button>
+        <button
+          class="flex items-center gap-2 bg-white text-gray-700 text-sm font-medium px-4 py-2 rounded-lg shadow border border-gray-200 hover:bg-gray-300 transition duration-400 ease-in-out"
+        >
+          <span class="material-symbols-rounded text-base">visibility</span>
+          Ver
+        </button>
       </div>
     </div>
   </div>
 
   <!-- Columna derecha (Perfil del Personal) -->
-  <div class="flex-1 overflow-auto p-6">
-    <div class="rounded border p-4 flex gap-4 items-center">
-      <div class="w-16 h-16 bg-gray-300 rounded-full"></div>
+  <div class="flex-1 overflow-auto p-6 space-y-6">
+    <!-- Tarjeta de perfil -->
+    <div
+      class="rounded-xl border p-6 flex gap-4 items-center bg-white shadow-sm"
+    >
+      <!-- Círculo con ícono centrado -->
       <div
-        class="flex-1 rounded bg-gray-100 p-2 flex justify-between items-center"
+        class="w-16 h-16 bg-gray-300 rounded-full flex items-center justify-center"
       >
-        <span>*Frase Personalizada*</span>
-        <i class="icon-settings"></i>
+        <span class="material-symbols-rounded">face</span>
+      </div>
+
+      <!-- Frase personalizada -->
+      <div
+        class="flex-1 rounded bg-gray-100 p-3 flex justify-between items-center"
+      >
+        <span class="text-sm text-gray-700 font-medium italic"
+          >*Frase Personalizada*</span
+        >
       </div>
     </div>
 
-    <div class="rounded border p-4 space-y-2">
+    <!-- Información del personal -->
+    <div class="rounded-xl border p-6 space-y-4 bg-white shadow-sm">
       <div>
-        <p class="font-semibold">*Nombre del Personal*</p>
-        <p>*Cargo del Personal*</p>
+        <p class="font-semibold text-gray-800 text-base">
+          *Nombre del Personal*
+        </p>
+        <p class="text-gray-600 text-sm">*Cargo del Personal*</p>
       </div>
       <div>
         <label class="text-sm text-gray-500">Correo Electrónico</label>
         <input
           type="text"
-          class="w-full mt-1 p-2 border rounded"
+          class="w-full mt-1 p-2 border border-gray-300 rounded-lg bg-gray-50 text-sm text-gray-700"
           value="*Correo del Personal*"
           readonly
         />
