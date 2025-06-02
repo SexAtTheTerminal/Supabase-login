@@ -47,7 +47,7 @@ export default class AuthLogInComponent {
       
       if (error) throw error;
 
-      this._router.navigateByUrl('/');
+      this._router.navigateByUrl('/cashier');
     } catch (error) {
       if (error instanceof Error) {
         console.log(error);
