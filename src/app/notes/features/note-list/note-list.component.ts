@@ -2,11 +2,12 @@ import { AfterViewInit, Component, inject } from '@angular/core';
 import { AuthService } from '../../../auth/data-access/auth.service';
 import { Router, RouterLink } from '@angular/router';
 import { NotesService } from '../../data-access/notes.service';
+import { SidebarCasherComponent } from "../../../sidebar/features/sidebar-casher/sidebar-casher.component";
 
 @Component({
   selector: 'app-note-list',
   standalone: true,
-  imports: [RouterLink],
+  imports: [SidebarCasherComponent],
   templateUrl: './note-list.component.html',
 })
 export default class NoteListComponent implements AfterViewInit{

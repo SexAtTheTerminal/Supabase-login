@@ -1,0 +1,100 @@
+<!-- Icons -->
+<link
+  rel="stylesheet"
+  href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0"
+/>
+<link
+  rel="stylesheet"
+  href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+/>
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;700&display=swap"
+  rel="stylesheet"
+/>
+
+<section
+  class="flex inset-0 -z-10 h-screen w-screen bg-gray-200 bg-[radial-gradient(#B8B8B8_1px,transparent_1px)] [background-size:16px_16px]"
+>
+  <!-- Sidebar -->
+  <app-sidebar-casher
+    (sidebarStateChange)="onSidebarToggle($event)"
+  ></app-sidebar-casher>
+
+  <!-- Columna izquierda (Gestión de Pedidos y Pagos) -->
+  <div
+    class="p-6 space-y-6 overflow-y-auto transition-all duration-300"
+    [ngClass]="{
+      'ml-[85px]': sidebarCollapsed,
+      'ml-[240px]': !sidebarCollapsed
+    }"
+  >
+    <div class="relative bg-white rounded-xl border p-30 space-y-2">
+      <span class="absolute top-0 left-0 w-3xs mt-3 ml-3 text-lg font-semibold">
+        Gestión de Pedidos
+      </span>
+      <!-- Registrar y Consultar -->
+      <div class="flex flex-col gap-8 space-y-2">
+        <!-- Cada tarjeta -->
+        <div class="flex justify-between items-center rounded border p-3">
+          <div class="flex items-center gap-2">
+            <i class="icon-pencil"></i>
+            Registrar Pedidos
+          </div>
+          <button class="bg-gray-200 px-2 py-1 rounded">Ver</button>
+        </div>
+        <div class="flex justify-between items-center rounded border p-3">
+          <div class="flex items-center gap-2">
+            <i class="icon-clipboard"></i>
+            Consultar Pedidos
+          </div>
+          <button class="bg-gray-200 px-2 py-1 rounded">Ver</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="relative bg-white rounded-xl border p-30">
+      <span class="absolute top-0 left-0 w-3xs mt-3 ml-3 text-lg font-semibold">
+        Gestión de Pagos
+      </span>
+      <div class="flex justify-between items-center mt-2 rounded border p-3">
+        <div class="flex items-center gap-2">
+          <i class="icon-cash"></i>
+          Registrar Cobro
+        </div>
+        <button class="bg-gray-200 px-2 py-1 rounded">Ver</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Columna derecha (Perfil del Personal) -->
+  <div class="flex-1 overflow-auto p-6">
+    <div class="rounded border p-4 flex gap-4 items-center">
+      <div class="w-16 h-16 bg-gray-300 rounded-full"></div>
+      <div
+        class="flex-1 rounded bg-gray-100 p-2 flex justify-between items-center"
+      >
+        <span>*Frase Personalizada*</span>
+        <i class="icon-settings"></i>
+      </div>
+    </div>
+
+    <div class="rounded border p-4 space-y-2">
+      <div>
+        <p class="font-semibold">*Nombre del Personal*</p>
+        <p>*Cargo del Personal*</p>
+      </div>
+      <div>
+        <label class="text-sm text-gray-500">Correo Electrónico</label>
+        <input
+          type="text"
+          class="w-full mt-1 p-2 border rounded"
+          value="*Correo del Personal*"
+          readonly
+        />
+      </div>
+    </div>
+  </div>
+</section>

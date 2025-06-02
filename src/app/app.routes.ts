@@ -10,6 +10,6 @@ export const routes: Routes = [
     {
         path: '',
         canActivate: [privateGuard],
-        loadChildren: () => import('./notes/features/note-shell/note-routing')
+        loadChildren: () => import('./views/features/view-shell/view-routing')
     }
 ];

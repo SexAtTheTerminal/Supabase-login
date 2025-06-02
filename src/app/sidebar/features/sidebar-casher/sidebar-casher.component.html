@@ -1,0 +1,154 @@
+<!-- Icons -->
+<link
+  rel="stylesheet"
+  href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0"
+/>
+<link
+  rel="stylesheet"
+  href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+/>
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;700&display=swap"
+  rel="stylesheet"
+/>
+
+<aside
+  id="sidebar"
+  class="fixed w-[240px] min-h-[100vh] bg-white transition-all duration-300 overflow-hidden ease-in-out"
+  [class.collapsed]="sidebarCollapsed"
+>
+  <!-- Sidebar-Header -->
+  <header
+    id="sidebar-header"
+    class="relative box-border fixed items-center justify-between px-[15px] py-[20px] pb-12"
+  >
+    <a routerLink="/" id="header-logo" class="">
+      <img
+        class="h-[46px] w-[46px] block object-contain rounded-[50%]"
+        src="https://raw.githubusercontent.com/SexAtTheTerminal/mis-imagenes/refs/heads/main/swsLogo.svg"
+        alt="headerlogo"
+      />
+    </a>
+
+    <button
+      id="sidebar-toggler"
+      (click)="toggleSidebar()"
+      class="absolute top-[73px] right-[15px] h-[35px] w-[35px] flex items-center justify-center cursor-pointer rounded-[8px] bg-gray-200 hover:bg-gray-300 focus:outline-2 focus:outline-offset-2 focus:outline-gray-300 active:bg-gray-500 transition duration-400 ease-in-out"
+    >
+      <span class="material-symbols-rounded text-[1.75rem]"
+        >arrow_menu_close</span
+      >
+    </button>
+  </header>
+
+  <!-- Sidebar-Nav -->
+  <nav id="sidebar-nav" class="">
+    <!-- Primary top nav -->
+    <ul
+      id="nav-list_primary-nav"
+      class="flex flex-col list-none gap-[12px] px-[11px] py-[15px] font-[Ubuntu] font-bold"
+    >
+      <li id="nav-item" class="">
+        <a
+          routerLink="/"
+          class="nav-link h-[35px] flex gap-[12px] items-center text-indigo-500 rounded-[8px] hover:bg-gray-200 focus:outline-2 focus:outline-offset-2 transition duration-400 ease-in-out"
+          onclick="this.blur()"
+        >
+          <span class="material-symbols-rounded pl-2">home</span>
+          <span class="nav-label">Inicio</span>
+        </a>
+      </li>
+
+      <!-- Dropdown -->
+      <li id="nav-item_dropdown-container" class="">
+        <a
+          routerLink="/"
+          id="nav-link_dropdown-toggle"
+          class="h-[35px] flex gap-[12px] items-center text-indigo-500 rounded-[8px] hover:bg-gray-200 focus:outline-2 focus:outline-offset-2 transition duration-400 ease-in-out"
+          onclick="this.blur()"
+        >
+          <span class="material-symbols-rounded pl-2">flatware</span>
+          <span class="nav-label">Pedidos</span>
+          <span
+            id="dropdown-icon"
+            class="material-symbols-rounded mt-[0px] -mr-[4px] mb-[0px] ml-auto"
+          >
+            keyboard_arrow_down</span
+          >
+        </a>
+
+        <!-- Dropdown-Menu -->
+        <ul id="dropdown-menu" class="list-none pl-[15px]">
+          <li id="nav-item" class="mt-2">
+            <a
+              routerLink="/"
+              id="nav-link_dropdown-link"
+              class="w-[200px] h-[40px] flex gap-[12px] items-center text-indigo-500 rounded-[8px] hover:bg-gray-200 focus:outline-2 focus:outline-offset-2 transition duration-400 ease-in-out"
+              onclick="this.blur()"
+            >
+              <span class="material-symbols-rounded pl-2"
+                >content_paste_search</span
+              >
+              <span class="nav-label">Consultar Pedidos</span>
+            </a>
+          </li>
+          <li id="nav-item" class="">
+            <a
+              routerLink="/"
+              id="nav-link_dropdown-link"
+              class="w-[200px] h-[40px] flex gap-[12px] items-center text-indigo-500 rounded-[8px] hover:bg-gray-200 focus:outline-2 focus:outline-offset-2 transition duration-400 ease-in-out"
+              onclick="this.blur()"
+            >
+              <span class="material-symbols-rounded pl-2">edit_note</span>
+              <span class="nav-label">Registrar Pedidos</span>
+            </a>
+          </li>
+        </ul>
+      </li>
+
+      <li id="nav-item" class="">
+        <a
+          routerLink="/"
+          id="nav-linka"
+          class="nav-link h-[35px] flex gap-[12px] items-center text-indigo-500 rounded-[8px] hover:bg-gray-200 focus:outline-2 focus:outline-offset-2 transition duration-400 ease-in-out"
+          onclick="this.blur()"
+        >
+          <span class="material-symbols-rounded pl-2"
+            >account_balance_wallet</span
+          >
+          <span class="nav-label">Pagos</span>
+        </a>
+      </li>
+    </ul>
+
+    <!-- Secondary Bottom nav -->
+    <ul
+      id="nav-list secondary-nav"
+      class="absolute bottom-[30px] w-[100%] flex flex-col list-none gap-[12px] px-[11px] py-[15px] font-[Ubuntu] font-bold"
+    >
+      <li id="nav-item" class="">
+        <a
+          routerLink="/"
+          class="nav-link h-[35px] flex gap-[12px] items-center text-indigo-500 rounded-[8px] hover:bg-gray-200 focus:outline-2 focus:outline-offset-2 transition duration-400 ease-in-out"
+          onclick="this.blur()"
+        >
+          <span class="material-symbols-rounded pl-2">account_circle</span>
+          <span class="nav-label">Usuario</span>
+        </a>
+      </li>
+      <li id="nav-item" class="">
+        <a
+          (click)="logOut()"
+          class="nav-link h-[35px] flex gap-[12px] items-center text-indigo-500 rounded-[8px] hover:bg-gray-200 focus:outline-2 focus:outline-offset-2 transition duration-400 ease-in-out"
+          onclick="this.blur()"
+        >
+          <span class="material-symbols-rounded pl-2">logout</span>
+          <span class="nav-label">Log Out</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+</aside>
