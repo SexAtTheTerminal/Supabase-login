@@ -15,8 +15,111 @@
   rel="stylesheet"
 />
 
-<section
-  class="flex inset-0 -z-10 h-screen w-screen bg-gray-200 bg-[radial-gradient(#B8B8B8_1px,transparent_1px)] [background-size:16px_16px]"
->
-
-<app-sidebar-casher></app-sidebar-casher>
+<section class="flex w-screen h-screen bg-gray-200 bg-[radial-gradient(#B8B8B8_1px,transparent_1px)] [background-size:16px_16px]">
+    <!-- Sidebar -->
+    <app-sidebar-casher (sidebarStateChange)="onSidebarToggle($event)"></app-sidebar-casher>
+  
+    <!-- Main content -->
+    <div [ngClass]="{
+        'ml-[90px]': sidebarCollapsed,
+        'ml-[240px]': !sidebarCollapsed
+      }" class="flex-1 p-6 space-y-4 transition-all duration-300">
+      <!-- Breadcrumb -->
+      <nav class="text-sm text-gray-500">
+        <span routerLink="/cashier" class="text-[#6A7282] font-normal">Inicio</span> >
+        <span class="text-[#6A7282] font-normal">Pedidos</span> >
+        <span class="text-gray-800 font-medium">Registrar Pedidos</span>
+      </nav>
+  
+      <!-- Título -->
+      <div>
+        <h1 class="text-xl font-semibold text-gray-800">Registrar Pedidos</h1>
+        <p class="text-sm text-gray-500">Registro de Pedidos para ser preparados por la cocina</p>
+      </div>
+  
+      <!-- Contenedor principal -->
+    <div class="flex gap-6">
+        <!-- Columna izquierda -->
+        <div class="w-1/4 bg-white p-4 rounded-xl border space-y-4">
+          <div>
+            <label class="block text-sm font-semibold text-gray-700">Cod Pedido</label>
+            <p class="text-sm text-gray-500 italic">*Código automático*</p>
+          </div>
+  
+          <div>
+            <label class="block text-sm font-medium text-gray-600 mb-1">Mesa</label>
+            <select class="w-full border rounded px-3 py-2 text-sm">
+              <option>Mesa</option>
+            </select>
+          </div>
+  
+          <div>
+            <label class="block text-sm font-medium text-gray-600 mb-1">Modalidad</label>
+            <select class="w-full border rounded px-3 py-2 text-sm">
+              <option>Modalidad</option>
+            </select>
+          </div>
+  
+          <div>
+            <label class="block text-sm font-medium text-gray-600 mb-1">Cocinero</label>
+            <select class="w-full border rounded px-3 py-2 text-sm">
+              <option>Cocinero</option>
+            </select>
+          </div>
+        </div>
+  
+        <!-- Columna derecha -->
+        <div class="flex-1 bg-white p-4 rounded-xl border flex flex-col justify-between min-h-[300px]">
+          <!-- Encabezado tabla -->
+          <div class="grid grid-cols-6 text-sm font-semibold text-gray-700 border-b pb-2">
+            <span>Cod Producto</span>
+            <span>Nombre P</span>
+            <span>Categoría</span>
+            <span>Monto</span>
+            <span class="text-center">Cantidad</span>
+            <span></span>
+          </div>
+  
+          <!-- Estado vacío -->
+          <div class="flex flex-col items-center justify-center flex-1 py-10 text-center text-gray-500 space-y-2">
+            <img src="https://raw.githubusercontent.com/SexAtTheTerminal/mis-imagenes/refs/heads/main/empty_box.svg" alt="Sin ítems" class="w-24 h-24 opacity-70" />
+            <p class="font-medium text-gray-700">No hay ítems</p>
+            <p class="text-sm">Aún no se han agregado ítems que podamos mostrarte</p>
+            <button class="flex items-center gap-2 px-4 py-2 border rounded text-blue-600 hover:bg-blue-50">
+              <span class="material-symbols-rounded">add</span> Agregar ítems del comercio
+            </button>
+          </div>
+  
+          <!-- Fila de ítem dinámico (oculta si está vacío) -->
+          <!--
+          <div class="grid grid-cols-6 gap-2 items-center py-2">
+            <input type="text" placeholder="*Cod Prod*" class="border rounded px-2 py-1 text-sm" />
+            <input type="text" placeholder="*Nombre P*" class="border rounded px-2 py-1 text-sm" />
+            <input type="text" placeholder="*Categoría*" class="border rounded px-2 py-1 text-sm" />
+            <input type="text" placeholder="s/.####" class="border rounded px-2 py-1 text-sm" />
+            <div class="flex items-center justify-center gap-1">
+              <button class="px-2 border rounded">
+                <span class="material-symbols-rounded text-sm">remove</span>
+              </button>
+              <input type="text" value="1" class="w-10 border rounded text-center text-sm" />
+              <button class="px-2 border rounded">
+                <span class="material-symbols-rounded text-sm">add</span>
+              </button>
+            </div>
+            <button class="text-red-500 hover:text-red-700">
+              <span class="material-symbols-rounded">delete</span>
+            </button>
+          </div>
+          -->
+  
+          <!-- Confirmar selección -->
+          <div class="flex justify-end pt-4">
+            <button class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+              Confirmar selección
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
