@@ -49,7 +49,7 @@
     <!-- Primary top nav -->
     <ul
       id="nav-list_primary-nav"
-      class="flex flex-col list-none gap-[12px] px-[11px] py-[15px] font-[Ubuntu] font-bold"
+      class="flex flex-col list-none h-[320px] gap-[13px] px-[11px] py-[15px] font-[Ubuntu] font-bold"
     >
       <li id="nav-item" class="">
         <a
@@ -62,57 +62,61 @@
         </a>
       </li>
 
-      <!-- Dropdown -->
+      <!-- Dropdown-Pedidos-->
       <li id="nav-item_dropdown-container" class="">
         <a
-          routerLink="/"
-          id="nav-link_dropdown-toggle"
-          class="h-[35px] flex gap-[12px] items-center text-indigo-500 rounded-[8px] hover:bg-gray-200 focus:outline-2 focus:outline-offset-2 transition duration-400 ease-in-out"
+          (click)="togglePedidosDropdown()"
+          class="nav-link h-[35px] flex gap-[12px] items-center text-indigo-500 rounded-[8px] hover:bg-gray-200 focus:outline-2 focus:outline-offset-2 transition-transform duration-300 ease-in-out"
           onclick="this.blur()"
         >
           <span class="material-symbols-rounded pl-2">flatware</span>
           <span class="nav-label">Pedidos</span>
           <span
             id="dropdown-icon"
-            class="material-symbols-rounded mt-[0px] -mr-[4px] mb-[0px] ml-auto"
+            class="material-symbols-rounded mt-[0px] mr-[2px] mb-[0px] ml-auto"
+            [class.rotate-180]="isPedidosOpen"
           >
             keyboard_arrow_down</span
           >
         </a>
 
-        <!-- Dropdown-Menu -->
-        <ul id="dropdown-menu" class="list-none pl-[15px]">
-          <li id="nav-item" class="mt-2">
-            <a
-              routerLink="/"
-              id="nav-link_dropdown-link"
-              class="w-[200px] h-[40px] flex gap-[12px] items-center text-indigo-500 rounded-[8px] hover:bg-gray-200 focus:outline-2 focus:outline-offset-2 transition duration-400 ease-in-out"
-              onclick="this.blur()"
-            >
-              <span class="material-symbols-rounded pl-2"
-                >content_paste_search</span
+        <!-- Dropdown-Menu-Pedidos -->
+        <div
+          class="overflow-hidden transition-all duration-400 ease-in-out"
+          [style.maxHeight]="isPedidosOpen ? '250px' : '0px'"
+        >
+          <ul id="dropdown-menu" class="list-none pl-[10px] h-[87px]">
+            <li id="nav-item" class="mt-2 mb-1">
+              <a
+                routerLink="/cashier/pedidos/consultar-pedidos"
+                class="nav-link w-[200px] h-[40px] flex gap-[12px] items-center text-indigo-500 rounded-[8px] hover:bg-gray-200 focus:outline-2 focus:outline-offset-2 transition"
+                onclick="this.blur()"
               >
-              <span class="nav-label">Consultar Pedidos</span>
-            </a>
-          </li>
-          <li id="nav-item" class="">
-            <a
-              routerLink="/"
-              id="nav-link_dropdown-link"
-              class="w-[200px] h-[40px] flex gap-[12px] items-center text-indigo-500 rounded-[8px] hover:bg-gray-200 focus:outline-2 focus:outline-offset-2 transition duration-400 ease-in-out"
-              onclick="this.blur()"
-            >
-              <span class="material-symbols-rounded pl-2">edit_note</span>
-              <span class="nav-label">Registrar Pedidos</span>
-            </a>
-          </li>
-        </ul>
+                <span class="material-symbols-rounded pl-2"
+                  >content_paste_search</span
+                >
+                <span class="nav-label">Consultar Pedidos</span>
+              </a>
+            </li>
+            <li id="nav-item" class="">
+              <a
+                routerLink="/cashier/pedidos/registrar-pedidos"
+                class="w-[200px] h-[38px] flex gap-[12px] items-center text-indigo-500 rounded-[8px] hover:bg-gray-200 focus:outline-2 focus:outline-offset-2 transition"
+                onclick="this.blur()"
+              >
+                <span class="material-symbols-rounded pl-2">edit_note</span>
+                <span class="nav-label">Registrar Pedidos</span>
+              </a>
+            </li>
+          </ul>
+        </div>
       </li>
 
+      <!-- Dropdown Pagos -->
       <li id="nav-item" class="">
         <a
-          routerLink="/"
-          id="nav-linka"
+          id="nav-link_dropdown-toggle"
+          (click)="togglePagosDropdown()"
           class="nav-link h-[35px] flex gap-[12px] items-center text-indigo-500 rounded-[8px] hover:bg-gray-200 focus:outline-2 focus:outline-offset-2 transition duration-400 ease-in-out"
           onclick="this.blur()"
         >
@@ -120,7 +124,34 @@
             >account_balance_wallet</span
           >
           <span class="nav-label">Pagos</span>
+          <span
+            id="dropdown-icon"
+            class="material-symbols-rounded mt-[0px] mr-[2px] mb-[0px] ml-auto"
+            [class.rotate-180]="isPagosOpen"
+          >
+            keyboard_arrow_down</span
+          >
         </a>
+
+        <!-- Dropdown-Menu-Pagos -->
+        <div
+          class="overflow-hidden transition-all duration-400 ease-in-out pb-2"
+          [style.maxHeight]="isPagosOpen ? '100px' : '0px'"
+        >
+          <ul id="dropdown-menu" class="list-none pl-[10px]">
+            <li id="nav-item" class="mt-2">
+              <a
+                routerLink="/cashier/pagos/registrar-cobro"
+                id="nav-link_dropdown-link"
+                class="w-[200px] h-[40px] flex gap-[12px] items-center text-indigo-500 rounded-[8px] hover:bg-gray-200 focus:outline-2 focus:outline-offset-2"
+                onclick="this.blur()"
+              >
+                <span class="material-symbols-rounded pl-2">add_business</span>
+                <span class="nav-label">Registrar Cobro</span>
+              </a>
+            </li>
+          </ul>
+        </div>
       </li>
     </ul>
 

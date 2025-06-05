@@ -18,6 +18,9 @@ export class SidebarCasherComponent {
   sidebarCollapsed = false;
   @Output() sidebarStateChange = new EventEmitter<boolean>();
 
+  isPedidosOpen: boolean = false;
+  isPagosOpen: boolean = false;
+
   async logOut() {
     await this._authService.signOut();
     this._router.navigateByUrl('/auth/log-in');
@@ -26,5 +29,13 @@ export class SidebarCasherComponent {
   toggleSidebar(): void {
     this.sidebarCollapsed = !this.sidebarCollapsed;
     this.sidebarStateChange.emit(this.sidebarCollapsed);
+  }
+
+  togglePedidosDropdown(): void{
+    this.isPedidosOpen = !this.isPedidosOpen;
+  }
+
+  togglePagosDropdown(): void{
+    this.isPagosOpen = !this.isPagosOpen;
   }
 }
