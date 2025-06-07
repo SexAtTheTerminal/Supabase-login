@@ -1,1 +1,185 @@
-<app-sidebar-casher></app-sidebar-casher>   
+<!-- Use el mismo material de importacion (iconos, fuentes, directivas entre otras cosas) de pepino -->
+<link
+  rel="stylesheet"
+  href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0"
+/>
+<link
+  rel="stylesheet"
+  href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+/>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;700&display=swap"
+  rel="stylesheet"
+/>
+
+<!-- Mismo fondo que se trabajara cada interfaz-->
+<section class="flex h-screen w-screen bg-gray-200 bg-[radial-gradient(#B8B8B8_1px,transparent_1px)] [background-size:16px_16px] overflow-hidden"
+>
+<!-- La barra lateral la misma dinamizacion de pepino, para manejar las mismas dimensiones de las interfaces -->
+  <app-sidebar-casher (sidebarStateChange)="onSidebarToggle($event)"></app-sidebar-casher>
+  <!-- Dimensiones para respetar la estructura de las interfacez se ajusten a los componentes que se aniadan -->
+  <div
+    class="flex-1 p-6 space-y-6 overflow-y-auto transition-all duration-300 relative z-10"
+    [ngClass]="{
+      'ml-[85px]': sidebarCollapsed,
+      'ml-[240px]': !sidebarCollapsed
+    }"
+  >
+    <!-- primer componente (barra donde se muestra en que interfaz estamos)
+     a su vez podremos regresar al inicio del sistema -->
+    <div class="bg-white rounded-lg shadow-md p-6 mb-6 flex flex-col items-start">
+      <!-- Creamos un Breadcrumb para una navegacion secundaria del cliente y pueda acceder a
+       las interfacez designadas -->
+      <nav class="flex mb-2" aria-label="Breadcrumb">
+        <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
+          <li class="inline-flex items-center">
+            <!-- Un routerLink en la opcion Inicio, para no tener la necesidad de recargar la pagina y se vea el dinamismo entre interfaces -->
+            <a [routerLink]="['/cashier']" class="inline-flex items-center text-sm font-medium text-gray-500 hover:text-gray-900">Inicio</a>
+          </li>
+          <li>
+            <div class="flex items-center">
+              <svg class="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
+              </svg>
+              <span class="ms-1 text-sm font-medium text-gray-700">Pagos</span>
+            </div>
+          </li>
+          <li aria-current="page">
+            <div class="flex items-center">
+              <svg class="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
+              </svg>
+              <span class="ms-1 text-sm font-medium text-gray-700">Registrar Cobro</span>
+            </div>
+          </li>
+        </ol>
+      </nav>
+      <!-- Titulo de la interfaz -->
+      <div>
+        <h1 class="text-3xl font-semibold tracking-tight text-gray-900 sm:text-4xl">Registrar Cobro</h1>
+        <p class="mt-1 text-base text-gray-600">Registro de Cobros por parte de los clientes</p>
+      </div>
+    </div>
+    <!-- Division de componentes 2 y 3 (componente 2 - dividimos la informacion de los clientes)
+     (componente 3 - Informacion sobre lo consumido de cada cliente al visitar la polleria) -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+      <!-- Componente 2 - informacion de los clientes -->
+      <div class="flex flex-col space-y-6">
+        <div class="border border-gray-300 rounded-lg p-4 bg-white shadow-sm">
+          <h2 class="text-lg font-semibold text-gray-800 mb-4">Información del Cliente</h2>
+          <!-- input donde se ingresara el Dni del cliente  -->
+          <div class="mb-4">
+            <label for="documento" class="block text-sm font-medium text-gray-700 mb-1">
+              <span class="inline-flex items-center">
+                <span class="material-symbols-rounded text-gray-500 text-base leading-none mr-1">article</span>
+                Documento
+              </span>
+              <span class="text-red-500">*</span>
+            </label>
+            <div class="flex items-center gap-2">
+              <!-- Ingreso del Dni -->
+              <input type="text" id="documento" placeholder="Digite el DNI de cliente"
+                     class="flex-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2.5" />
+              <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <!-- Esperando integrar signal para realizar la llamada a la BD -->
+                <button class="bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-cyan-600 hover:to-blue-600 text-white font-semibold py-2 px-4 rounded-xl transition-all duration-300 transform hover:scale-105 hover:shadow-lg">
+                  Search
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <label for="cliente" class="block text-sm font-medium text-gray-700 mb-1">
+              <span class="inline-flex items-center">
+                <span class="material-symbols-rounded text-gray-500 text-base leading-none mr-1">person</span>
+                Cliente
+              </span>
+            </label>
+            <div class="flex items-center gap-2">
+              <!-- Debe traer la informacion de la BD (@for y @if) -->
+              <input type="text" id="cliente" placeholder="Nombres"
+                     class="flex-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2.5" readonly />
+              <span class="text-xs text-gray-500">Autocompleta</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="relative inline-block w-full">
+          <label for="mesa" class="block text-sm font-medium text-gray-700 sr-only">Mesa</label>
+          <!-- Falta trabajar como se haria esto -->
+          <select id="mesa" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2.5 bg-white cursor-pointer
+                     appearance-none pr-10">
+            <option value="">Mesa</option>
+            <option value="1">Mesa 1</option>
+            <option value="2">Mesa 2</option>
+          </select>
+          <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+            <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+              <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.25 4.25a.75.75 0 01-1.06 0L5.23 8.27a.75.75 0 010-1.06z" clip-rule="evenodd" />
+            </svg>
+          </div>
+        </div>
+        <!-- Boton para confirmar la mesa del cliente donde se mostara todos los productos
+         consumidos -->
+        <button class="w-full py-3 px-6 bg-green-600 text-white font-semibold rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
+          Confirmar
+        </button>
+      </div>
+
+      <!-- Componente 3 - informacion del consumo del cliente, mas que todo es
+       saber la mesa que productos consumio y mostrarlos -->
+      <div class="flex flex-col border border-gray-300 rounded-lg p-4 bg-white shadow-sm h-full min-h-[300px]">
+        <div class="grid grid-cols-3 gap-4 pb-3 mb-3 border-b-2 border-gray-200 font-semibold text-gray-700 text-sm md:text-base">
+          <div class="col-span-1">Cantidad</div>
+          <div class="col-span-1">Producto</div>
+          <div class="col-span-1 text-right">Precio</div>
+        </div>
+
+        <div class="flex-grow space-y-3 overflow-y-auto pr-2 custom-scrollbar"> <div class="grid grid-cols-3 gap-4 items-center p-3 border border-gray-100 rounded-lg bg-white shadow-sm text-sm text-gray-800 hover:shadow-md transition-shadow duration-200">
+            <div class="col-span-1 font-medium text-gray-900">1</div>
+            <div class="col-span-1 text-gray-700">Pizza de carne</div>
+            <div class="col-span-1 text-right font-semibold text-gray-900">S/. 25.00</div>
+          </div>
+
+          <div class="grid grid-cols-3 gap-4 items-center p-3 border border-gray-100 rounded-lg bg-white shadow-sm text-sm text-gray-800 hover:shadow-md transition-shadow duration-200">
+            <div class="col-span-1 font-medium text-gray-900">2</div>
+            <div class="col-span-1 text-gray-700">Gaseosa Coca Cola</div>
+            <div class="col-span-1 text-right font-semibold text-gray-900">S/. 8.50</div>
+          </div>
+
+          <div class="grid grid-cols-3 gap-4 items-center p-3 border border-gray-100 rounded-lg bg-white shadow-sm text-sm text-gray-800 hover:shadow-md transition-shadow duration-200">
+            <div class="col-span-1 font-medium text-gray-900">1</div>
+            <div class="col-span-1 text-gray-700">Ensalada para los dieteticos XD </div>
+            <div class="col-span-1 text-right font-semibold text-gray-900">S/. 15.00</div>
+          </div>
+
+          <div class="text-center text-gray-500 pt-6 pb-2">
+            <p>o o o</p>
+          </div>
+        </div>
+        <!-- Estaba pensando aplicar lo que se hizo con el estacionamiento generar una boleta
+         donde se va a visualizar todo lo consumido o mas detalles de los pedidos -->
+        <div class="text-center mt-4 mb-4"> <p class="text-blue-600 font-medium cursor-pointer hover:underline text-sm md:text-base">
+            <span class="material-symbols-rounded text-blue-600 align-middle text-base mr-1">visibility</span>
+            Visualizar detalles
+          </p>
+        </div>
+
+        <div class="mt-auto pt-4 border-t border-gray-300 text-right">
+          <span class="text-lg font-semibold text-gray-800">Total</span>
+          <span class="ml-4 text-2xl font-bold text-gray-900">S/. 48.50</span> </div>
+        </div>
+    </div>
+
+    <!-- Imagen subida a un sevidor para usarlo y darle un poco de interaccion a la pagina -->
+    <div class="w-full flex justify-center mt-20 mb-8">
+      <img src="https://i.ibb.co/V0f0yVTk/dar-dinero.png" alt="dar-dinero"
+           class="w-40 h-40 object-contain animate-bounce"
+           style="animation-duration: 2s; animation-iteration-count: infinite;">
+    </div>
+  </div>
+</section>
+
