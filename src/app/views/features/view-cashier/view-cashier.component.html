@@ -27,7 +27,7 @@
   <div
     class="p-6 space-y-6 overflow-y-auto transition-all duration-300"
     [ngClass]="{
-      'ml-[85px]': sidebarCollapsed,
+      'ml-[90px]': sidebarCollapsed,
       'ml-[240px]': !sidebarCollapsed
     }"
   >
@@ -52,7 +52,11 @@
           <button
             class="flex items-center gap-2 bg-white text-gray-600 text-sm font-medium px-4 py-2 rounded-lg shadow border border-gray-200 hover:bg-gray-300 transition duration-400 ease-in-out"
           >
-            <span class="material-symbols-rounded text-base">visibility</span>
+            <span
+              routerLink="/cashier/pedidos/consultar-pedidos"
+              class="material-symbols-rounded text-base"
+              >visibility</span
+            >
             Ver
           </button>
         </div>
@@ -72,7 +76,11 @@
           <button
             class="flex items-center gap-2 bg-white text-gray-600 text-sm font-medium px-4 py-2 rounded-lg shadow border border-gray-200 hover:bg-gray-300 transition duration-400 ease-in-out"
           >
-            <span class="material-symbols-rounded text-base">visibility</span>
+            <span
+              routerLink="/cashier/pedidos/registrar-pedidos"
+              class="material-symbols-rounded text-base"
+              >visibility</span
+            >
             Ver
           </button>
         </div>
@@ -102,7 +110,11 @@
         <button
           class="flex items-center gap-2 bg-white text-gray-700 text-sm font-medium px-4 py-2 rounded-lg shadow border border-gray-200 hover:bg-gray-300 transition duration-400 ease-in-out"
         >
-          <span class="material-symbols-rounded text-base">visibility</span>
+          <span
+            routerLink="/cashier/pagos/registrar-cobro"
+            class="material-symbols-rounded text-base"
+            >visibility</span
+          >
           Ver
         </button>
       </div>
