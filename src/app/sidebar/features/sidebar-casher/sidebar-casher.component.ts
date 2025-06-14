@@ -20,6 +20,7 @@ export class SidebarCasherComponent {
 
   isPedidosOpen: boolean = false;
   isPagosOpen: boolean = false;
+  isLogoOpen: boolean = false;
 
   async logOut() {
     await this._authService.signOut();
@@ -31,11 +32,15 @@ export class SidebarCasherComponent {
     this.sidebarStateChange.emit(this.sidebarCollapsed);
   }
 
-  togglePedidosDropdown(): void{
+  togglePedidosDropdown(): void {
     this.isPedidosOpen = !this.isPedidosOpen;
   }
 
-  togglePagosDropdown(): void{
+  togglePagosDropdown(): void {
     this.isPagosOpen = !this.isPagosOpen;
+  }
+
+  toggleLogo(): void {
+    this.isLogoOpen = !this.isLogoOpen;
   }
 }
