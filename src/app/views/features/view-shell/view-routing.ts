@@ -8,7 +8,7 @@ import { RegistrarPedidosComponent } from '../../../modules/pedidos/registrar-pe
 export default [
   {
     path: 'cashier',
-    component: ViewCashierComponent
+    component: ViewCashierComponent,
   },
   {
     path: 'cashier/pagos/registrar-cobro',
@@ -16,15 +16,19 @@ export default [
   },
   {
     path: 'cashier/pedidos/consultar-pedidos',
-    component: ConsultarPedidosComponent
+    component: ConsultarPedidosComponent,
   },
   {
     path: 'cashier/pedidos/registrar-pedidos',
-    component: RegistrarPedidosComponent
+    component: RegistrarPedidosComponent,
   },
   {
     path: 'cooker',
     component: ViewCookerComponent,
+  },
+  {
+    path: 'cooker/pedidos/consultar-pedidos',
+    component: ConsultarPedidosComponent,
   },
   {
     path: '**',

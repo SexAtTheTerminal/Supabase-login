@@ -11,10 +11,9 @@ import { RouterLink } from '@angular/router';
   styleUrl: './view-cashier.component.scss',
 })
 export class ViewCashierComponent {
-
   sidebarCollapsed = false;
 
-  onSidebarToggle(state: boolean): void{
+  onSidebarToggle(state: boolean): void {
     this.sidebarCollapsed = state;
   }
 }

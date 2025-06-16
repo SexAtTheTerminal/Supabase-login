@@ -1,0 +1,108 @@
+<!-- Icons -->
+<link
+  rel="stylesheet"
+  href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0"
+/>
+<link
+  rel="stylesheet"
+  href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+/>
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;700&display=swap"
+  rel="stylesheet"
+/>
+
+<div class="mt-6 bg-white rounded-lg shadow overflow-hidden">
+  <!-- Tabla -->
+  <table
+    *ngIf="paginaActual.length > 0"
+    class="w-full table-auto bg-white rounded-lg shadow"
+  >
+    <thead>
+      <tr class="bg-gray-100 text-left text-sm font-semibold text-gray-700">
+        <th class="px-6 py-3">Código</th>
+        <th class="px-6 py-3">Mesa</th>
+        <th class="px-6 py-3">Estado</th>
+        <th class="px-6 py-3">Hora</th>
+        <th class="px-6 py-3 text-center">Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        *ngFor="let pedido of paginaActual"
+        class="border-t hover:bg-gray-50 transition duration-150"
+      >
+        <td class="px-6 py-4 font-mono text-sm text-gray-800">
+          {{ pedido.codigo }}
+        </td>
+        <td class="px-6 py-4 text-sm text-gray-700">{{ pedido.mesa }}</td>
+        <td class="px-6 py-4">
+          <span
+            class="px-2 py-1 text-xs font-semibold rounded-full"
+            [ngClass]="{
+              'bg-yellow-100 text-yellow-700': pedido.estado === 'pendiente',
+              'bg-green-100 text-green-700': pedido.estado === 'finalizado'
+            }"
+          >
+            {{ pedido.estado }}
+          </span>
+        </td>
+        <td class="px-6 py-4 text-sm text-gray-700">
+          {{ pedido.fecha | date : "shortTime" }}
+        </td>
+        <td class="px-6 py-4 flex items-center justify-center gap-4">
+          <button
+            (click)="abrirDetalle(pedido)"
+            class="text-blue-500 hover:text-blue-700"
+            title="Ver detalles"
+          >
+            <span class="material-symbols-rounded">visibility</span>
+          </button>
+          <button
+            (click)="eliminarPedido(pedido)"
+            class="text-red-500 hover:text-red-700"
+            title="Eliminar pedido"
+          >
+            <span class="material-symbols-rounded">delete</span>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Estado vacío -->
+  <div
+    *ngIf="paginaActual.length === 0"
+    class="flex flex-col items-center justify-center text-gray-500 mt-8"
+  >
+    <span class="material-symbols-rounded text-6xl text-gray-400 mb-2"
+      >inbox</span
+    >
+    <p class="text-lg font-medium">No se encontraron pedidos</p>
+    <p class="text-sm text-gray-400">
+      Intenta con otro código o cambia el estado del filtro.
+    </p>
+  </div>
+
+  <!-- Paginación -->
+  <div class="flex justify-between items-center p-4" *ngIf="totalPaginas > 1">
+    <button
+      class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300"
+      (click)="paginaAnterior()"
+      [disabled]="pagina === 1"
+    >
+      Anterior
+    </button>
+    <p>Página {{ pagina }} de {{ totalPaginas }}</p>
+    <button
+      class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300"
+      (click)="paginaSiguiente()"
+      [disabled]="pagina === totalPaginas"
+    >
+      Siguiente
+    </button>
+  </div>
+</div>
