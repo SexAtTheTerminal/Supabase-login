@@ -1,11 +1,11 @@
 import { Component, EventEmitter, inject, Output } from '@angular/core';
 import { AuthService } from '../../../auth/data-access/auth.service';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-sidebar-cooker',
   standalone: true,
-  imports: [],
+  imports: [RouterLink],
   templateUrl: './sidebar-cooker.component.html',
   styleUrl: './sidebar-cooker.component.scss',
 })

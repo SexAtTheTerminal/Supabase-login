@@ -12,6 +12,7 @@ export class FiltrosPedidosComponent {
   @Input() busquedaCodigo: string = '';
   @Input() estadoSeleccionado: string = '';
   @Input() ordenFecha: string = 'reciente';
+  @Input() mostrarFiltroEstado: boolean = true;
 
   @Output() busquedaCodigoChange = new EventEmitter<string>();
   @Output() estadoSeleccionadoChange = new EventEmitter<string>();

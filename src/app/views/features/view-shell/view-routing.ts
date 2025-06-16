@@ -4,6 +4,7 @@ import { ViewCookerComponent } from '../view-cooker/view-cooker.component';
 import { RegistrarCobroComponent } from '../../../modules/pagos/registrar-cobro/registrar-cobro.component';
 import { ConsultarPedidosComponent } from '../../../modules/pedidos/consultar-pedidos/consultar-pedidos.component';
 import { RegistrarPedidosComponent } from '../../../modules/pedidos/registrar-pedidos/registrar-pedidos.component';
+import { UpdatePedidosComponent } from '../../../modules/pedidos/update-pedidos/update-pedidos.component';
 
 export default [
   {
@@ -29,6 +30,10 @@ export default [
   {
     path: 'cooker/pedidos/consultar-pedidos',
     component: ConsultarPedidosComponent,
+  },
+  {
+    path: 'cooker/pedidos/update-pedidos',
+    component: UpdatePedidosComponent,
   },
   {
     path: '**',
