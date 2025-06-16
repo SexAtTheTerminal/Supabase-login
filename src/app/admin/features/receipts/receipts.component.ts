@@ -4,23 +4,14 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 
 @Component({
-  selector: 'app-view-admin',
-  standalone: true,
+  selector: 'app-receipts',
   imports: [SidebarAdminComponent, CommonModule, RouterLink],
-  templateUrl: './view-admin.component.html',
-  styleUrl: './view-admin.component.scss'
+  templateUrl: './receipts.component.html',
+  styleUrl: './receipts.component.scss'
 })
-export class ViewAdminComponent {
+export class ReceiptsComponent {
   sidebarCollapsed = false;
-
   onSidebarToggle(state: boolean): void {
     this.sidebarCollapsed = state;
   }
-
-
-  goToReceipts() {
-    // Implementación real que navega a la ruta de comprobantes
-  }
-
-  
 }

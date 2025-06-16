@@ -11,6 +11,7 @@ import { CommonModule } from '@angular/common';
   styleUrl: './sidebar-casher.component.scss',
 })
 export class SidebarCasherComponent {
+  
   private _authService = inject(AuthService);
 
   private _router = inject(Router);

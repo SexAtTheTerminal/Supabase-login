@@ -1,0 +1,80 @@
+<!-- Icons -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;700&display=swap" rel="stylesheet">
+
+<section class="flex inset-0 -z-10 h-screen w-screen bg-[#205781] bg-[radial-gradient(#2d6b8f_1px,transparent_1px)] [background-size:16px_16px]">
+  <!-- Sidebar -->
+  <app-sidebar-admin
+    (sidebarStateChange)="onSidebarToggle($event)"
+  ></app-sidebar-admin>
+
+  <!-- Contenido principal -->
+  <div class="flex h-full w-full transition-all duration-300"
+    [ngClass]="{
+      'ml-[90px]': sidebarCollapsed,
+      'ml-[240px]': !sidebarCollapsed
+    }">
+    
+    <!-- Sección de Visualización de Comprobantes -->
+    <div class="flex-1 p-6 overflow-y-auto">
+      <!-- Ruta de navegación -->
+      <div class="text-sm text-white mb-2">
+        <span routerLink="/admin" class="text-white font-normal"
+        >Inicio</span
+      >
+      > <span class="text-white font-normal">Comprobantes</span> >
+      <span class="text-white text-xl font-medium">Visualizar Comprobantes</span>
+      </div>
+
+      <!-- Encabezado -->
+      <h1 class="text-2xl font-bold text-white mb-1">Visualizar Comprobantes de Pago</h1>
+      <p class="text-[#bec1c5] mb-4">Comprobantes de Pago generados en base a los cobros de pedidos</p>
+
+      <!-- Tarjeta de Filtros -->
+      <!-- Filtro -->
+        <div class="flex gap-2 mb-6">
+            <input type="text" placeholder="Código" class="px-3 py-1.5 border border-gray-300 bg-[#98D2C0] rounded-md w-[200px]" />
+            <button class="bg-indigo-500 text-white px-4 py-1.5 rounded-md cursor-pointer transition-colors hover:bg-indigo-600">
+                Filtrar
+            </button>
+        </div>
+
+        <!-- Tabla -->
+        <div class="bg-[#98D2C0] rounded-lg shadow-sm overflow-x-auto h-[calc(70vh-40px)]">
+            <table class="w-full border-collapse">
+                <thead>
+                    <tr class="bg-[#4F959D] text-white">
+                        <th class="px-4 py-3 text-center">Código</th>
+                        <th class="px-4 py-3 text-center">Método de Pago</th>
+                        <th class="px-4 py-3 text-center">Cliente</th>
+                        <th class="px-4 py-3 text-center">Monto</th>
+                        <th class="px-4 py-3 text-center">Visualizar Pago</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="border-t border-gray-200">
+                        <td class="px-4 py-3 text-center">*Cod*</td>
+                        <td class="px-4 py-3 text-center">*Método*</td>
+                        <td class="px-4 py-3 text-center">*Nombre*</td>
+                        <td class="px-4 py-3 text-center">*Monto*</td>
+                        <td class="px-4 py-3 text-center">
+                            <button class="bg-transparent border-none text-indigo-500 cursor-pointer text-xl hover:text-indigo-700" routerLink="/admin/details">
+                                <span class="material-symbols-rounded">visibility</span>
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="5" class="text-gray-400 text-center py-4">. . .</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+      </div>
+    </div>
+
+</section>
+

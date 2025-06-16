@@ -1,1 +1,87 @@
-<p>view-admin works!</p>
+
+
+<section class="flex inset-0 -z-10 h-screen w-screen bg-[#205781] bg-[radial-gradient(#2d6b8f_1px,transparent_1px)] [background-size:16px_16px]">
+  <!-- Sidebar -->
+  <app-sidebar-admin
+    (sidebarStateChange)="onSidebarToggle($event)"
+  ></app-sidebar-admin>
+
+  <!-- Contenido principal -->
+  <div class="flex h-full w-full transition-all duration-300"
+    [ngClass]="{
+      'ml-[90px]': sidebarCollapsed,
+      'ml-[240px]': !sidebarCollapsed
+    }">
+    
+    <!-- Columna izquierda (Gestión de Comprobantes) -->
+    <div class="w-[400px] p-6 overflow-y-auto">
+      <div class="relative bg-[#4F959D] rounded-xl border p-6 h-fit">
+        <span class="absolute top-0 left-0 mt-4 ml-4 text-lg font-semibold">
+          Gestión de Comprobantes
+        </span>
+
+        <div class="mt-10 bg-[#98D2C0] rounded-xl p-6 flex items-center justify-between shadow-sm w-full">
+          <div class="flex items-center gap-4 mr-5">
+            <span class="material-symbols-rounded text-2xl text-gray-600">receipt_long</span>
+            <span class="text-base font-medium text-gray-800">Visualizar Comprobantes</span>
+          </div>
+          <button
+            class="flex items-center gap-2 bg-indigo-500 text-white text-sm font-medium px-4 py-2 rounded-lg shadow hover:bg-indigo-600 transition duration-400 ease-in-out"
+            routerLink="/admin/receipts">
+            <span class="material-symbols-rounded text-base">visibility</span>
+            Ver
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Columna derecha (Perfil del Personal) - Ancho flexible  -->
+    <div class="flex-1 p-6 overflow-y-auto">
+      <!-- Tarjeta de perfil -->
+      <div class="rounded-xl border p-6 flex gap-4 items-center bg-[#4F959D] shadow-sm">
+        <!-- Círculo con ícono centrado -->
+        <div class="w-16 h-16 bg-[#98D2C0] rounded-full flex items-center justify-center">
+          <span class="material-symbols-rounded text-3xl">account_circle</span>
+        </div>
+
+        <!-- Frase personalizada -->
+        <div class="flex-1 rounded bg-[#98D2C0] p-3 flex justify-between items-center">
+          <span class="text-sm text-gray-700 font-medium italic">
+            Lorem ipsum dolor, sit amet consectetur adipisicing elit...
+          </span>
+          <button class="text-indigo-500 hover:text-gray-700">
+            <span class="material-symbols-rounded">settings</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Información del personal -->
+      <div class="rounded-xl border p-6 space-y-4 bg-[#4F959D] shadow-sm mt-6">
+        <div>
+          <label class="block text-base font-medium text-gray-800 mb-1">Nombre del Personal:</label>
+          <input
+            type="text"
+            class="w-full p-2 border border-[#F6F8D5] rounded-lg bg-[#98D2C0] text-sm text-gray-700"
+            placeholder="*Nombre del Personal*"
+          />
+        </div>
+        <div>
+          <label class="block text-base font-medium text-gray-800 mb-1">Cargo del Personal:</label>
+          <input
+            type="text"
+            class="w-full p-2 border border-[#F6F8D5] rounded-lg bg-[#98D2C0] text-sm text-gray-700"
+            placeholder="*Cargo del Personal*"
+          />
+        </div>
+        <div>
+          <label class="block text-base font-medium text-gray-800 mb-1">Correo Electrónico:</label>
+          <input
+            type="email"
+            class="w-full p-2 border border-[#F6F8D5] rounded-lg bg-[#98D2C0] text-sm text-gray-700"
+            placeholder="*Correo del Personal*"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
