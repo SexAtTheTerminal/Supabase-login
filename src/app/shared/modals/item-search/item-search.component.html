@@ -1,0 +1,32 @@
+<div
+  class="fixed inset-0 bg-black/30 flex items-center justify-center z-50 transition-opacity duration-300"
+>
+  <div
+    class="bg-white w-full max-w-md rounded-xl shadow-lg p-6 space-y-4 animate-scaleIn"
+  >
+    <div class="flex justify-between items-center mb-2">
+      <h2 class="text-lg font-semibold text-gray-800">Buscar ítems</h2>
+      <button (click)="close.emit()" class="text-gray-400 hover:text-gray-600">
+        <span class="material-symbols-rounded">close</span>
+      </button>
+    </div>
+
+    <input
+      type="text"
+      [(ngModel)]="searchTerm"
+      placeholder="Buscar por nombre..."
+      class="w-full border px-4 py-2 rounded focus:ring focus:ring-blue-300"
+    />
+
+    <ul class="max-h-60 overflow-y-auto divide-y text-sm">
+      <li
+        *ngFor="let item of filteredItems"
+        (click)="seleccionar(item)"
+        class="py-2 px-2 cursor-pointer hover:bg-blue-50 rounded flex justify-between"
+      >
+        <span>{{ item.descripcion }}</span>
+        <span class="text-gray-500">s/. {{ item.precio.toFixed(2) }}</span>
+      </li>
+    </ul>
+  </div>
+</div>

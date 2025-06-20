@@ -15,6 +15,12 @@
   rel="stylesheet"
 />
 
+<app-item-search
+  *ngIf="showItemSearch"
+  (close)="showItemSearch = false"
+  (itemSelected)="agregarItem2($event)"
+></app-item-search>
+
 <section
   class="flex w-screen h-screen bg-gray-200 bg-[radial-gradient(#B8B8B8_1px,transparent_1px)] [background-size:16px_16px]"
 >
@@ -62,9 +68,13 @@
             >Mesa</label
           >
           <select
+            [(ngModel)]="mesaSeleccionada"
             class="w-full border border-[#E0E0E0] bg-white rounded-md px-3 py-2 text-sm text-[#37474F] focus:outline-none focus:ring-2 focus:ring-[#90CAF9]"
           >
-            <option>Mesa</option>
+            <option value="" disabled selected>Seleccione una mesa</option>
+            <option *ngFor="let mesa of mesas">
+              {{ mesa }}
+            </option>
           </select>
         </div>
 
@@ -73,9 +83,13 @@
             >Modalidad</label
           >
           <select
+            [(ngModel)]="modalidadSeleccionada"
             class="w-full border border-[#E0E0E0] bg-white rounded-md px-3 py-2 text-sm text-[#37474F] focus:outline-none focus:ring-2 focus:ring-[#90CAF9]"
           >
-            <option>Modalidad</option>
+            <option value="" disabled selected>Seleccione una modalidad</option>
+            <option *ngFor="let modalidad of modalidades">
+              {{ modalidad }}
+            </option>
           </select>
         </div>
 
@@ -84,9 +98,11 @@
             >Cocinero</label
           >
           <select
+            [(ngModel)]="cocineroSeleccionado"
             class="w-full border border-[#E0E0E0] bg-white rounded-md px-3 py-2 text-sm text-[#37474F] focus:outline-none focus:ring-2 focus:ring-[#90CAF9]"
           >
-            <option>Cocinero</option>
+            <option value="" disabled selected>Seleccione un cocinero</option>
+            <option *ngFor="let cocinero of cocineros">{{ cocinero }}</option>
           </select>
         </div>
       </div>
@@ -95,64 +111,105 @@
       <div
         class="flex-1 bg-[#F9FAFC] p-0 rounded-xl border border-[#E5EAF2] overflow-hidden shadow-sm flex flex-col justify-between min-h-[300px]"
       >
-        <!-- Encabezado tabla -->
-        <div
-          class="grid grid-cols-6 text-xs font-medium text-[#546E7A] bg-[#EDF2FA] px-4 py-3 border-b border-[#E5EAF2]"
-        >
-          <span>Descripción</span>
-          <span>Tipo de ítem</span>
-          <span>Unidad</span>
-          <span>Cantidad</span>
-          <span>Precio</span>
-          <span></span>
-        </div>
+        <!-- Tabla con items -->
+        <ng-container *ngIf="items.length > 0; else estadoVacio">
+          <table class="w-full text-sm text-[#37474F]">
+            <thead
+              class="text-xs font-medium text-[#546E7A] bg-[#EDF2FA] border-b border-[#E5EAF2]"
+            >
+              <tr>
+                <th class="px-4 py-3 text-left">Descripción</th>
+                <th class="px-4 py-3 text-left">Tipo de ítem</th>
+                <th class="px-4 py-3 text-left">Unidad</th>
+                <th class="px-4 py-3 text-left">Cantidad</th>
+                <th class="px-4 py-3 text-left">Precio</th>
+                <th class="px-4 py-3"></th>
+              </tr>
+            </thead>
+            <tbody class="bg-white">
+              <tr *ngFor="let item of items" class="border-b border-[#E5EAF2]">
+                <td class="px-4 py-3">
+                  <p class="font-semibold text-[#1E88E5]">
+                    {{ item.descripcion }}
+                  </p>
+                  <p class="text-xs text-[#90A4AE]">Platos de fondo</p>
+                </td>
+                <td class="px-4 py-3">
+                  <span
+                    class="inline-block bg-[#E3F2FD] text-[#1E88E5] text-xs px-2 py-1 rounded"
+                    >{{ item.tipo }}</span
+                  >
+                </td>
+                <td class="px-4 py-3">{{ item.unidad }}</td>
+                <td class="px-4 py-3">
+                  <div class="flex items-center gap-2">
+                    <button
+                      (click)="actualizarCantidad(item, -1)"
+                      [disabled]="item.cantidad <= 1"
+                      class="text-[#1E88E5]"
+                    >
+                      −
+                    </button>
+                    <span>{{ item.cantidad }}</span>
+                    <button (click)="actualizarCantidad(item, 1)">+</button>
+                  </div>
+                </td>
+                <td class="px-4 py-3">
+                  <span class="font-medium text-[#1E88E5]"
+                    >S/ {{ item.subtotal }}</span
+                  >
+                </td>
+                <td class="px-4 py-3">
+                  <button
+                    (click)="eliminarItem(item)"
+                    class="text-red-500 hover:text-red-700"
+                  >
+                    <span class="material-symbols-rounded">delete</span>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </ng-container>
 
-        <!-- Estado vacío -->
-        <div
-          class="flex flex-col items-center justify-center flex-1 py-12 text-center text-[#90A4AE] space-y-2 bg-white"
-        >
-          <img
-            src="https://raw.githubusercontent.com/SexAtTheTerminal/mis-imagenes/refs/heads/main/empty_box.svg"
-            alt="Sin ítems"
-            class="w-24 h-24 opacity-70"
-          />
-          <p class="font-semibold text-[#455A64]">No hay ítems</p>
-          <p class="text-sm">
-            Aún no se han agregado ítems que podamos mostrarte
-          </p>
-          <button
-            class="flex items-center gap-2 px-4 py-2 border border-[#90CAF9] text-[#1E88E5] rounded hover:bg-[#E3F2FD] transition"
+        <!-- Estado vacío ocupa el fondo de toda la tabla -->
+        <ng-template #estadoVacio>
+          <div
+            class="flex flex-col items-center justify-center flex-1 py-12 text-center text-[#90A4AE] space-y-2 bg-white"
           >
-            <span class="material-symbols-rounded">add</span> Agregar ítems del
-            comercio
-          </button>
-        </div>
-
-        <!-- Fila de ítem dinámico (oculta si está vacío) -->
-        <!--
-        <div class="grid grid-cols-6 gap-2 items-center py-3 px-4 border-t border-[#E5EAF2] bg-white text-sm">
-          <input type="text" placeholder="*Cod Prod*" class="border rounded px-2 py-1 text-sm" />
-          <input type="text" placeholder="*Nombre P*" class="border rounded px-2 py-1 text-sm" />
-          <input type="text" placeholder="*Categoría*" class="border rounded px-2 py-1 text-sm" />
-          <input type="text" placeholder="s/.####" class="border rounded px-2 py-1 text-sm" />
-          <div class="flex items-center justify-center gap-1">
-            <button class="px-2 border rounded">
-              <span class="material-symbols-rounded text-sm">remove</span>
-            </button>
-            <input type="text" value="1" class="w-10 border rounded text-center text-sm" />
-            <button class="px-2 border rounded">
-              <span class="material-symbols-rounded text-sm">add</span>
+            <img
+              src="https://raw.githubusercontent.com/SexAtTheTerminal/mis-imagenes/refs/heads/main/empty_box.svg"
+              alt="Sin ítems"
+              class="w-24 h-24 opacity-70"
+            />
+            <p class="font-semibold text-[#455A64]">No hay ítems</p>
+            <p class="text-sm">
+              Aún no se han agregado ítems que podamos mostrarte
+            </p>
+            <button
+              (click)="showItemSearch = true"
+              class="flex items-center gap-2 px-4 py-2 border border-[#90CAF9] text-[#1E88E5] rounded hover:bg-[#E3F2FD] transition"
+            >
+              <span class="material-symbols-rounded">add</span> Agregar ítems
+              del comercio
             </button>
           </div>
-          <button class="text-red-500 hover:text-red-700">
-            <span class="material-symbols-rounded">delete</span>
-          </button>
-        </div>
-        -->
+        </ng-template>
 
-        <div class="flex justify-end p-4 bg-white border-t border-[#E5EAF2]">
+        <div
+          class="flex justify-between items-center p-4 bg-white border-t border-[#E5EAF2]"
+        >
           <button
-            class="px-4 py-2 bg-[#1E88E5] text-white rounded hover:bg-[#1565C0] transition"
+            (click)="limpiarItems()"
+            [disabled]="items.length === 0"
+            class="px-4 py-2 rounded transition text-white bg-[#1E88E5] hover:bg-[#1565C0] disabled:bg-gray-300 disabled:text-gray-600 disabled:cursor-not-allowed"
+          >
+            Limpiar lista
+          </button>
+          <button
+            (click)="limpiarItems()"
+            [disabled]="items.length === 0"
+            class="px-4 py-2 rounded transition text-white bg-[#1E88E5] hover:bg-[#1565C0] disabled:bg-gray-300 disabled:text-gray-600 disabled:cursor-not-allowed"
           >
             Confirmar selección
           </button>
