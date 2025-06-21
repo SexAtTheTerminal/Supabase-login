@@ -80,15 +80,16 @@
             </label>
             <div class="flex items-center gap-2">
               <!-- Ingreso del Dni -->
-              <input type="text" id="documento" placeholder="Digite el DNI de cliente"
+              <input type="text" [(ngModel)]="dni" maxlength="8" placeholder="Digite el DNI de cliente"
                      class="flex-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2.5" />
               <div class="flex flex-col sm:flex-row gap-4 justify-center">
                 <!-- Esperando integrar signal para realizar la llamada a la BD -->
-                <button class="bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-cyan-600 hover:to-blue-600 text-white font-semibold py-2 px-4 rounded-xl transition-all duration-300 transform hover:scale-105 hover:shadow-lg">
-                  Search
+                <button class="bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-cyan-600 hover:to-blue-600 text-white font-semibold py-2 px-4 rounded-xl transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
+                  (click)="buscarClientePorDni()"> Search
                 </button>
               </div>
             </div>
+            <div *ngIf="error" class="text-red-500 text-sm mt-2">{{ error }}</div>
           </div>
 
           <div>
@@ -101,10 +102,11 @@
             <div class="flex items-center gap-2">
               <!-- Debe traer la informacion de la BD (@for y @if) -->
               <input type="text" id="cliente" placeholder="Nombres"
-                     class="flex-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2.5" readonly />
+                     [(ngModel)]="clienteNombres" name="clienteNombres" class="flex-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2.5" readonly />
               <span class="text-xs text-gray-500">Autocompleta</span>
             </div>
           </div>
+          <div *ngIf="loading" class="text-blue-500 text-sm mt-2">Cargando...</div>
         </div>
 
         <div class="relative inline-block w-full">
@@ -176,7 +178,7 @@
 
     <!-- Imagen subida a un sevidor para usarlo y darle un poco de interaccion a la pagina -->
     <div class="w-full flex justify-center mt-20 mb-8">
-      <img src="https://i.ibb.co/V0f0yVTk/dar-dinero.png" alt="dar-dinero"
+      <img src="https://i.ibb.co/q388Lhj8/dar-dinero.png" alt="dar-dinero"
            class="w-40 h-40 object-contain animate-bounce"
            style="animation-duration: 2s; animation-iteration-count: infinite;">
     </div>
