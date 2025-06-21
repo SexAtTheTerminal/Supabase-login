@@ -18,7 +18,7 @@
 <app-item-search
   *ngIf="showItemSearch"
   (close)="showItemSearch = false"
-  (itemSelected)="agregarItem2($event)"
+  (itemSelected)="agregarItem($event)"
 ></app-item-search>
 
 <section
@@ -71,9 +71,9 @@
             [(ngModel)]="mesaSeleccionada"
             class="w-full border border-[#E0E0E0] bg-white rounded-md px-3 py-2 text-sm text-[#37474F] focus:outline-none focus:ring-2 focus:ring-[#90CAF9]"
           >
-            <option value="" disabled selected>Seleccione una mesa</option>
-            <option *ngFor="let mesa of mesas">
-              {{ mesa }}
+            <option value="null" disabled selected>Seleccione una mesa</option>
+            <option *ngFor="let mesa of mesas" [ngValue]="mesa">
+              {{ mesa.numeroMesa }}
             </option>
           </select>
         </div>
@@ -86,23 +86,10 @@
             [(ngModel)]="modalidadSeleccionada"
             class="w-full border border-[#E0E0E0] bg-white rounded-md px-3 py-2 text-sm text-[#37474F] focus:outline-none focus:ring-2 focus:ring-[#90CAF9]"
           >
-            <option value="" disabled selected>Seleccione una modalidad</option>
-            <option *ngFor="let modalidad of modalidades">
-              {{ modalidad }}
+            <option value="null" disabled selected>Seleccione una modalidad</option>
+            <option *ngFor="let modalidad of modalidades" [ngValue]="modalidad">
+              {{ modalidad.nombreModalidad }}
             </option>
-          </select>
-        </div>
-
-        <div>
-          <label class="block text-xs font-semibold text-[#546E7A] mb-1"
-            >Cocinero</label
-          >
-          <select
-            [(ngModel)]="cocineroSeleccionado"
-            class="w-full border border-[#E0E0E0] bg-white rounded-md px-3 py-2 text-sm text-[#37474F] focus:outline-none focus:ring-2 focus:ring-[#90CAF9]"
-          >
-            <option value="" disabled selected>Seleccione un cocinero</option>
-            <option *ngFor="let cocinero of cocineros">{{ cocinero }}</option>
           </select>
         </div>
       </div>
@@ -207,7 +194,7 @@
             Limpiar lista
           </button>
           <button
-            (click)="limpiarItems()"
+            (click)="registrarPedido()"
             [disabled]="items.length === 0"
             class="px-4 py-2 rounded transition text-white bg-[#1E88E5] hover:bg-[#1565C0] disabled:bg-gray-300 disabled:text-gray-600 disabled:cursor-not-allowed"
           >

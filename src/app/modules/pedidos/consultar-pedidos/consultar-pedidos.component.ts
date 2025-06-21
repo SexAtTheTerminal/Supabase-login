@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { DetallesPedidoComponent } from '../../../shared/modals/detalles-pedido/detalles-pedido.component';
 import { FormsModule } from '@angular/forms';
 import { TablaPedidosComponent } from '../../../shared/modals/tabla-pedidos/tabla-pedidos.component';
-import { ConsultarPedidosService } from '../../../services/data-access/consultar-pedidos.service';
+import { ConsultarPedidosService } from '../../../services/data-access/consultar-pedidos/consultar-pedidos.service';
 import { FiltrosPedidosComponent } from '../../../shared/modals/filtros-pedidos/filtros-pedidos.component';
 
 @Component({
@@ -44,8 +44,9 @@ export class ConsultarPedidosComponent implements OnInit {
     private readonly consultarPedidosService: ConsultarPedidosService
   ) {}
 
-  ngOnInit(): void {
-    this.pedidos = this.consultarPedidosService.obtenerPedidos();
+  async ngOnInit() {
+    this.pedidos = await this.consultarPedidosService.obtenerPedidosDesdeDB();
+    console.log(this.pedidos);
     this.aplicarFiltros();
   }
 
@@ -53,14 +54,14 @@ export class ConsultarPedidosComponent implements OnInit {
     const codigo = this.busquedaCodigo.toLowerCase();
     const estado = this.estadoSeleccionado;
 
-    // Filtrar por código y estado
+    // Filtrar por código y estado wasaaa
     this.pedidosFiltrados = this.pedidos.filter(
       (pedido) =>
         pedido.codigo.toLowerCase().includes(codigo) &&
         (estado ? pedido.estado === estado : true)
     );
 
-    // Ordenar por fecha según selección
+    // Ordenar por fecha wasaaaa
     this.pedidosFiltrados.sort((a, b) => {
       const fechaA = new Date(a.fecha);
       const fechaB = new Date(b.fecha);
@@ -91,13 +92,24 @@ export class ConsultarPedidosComponent implements OnInit {
     this.modalAbierto = false;
   }
 
-  eliminarPedido(pedido: any): void {
+  async eliminarPedido(pedido: any): Promise<void> {
     const confirmado = confirm(`¿Eliminar el pedido ${pedido.codigo}?`);
     if (!confirmado) return;
 
-    this.pedidos = this.pedidos.filter((p) => p.codigo !== pedido.codigo);
-    this.aplicarFiltros();
-    this.mostrarMensajeExito(`Pedido ${pedido.codigo} eliminado correctamente`);
+    const exito = await this.consultarPedidosService.eliminarPedido(
+      pedido.idPedido
+    );
+
+    if (exito) {
+      this.pedidos = this.pedidos.filter((p) => p.idPedido !== pedido.idPedido);
+      this.aplicarFiltros();
+
+      this.mostrarMensajeExito(
+        `Pedido ${pedido.codigo} eliminado correctamente`
+      );
+    } else {
+      alert('Ocurrió un error al eliminar el pedido');
+    }
   }
 
   mostrarMensajeExito(mensaje: string): void {
@@ -105,10 +117,10 @@ export class ConsultarPedidosComponent implements OnInit {
     setTimeout(() => (this.mensajeExito = ''), 3000);
   }
 
-  reiniciarFiltros(): void {
+  async reiniciarFiltros() {
     this.busquedaCodigo = '';
     this.estadoSeleccionado = '';
-    this.pedidos = this.consultarPedidosService.obtenerPedidos();
+    this.pedidos = await this.consultarPedidosService.obtenerPedidosDesdeDB();
     this.aplicarFiltros();
   }
 

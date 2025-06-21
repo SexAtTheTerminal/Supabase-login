@@ -1,26 +1,24 @@
-import { inject, Injectable } from "@angular/core";
-import { SupabaseService } from "../../shared/data-access/supabase.service";
-import { SignUpWithPasswordCredentials } from "@supabase/supabase-js";
+import { inject, Injectable } from '@angular/core';
+import { SupabaseService } from '../../shared/data-access/supabase.service';
+import { SignUpWithPasswordCredentials } from '@supabase/supabase-js';
 
 @Injectable({ providedIn: 'root' })
-
 export class AuthService {
-    
-    private _supabaseClient = inject(SupabaseService).supabaseClient;
+  private _supabaseClient = inject(SupabaseService).supabaseClient;
 
-    session() {
-        return this._supabaseClient.auth.getSession(); 
-    }
+  session() {
+    return this._supabaseClient.auth.getSession();
+  }
 
-    signUp(credentials: SignUpWithPasswordCredentials) {
-        return this._supabaseClient.auth.signUp(credentials);
-    }
+  signUp(credentials: SignUpWithPasswordCredentials) {
+    return this._supabaseClient.auth.signUp(credentials);
+  }
 
-    logIn(credentials: SignUpWithPasswordCredentials) {
-        return this._supabaseClient.auth.signInWithPassword(credentials);
-    }
+  logIn(credentials: SignUpWithPasswordCredentials) {
+    return this._supabaseClient.auth.signInWithPassword(credentials);
+  }
 
-    signOut() {
-        return this._supabaseClient.auth.signOut();
-    }
+  signOut() {
+    return this._supabaseClient.auth.signOut();
+  }
 }

@@ -51,7 +51,7 @@ export class TablaPedidosComponent {
 
   eliminarPedido(pedido: any) {
     this.eliminar.emit(pedido);
-    // Reiniciar a página 1 luego de eliminar un elemento
+    // Reiniciar a página 1 luego de eliminar un elemento :v
     this.pagina = 1;
     this.actualizarPaginacion();
   }
