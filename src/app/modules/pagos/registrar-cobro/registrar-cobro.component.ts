@@ -21,6 +21,7 @@ import { RegistrarCobroService } from '../../../services/data-access/registrar-c
 })
 
 export class RegistrarCobroComponent {
+  totalPaginas: number = 0;
   sidebarCollapsed = false;
   dni: string = '';
   clienteNombres: string = '';
@@ -32,6 +33,7 @@ export class RegistrarCobroComponent {
   totalPedido: number = 0;
   mensajeError: string | null = null;
   datosAregistrar: { idPedido: number, idModalidad: number }[] = [];
+  paginaActual: number = 0;
 
   constructor(
     private apiPeruService: ApiPeruService,
@@ -47,6 +49,7 @@ export class RegistrarCobroComponent {
   }
 
   // DNI API
+
   buscarClientePorDni(): void {
     this.clienteNombres = '';
     this.error = null;
@@ -90,14 +93,16 @@ export class RegistrarCobroComponent {
     });
   }
 
-  async mostrarPedidosMesas(mesaSeleccionada: { idMesa: number; numeroMesa: string } | null): Promise<void> {
+  async mostrarPedidosMesas(mesaSeleccionada: { idMesa: number; numeroMesa: string } | null, nPedido:number): Promise<void> {
     if (!mesaSeleccionada) return;
 
     try {
       const resultado = await this.registrarCobroService.obtenerPedidosdelaMesa(mesaSeleccionada.idMesa);
 
-      this.pedidoSeleccionado = resultado?.[0]?.items || [];
-      this.totalPedido = this.pedidoSeleccionado.reduce((total, item) => total + (item.precio || 0), 0);
+      this.pedidoSeleccionado = resultado?.[nPedido] || [];
+      this.totalPedido = this.pedidoSeleccionado.reduce((total, item) => total + (item.cantidad * item.precio || 0), 0);
+      this.paginaActual = nPedido + 1;
+      this.totalPaginas = resultado.length;
 
       console.log('Pedido seleccionado:', this.pedidoSeleccionado);
     } catch (error) {
@@ -147,4 +152,19 @@ export class RegistrarCobroComponent {
     return;
   }
 
+  paginaAnterior(mesaSeleccionada: { idMesa: number; numeroMesa: string } | null) {
+    if(this.paginaActual === 1)
+      return;
+
+    this.paginaActual = this.paginaActual - 1;
+    this.mostrarPedidosMesas(mesaSeleccionada, this.paginaActual - 1);
+  }
+
+  paginaSiguiente(mesaSeleccionada: { idMesa: number; numeroMesa: string } | null) {
+    if(this.paginaActual === this.totalPaginas)
+      return;
+
+    this.paginaActual = this.paginaActual + 1;
+    this.mostrarPedidosMesas(mesaSeleccionada, this.paginaActual - 1);
+  }
 }

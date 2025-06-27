@@ -11,16 +11,24 @@ export class RegistrarCobroService {
   async obtenerMesas(): Promise<any[]> {
     const { data, error } = await this._supabaseClient
       .from('Pedido')
-      .select(`idMesa`)
+      .select('idMesa')
+      .eq('estado', false)
       .order('idMesa', { ascending: true });
 
     if (error) {
       console.error('Error al obtener mesas:', error);
       return [];
-    } else {
-      return data as any[];
     }
+
+    // Tipar item para evitar el error de "implicitly has an any type"
+    const mesasUnicas = Array.from(new Set(data!.map((item: any) => item.idMesa)))
+      .map((idMesa) => ({ idMesa }));
+
+    return mesasUnicas;
   }
+
+
+
 
   async obtenerPedidosdelaMesa(mesa: number): Promise<any[]> {
     const { data, error } = await this._supabaseClient
@@ -44,15 +52,17 @@ export class RegistrarCobroService {
       return [];
     }
 
-    return data.map((pedido: any) => {
-      return {
-        items: pedido.DetallePedido.map((detalle: any) => ({
-          nombre: detalle.Producto?.nombreProducto || 'Producto desconocido',
-          cantidad: detalle.cantidad,
-          precio: detalle.Producto?.precio,
-        })),
-      };
-    });
+    console.log('Pedidos encontrados:', data);
+
+    const pedidosAgrupados = data.map((pedido: any) =>
+      pedido.DetallePedido.map((detalle: any) => ({
+        nombre: detalle.Producto?.nombreProducto || 'Producto desconocido',
+        cantidad: detalle.cantidad,
+        precio: detalle.Producto?.precio,
+      }))
+    );
+
+    return pedidosAgrupados;
   }
 
   async obtenerIds(mesa: number): Promise<any[]> {
@@ -83,7 +93,8 @@ export class RegistrarCobroService {
     montoTotal: number,
     dniCliente: string
   ): Promise<void> {
-    const { error } = await this._supabaseClient
+    // Registrar el pago
+    const { error: pagoError } = await this._supabaseClient
       .from('Pago')
       .insert({
         idPedido: idPedido,
@@ -92,11 +103,22 @@ export class RegistrarCobroService {
         dniCliente: dniCliente,
       });
 
-    if (error) {
-      console.error('Error al registrar el pago:', error);
+    if (pagoError) {
+      console.error('Error al registrar el pago:', pagoError);
       return;
     }
 
-    console.log('Pago registrado exitosamente');
+    const { error: pedidoError } = await this._supabaseClient
+      .from('Pedido')
+      .update({ estado: true })
+      .eq('idPedido', idPedido)
+      .select();
+
+    if (pedidoError) {
+      console.error('Error al actualizar el estado del pedido:', pedidoError);
+      return;
+    }
+
+    console.log('Pago registrado y estado del pedido actualizado exitosamente');
   }
 }

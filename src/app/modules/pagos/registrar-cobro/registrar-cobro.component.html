@@ -95,7 +95,7 @@
           >
           <select
             [(ngModel)]="mesaSeleccionada"
-            (ngModelChange)="mostrarPedidosMesas(mesaSeleccionada)"
+            (ngModelChange)="mostrarPedidosMesas(mesaSeleccionada, 0)"
             class="w-full border border-[#E0E0E0] bg-white rounded-md px-3 py-2 text-sm text-[#37474F] focus:outline-none focus:ring-2 focus:ring-[#90CAF9]"
           >
             <option [ngValue]="null" disabled>Seleccione una mesa</option>
@@ -127,25 +127,25 @@
 
       <!-- Columna derecha: Detalles del consumo -->
       <div class="flex flex-col border border-gray-300 rounded-lg p-4 bg-white shadow-sm h-full min-h-[300px]">
+        <!-- Cabecera -->
         <div class="grid grid-cols-3 gap-4 pb-3 mb-3 border-b-2 border-gray-200 font-semibold text-gray-700 text-sm md:text-base">
           <div class="col-span-1">Cantidad</div>
           <div class="col-span-1">Producto</div>
           <div class="col-span-1 text-right">Precio</div>
         </div>
 
+        <!-- Listado -->
         <div class="flex-grow space-y-3 overflow-y-auto pr-2 custom-scrollbar">
-
-          <div class="flex-grow space-y-3 overflow-y-auto pr-2 custom-scrollbar">
-            <div
-              *ngFor="let item of pedidoSeleccionado"
-              class="grid grid-cols-3 gap-4 items-center p-3 border border-gray-100 rounded-lg bg-white shadow-sm text-sm text-gray-800 hover:shadow-md transition-shadow duration-200"
-            >
-              <div class="col-span-1 font-medium text-gray-900">{{ item.cantidad }}</div>
-              <div class="col-span-1 text-gray-700">{{ item.nombre }}</div>
-              <div class="col-span-1 text-right font-semibold text-gray-900">S/. {{ item.precio }}</div>
-            </div>
+          <div
+            *ngFor="let item of pedidoSeleccionado"
+            class="grid grid-cols-3 gap-4 items-center p-3 border border-gray-100 rounded-lg bg-white shadow-sm text-sm text-gray-800 hover:shadow-md transition-shadow duration-200"
+          >
+            <div class="col-span-1 font-medium text-gray-900">{{ item.cantidad }}</div>
+            <div class="col-span-1 text-gray-700">{{ item.nombre }}</div>
+            <div class="col-span-1 text-right font-semibold text-gray-900">S/. {{ item.cantidad * item.precio }}</div>
           </div>
 
+          <!-- Mensaje vacío -->
           <div
             class="flex flex-col items-center justify-center text-gray-500 py-6"
             *ngIf="!pedidoSeleccionado || pedidoSeleccionado.length === 0"
@@ -157,7 +157,6 @@
             />
             <p>Seleccione una Mesa</p>
           </div>
-
         </div>
 
         <!-- Total -->
@@ -165,17 +164,37 @@
           <span class="text-lg font-semibold text-gray-800">Total</span>
           <span class="ml-4 text-2xl font-bold text-gray-900">S/. {{ totalPedido.toFixed(2) }}</span>
         </div>
+
+        <!-- 🔥 Controles de página -->
+        <div class="flex justify-between items-center mt-4">
+          <button
+            (click)="paginaAnterior(mesaSeleccionada)"
+            class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition"
+          >
+            Anterior
+          </button>
+
+          <span class="text-gray-600 font-medium">Pedido {{ paginaActual }} de {{ totalPaginas }}</span>
+
+          <button
+            (click)="paginaSiguiente(mesaSeleccionada)"
+            class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition"
+          >
+            Siguiente
+          </button>
+        </div>
       </div>
     </div>
 
-    <!-- Imagen animada final, como que no va :v
-    <div class="w-full flex justify-center mt-20 mb-8">
-      <img
-        src="https://i.ibb.co/q388Lhj8/dar-dinero.png"
-        alt="dar-dinero"
-        class="w-40 h-40 object-contain animate-bounce"
-        style="animation-duration: 2s; animation-iteration-count: infinite;"
-      />
-    </div> -->
+
+      <!-- Imagen animada final, como que no va :v
+      <div class="w-full flex justify-center mt-20 mb-8">
+        <img
+          src="https://i.ibb.co/q388Lhj8/dar-dinero.png"
+          alt="dar-dinero"
+          class="w-40 h-40 object-contain animate-bounce"
+          style="animation-duration: 2s; animation-iteration-count: infinite;"
+        />
+      </div> -->
   </div>
 </section>
