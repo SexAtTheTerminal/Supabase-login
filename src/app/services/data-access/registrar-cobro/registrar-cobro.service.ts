@@ -45,7 +45,8 @@ export class RegistrarCobroService {
         )
       `
       )
-      .eq('idMesa', mesa);
+      .eq('idMesa', mesa)
+      .eq('estado', false);
 
     if (error) {
       console.error('Error al obtener pedidos:', error);
@@ -74,12 +75,15 @@ export class RegistrarCobroService {
         idModalidad
       `
       )
-      .eq('idMesa', mesa);
+      .eq('idMesa', mesa)
+      .eq('estado', false);
 
     if (error) {
       console.error('Error al obtener pedidos:', error);
       return [];
     }
+
+    console.log('IDs encontrados:', data);
 
     return data.map((pedido: any) => ({
           idPedido: pedido.idPedido,

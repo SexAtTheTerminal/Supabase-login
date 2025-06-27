@@ -32,7 +32,7 @@ export class RegistrarCobroComponent {
   pedidoSeleccionado: { nombre: string; cantidad: number; precio: number }[] = [];
   totalPedido: number = 0;
   mensajeError: string | null = null;
-  datosAregistrar: { idPedido: number, idModalidad: number }[] = [];
+  datosAregistrar: { idPedido: number, idModalidad: number } | null = null;
   paginaActual: number = 0;
 
   constructor(
@@ -123,25 +123,24 @@ export class RegistrarCobroComponent {
 
     try {
       const resultado = await this.registrarCobroService.obtenerIds(mesaSeleccionada.idMesa);
-      this.datosAregistrar = resultado || [];
-      console.log(this.datosAregistrar);
+      this.datosAregistrar = resultado?.[this.paginaActual-1] || null;
+      console.log('Ids a registrar', this.datosAregistrar);
     } catch (error) {
       console.error('Error al obtener datos:', error);
       return;
     }
 
     try {
-      if (this.datosAregistrar && this.datosAregistrar.length > 0) {
-        for (const dato of this.datosAregistrar) {
-          await this.registrarCobroService.registrarPagoConPedidoCompleto(
-            dato.idPedido,
-            dato.idModalidad,
-            montoTotal,
-            dniCliente
-          );
-        }
+      if (this.datosAregistrar) {
+        await this.registrarCobroService.registrarPagoConPedidoCompleto(
+          this.datosAregistrar.idPedido,
+          this.datosAregistrar.idModalidad,
+          montoTotal,
+          dniCliente
+        );
       } else {
         this.mensajeError = 'No hay pedidos para registrar.';
+        return;
       }
     } catch (error) {
       console.error('Error al registrar cobro', error);
@@ -149,6 +148,7 @@ export class RegistrarCobroComponent {
     }
 
     alert('Pedido registrado correctamente');
+    window.location.reload();
     return;
   }
 
