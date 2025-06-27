@@ -54,4 +54,49 @@ export class RegistrarCobroService {
       };
     });
   }
+
+  async obtenerIds(mesa: number): Promise<any[]> {
+    const { data, error } = await this._supabaseClient
+      .from('Pedido')
+      .select(
+        `
+        idPedido,
+        idModalidad
+      `
+      )
+      .eq('idMesa', mesa);
+
+    if (error) {
+      console.error('Error al obtener pedidos:', error);
+      return [];
+    }
+
+    return data.map((pedido: any) => ({
+          idPedido: pedido.idPedido,
+          idModalidad: pedido.idModalidad,
+    }));
+  }
+
+  async registrarPagoConPedidoCompleto(
+    idPedido: number,
+    idMetodoPago: number,
+    montoTotal: number,
+    dniCliente: string
+  ): Promise<void> {
+    const { error } = await this._supabaseClient
+      .from('Pago')
+      .insert({
+        idPedido: idPedido,
+        idMetodoPago: idMetodoPago,
+        montoTotal: montoTotal,
+        dniCliente: dniCliente,
+      });
+
+    if (error) {
+      console.error('Error al registrar el pago:', error);
+      return;
+    }
+
+    console.log('Pago registrado exitosamente');
+  }
 }

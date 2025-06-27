@@ -30,7 +30,8 @@ export class RegistrarCobroComponent {
   mesaSeleccionada: { idMesa: number; numeroMesa: string } | null = null;
   pedidoSeleccionado: { nombre: string; cantidad: number; precio: number }[] = [];
   totalPedido: number = 0;
-  modalAbierto = false;
+  mensajeError: string | null = null;
+  datosAregistrar: { idPedido: number, idModalidad: number }[] = [];
 
   constructor(
     private apiPeruService: ApiPeruService,
@@ -105,5 +106,45 @@ export class RegistrarCobroComponent {
     }
   }
 
-  protected readonly parseInt = parseInt;
+  async registrarPago(
+    mesaSeleccionada: { idMesa: number; numeroMesa: string } | null,
+    montoTotal: number,
+    dniCliente: string
+  ) {
+    if (!mesaSeleccionada) {
+      this.mensajeError = 'Debe seleccionar una mesa.';
+      return;
+    }
+
+    try {
+      const resultado = await this.registrarCobroService.obtenerIds(mesaSeleccionada.idMesa);
+      this.datosAregistrar = resultado || [];
+      console.log(this.datosAregistrar);
+    } catch (error) {
+      console.error('Error al obtener datos:', error);
+      return;
+    }
+
+    try {
+      if (this.datosAregistrar && this.datosAregistrar.length > 0) {
+        for (const dato of this.datosAregistrar) {
+          await this.registrarCobroService.registrarPagoConPedidoCompleto(
+            dato.idPedido,
+            dato.idModalidad,
+            montoTotal,
+            dniCliente
+          );
+        }
+      } else {
+        this.mensajeError = 'No hay pedidos para registrar.';
+      }
+    } catch (error) {
+      console.error('Error al registrar cobro', error);
+      return;
+    }
+
+    alert('Pedido registrado correctamente');
+    return;
+  }
+
 }

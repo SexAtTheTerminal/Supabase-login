@@ -108,10 +108,21 @@
 
         <!-- Botón Confirmar -->
         <button
-          class="w-full py-3 px-6 bg-green-600 text-white font-semibold rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+          [disabled]="!clienteNombres"
+          (click)="registrarPago(mesaSeleccionada, totalPedido, dni)"
+          [ngClass]="{
+            'bg-gray-400 cursor-not-allowed': !clienteNombres,
+           'bg-green-600 hover:bg-green-700': clienteNombres
+           }"
+          class="w-full py-3 px-6 text-white font-semibold rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
         >
           Confirmar
         </button>
+
+        <div *ngIf="mensajeError" class="text-red-500 text-sm mt-2 text-center">
+          {{ mensajeError }}
+        </div>
+
       </div>
 
       <!-- Columna derecha: Detalles del consumo -->
