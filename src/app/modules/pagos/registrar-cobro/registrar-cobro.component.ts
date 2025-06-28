@@ -1,11 +1,9 @@
 import { Component } from '@angular/core';
 import { SidebarCasherComponent } from '../../../sidebar/features/sidebar-casher/sidebar-casher.component';
-import { NgClass } from '@angular/common';
+import { NgClass, NgIf, CommonModule } from '@angular/common';
 import { ApiPeruService } from '../../../shared/data-access/api-peru.service';
 import { catchError, throwError } from 'rxjs';
 import { FormsModule } from '@angular/forms';
-import { NgIf } from '@angular/common';
-import { CommonModule } from '@angular/common';
 import { RegistrarCobroService } from '../../../services/data-access/registrar-cobro/registrar-cobro.service';
 
 @Component({
