@@ -31,22 +31,22 @@
         </nav>
 
         <!-- Título -->
-        <h1 class="text-3xl font-bold text-white mb-8">Installer la comprobante</h1>
+        <h1 class="text-3xl font-bold text-white mb-8">Detalle del comprobante</h1>
 
         <!-- Sección de comprobante -->
         <div class="grid grid-cols-2 gap-4 mb-6">
             <!-- Detalles del comprobante -->
             <div class="grid grid-cols-[1fr_auto] gap-4 w-full bg-[#98D2C0] rounded-xl p-6 shadow-md">
                 <div>
-                    <h2 class="text-xl font-semibold text-[#0a3453] mb-4">Installer la comprobante</h2>
-                    <p><span class="font-medium text-[#0a3453] leading-10">Código de pago:</span> "Código"</p>
-                    <p><span class="font-medium text-[#0a3453] leading-10">Fecha de pago:</span> "Fecha de pago"</p>
-                    <p><span class="font-medium text-[#0a3453] leading-10">Monto pagado:</span> "Monto pagado"</p>
+                    <h2 class="text-xl font-semibold text-[#0a3453] mb-4">Detalle del comprobante</h2>
+                    <p><span class="font-medium text-[#0a3453] leading-10">Código de pago:</span> {{ pago?.codigo || 'No disponible' }}</p>
+                    <p><span class="font-medium text-[#0a3453] leading-10">Fecha de pago:</span> {{ (pago?.fecha | date:'medium') ?? 'No disponible' }}</p>
+                    <p><span class="font-medium text-[#0a3453] leading-10">Monto pagado:</span> S/ {{ pago?.monto?.toFixed(2) || '0.00' }}</p>
                 </div>
 
                 <!-- Columna derecha -->
                 <div class="min-w-[160px] max-w-[200px] flex flex-col justify-between">
-                    <p><span class="font-medium text-[#0a3453] leading-10">Nº Mesa:</span> *mesa*</p>
+                    <p><span class="font-medium text-[#0a3453] leading-10">Nº Mesa:</span> {{ pago?.mesa || '00' }}</p>
                     <div class="mt-4 ml-12">
                         <span class="material-symbols-rounded text-5xl text-[#5672bd]">sentiment_very_satisfied</span>
                     </div>
@@ -57,33 +57,50 @@
             </div>
 
             <!-- Información del cliente -->
-            <div class="w-full p-6 rounded-xl bg-[#98D2C0]">
-                <h2 class="text-xl font-semibold text-white mb-4">Información del Cliente</h2>
-                <p><strong><span class="material-symbols-rounded">person</span> Cliente:</strong> "Nombre del Cliente"</p>
-                <p><strong><span class="material-symbols-rounded">description</span> Documento:</strong> "Dígitos del DNI"</p>
-            </div>
+<div class="w-full p-6 rounded-xl bg-[#98D2C0]">
+    <h2 class="text-xl font-semibold text-white mb-4">Información del Cliente</h2>
+    <p class="flex items-center gap-2">
+        <strong><span class="material-symbols-rounded">person</span> Cliente:</strong> 
+        <span *ngIf="!cargandoCliente">{{ nombreCliente }}</span>
+        <span *ngIf="cargandoCliente" class="inline-block h-4 w-32 bg-gray-300 rounded animate-pulse"></span>
+    </p>
+    <p class="flex items-center gap-2">
+        <strong><span class="material-symbols-rounded">description</span> Documento:</strong> 
+        {{ pago?.dniCliente || 'No disponible' }}
+    </p>
+</div>
         </div>
 
         <h2 class="text-xl font-semibold text-white mb-4">Productos Incluidos</h2>
 
-            <!-- Tabla de productos -->
-            <div class="bg-[#98D2C0] rounded-lg shadow-sm overflow-x-auto h-[calc(45vh-40px)]">
-                <table class="w-full border-collapse">
-                    <thead>
-                        <tr>
-                            <th class="p-3 text-left bg-[#4F959D] text-white font-semibold text-sm">Cod Producto</th>
-                            <th class="p-3 text-left bg-[#4F959D] text-white font-semibold text-sm">Descripción</th>
-                            <th class="p-3 text-left bg-[#4F959D] text-white font-semibold text-sm">Monto</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td class="p-3 text-left border-b border-gray-200">*Cod*</td>
-                            <td class="p-3 text-left border-b border-gray-200">*Nombre Producto*</td>
-                            <td class="p-3 text-left border-b border-gray-200">*Monto*</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+<!-- Tabla de productos -->
+<div class="bg-[#98D2C0] rounded-lg shadow-sm overflow-x-auto h-[calc(45vh-40px)]">
+  <table class="w-full border-collapse">
+    <thead>
+      <tr>
+        <th class="p-3 text-left bg-[#4F959D] text-white font-semibold text-sm">Producto</th>
+        <th class="p-3 text-left bg-[#4F959D] text-white font-semibold text-sm">Descripción</th>
+        <th class="p-3 text-left bg-[#4F959D] text-white font-semibold text-sm">Cantidad</th>
+        <th class="p-3 text-left bg-[#4F959D] text-white font-semibold text-sm">Precio Unitario</th>
+        <th class="p-3 text-left bg-[#4F959D] text-white font-semibold text-sm">Subtotal</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngIf="cargandoProductos">
+        <td colspan="5" class="p-3 text-center">Cargando productos...</td>
+      </tr>
+      <tr *ngIf="!cargandoProductos && productos.length === 0">
+        <td colspan="5" class="p-3 text-center">No se encontraron productos</td>
+      </tr>
+      <tr *ngFor="let producto of productos" class="border-t border-[#4F959D]">
+        <td class="p-3">{{ producto.nombreProducto }}</td>
+        <td class="p-3">{{ producto.descripcionProducto || 'Sin descripción' }}</td>
+        <td class="p-3">{{ producto.cantidad }}</td>
+        <td class="p-3">S/ {{ producto.precioUnitario.toFixed(2) }}</td>
+        <td class="p-3">S/ {{ (producto.cantidad * producto.precioUnitario).toFixed(2) }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
     </div>
 </section>

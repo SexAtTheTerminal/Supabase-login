@@ -1,0 +1,83 @@
+<div class="bg-[#98D2C0] rounded-lg shadow overflow-hidden">
+  <!-- Tabla -->
+  <table
+    *ngIf="paginaActual.length > 0"
+    class="w-full table-auto"
+  >
+    <thead>
+      <tr class="bg-[#4F959D] text-white">
+        <th class="px-6 py-3">Código</th>
+        <th class="px-6 py-3">Método de Pago</th>
+        <th class="px-6 py-3">Cliente</th>
+        <th class="px-6 py-3">Monto</th>
+        <th class="px-6 py-3">Mesa</th>
+        <th class="px-6 py-3 text-center">Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        *ngFor="let pago of paginaActual"
+        class="border-t border-[#4F959D] hover:bg-[#8ac7b3] transition duration-150"
+      >
+        <td class="px-6 py-4 font-mono text-sm text-gray-800">
+          {{ pago.codigo }}
+        </td>
+        <td class="px-6 py-4 text-sm text-gray-700">{{ pago.metodoPago }}</td>
+        <td class="px-6 py-4 text-sm text-gray-700">{{ pago.cliente }}</td>
+        <td class="px-6 py-4 text-sm text-gray-700">
+          S/ {{ pago.monto.toFixed(2) }}
+        </td>
+        <td class="px-6 py-4 text-sm text-gray-700">{{ pago.mesa }}</td>
+        <td class="px-6 py-4 flex items-center justify-center gap-4">
+          <button
+            (click)="abrirDetalle(pago)"
+            class="text-blue-500 hover:text-blue-700"
+            title="Ver detalles"
+          >
+            <span class="material-symbols-rounded">visibility</span>
+          </button>
+          <button
+            (click)="eliminarPago(pago)"
+            class="text-red-500 hover:text-red-700"
+            title="Eliminar pago"
+          >
+            <span class="material-symbols-rounded">delete</span>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Estado vacío -->
+  <div
+    *ngIf="paginaActual.length === 0"
+    class="flex flex-col items-center justify-center text-gray-500 p-8"
+  >
+    <span class="material-symbols-rounded text-6xl text-gray-400 mb-2"
+      >receipt_long</span
+    >
+    <p class="text-lg font-medium">No se encontraron comprobantes</p>
+    <p class="text-sm text-gray-400">
+      Intenta con otro código o cambia el método de pago en el filtro.
+    </p>
+  </div>
+
+  <!-- Paginación -->
+  <div class="flex justify-between items-center p-4 bg-[#4F959D]" *ngIf="totalPaginas > 1">
+    <button
+      class="px-3 py-1 bg-[#98D2C0] rounded hover:bg-[#8ac7b3] text-gray-800"
+      (click)="paginaAnterior()"
+      [disabled]="pagina === 1"
+    >
+      Anterior
+    </button>
+    <p class="text-white">Página {{ pagina }} de {{ totalPaginas }}</p>
+    <button
+      class="px-3 py-1 bg-[#98D2C0] rounded hover:bg-[#8ac7b3] text-gray-800"
+      (click)="paginaSiguiente()"
+      [disabled]="pagina === totalPaginas"
+    >
+      Siguiente
+    </button>
+  </div>
+</div>
