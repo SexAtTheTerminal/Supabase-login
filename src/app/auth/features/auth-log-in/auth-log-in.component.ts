@@ -15,10 +15,10 @@ interface LogInForm{
   templateUrl: `./auth-log-in.component.html`,
   styleUrl: './auth-log-in.component.scss'
 })
-  
+
 
 export default class AuthLogInComponent {
-  
+
   private _formBuilder = inject(FormBuilder);
 
   private _authService = inject(AuthService);
@@ -44,10 +44,10 @@ export default class AuthLogInComponent {
         email: this.form.value.email ?? '',
         password: this.form.value.password ?? ''
       });
-      
+
       if (error) throw error;
 
-      this._router.navigateByUrl('/cashier');
+      this._router.navigateByUrl('/cooker');
     } catch (error) {
       if (error instanceof Error) {
         console.log(error);

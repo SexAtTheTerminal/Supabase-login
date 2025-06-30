@@ -1,16 +1,16 @@
 import { Component, OnInit } from '@angular/core';
-import { SidebarCasherComponent } from '../../../sidebar/features/sidebar-casher/sidebar-casher.component';
+import { SidebarCookerComponent } from '../../../sidebar/features/sidebar-cooker/sidebar-cooker.component';
 import { CommonModule } from '@angular/common';
 import { DetallesPedidoComponent } from '../../../shared/modals/detalles-pedido/detalles-pedido.component';
 import { FormsModule } from '@angular/forms';
 import { TablaPedidosComponent } from '../../../shared/modals/tabla-pedidos/tabla-pedidos.component';
-import { ConsultarPedidosService } from '../../../services/data-access/consultar-pedidos/consultar-pedidos.service';
+import { UpdatePedidosService } from '../../../services/data-access/consultar-pedidos/consultar-pedidos.service';
 import { FiltrosPedidosComponent } from '../../../shared/modals/filtros-pedidos/filtros-pedidos.component';
 
 @Component({
   selector: 'app-consultar-pedidos',
   imports: [
-    SidebarCasherComponent,
+    SidebarCookerComponent,
     CommonModule,
     DetallesPedidoComponent,
     FormsModule,
@@ -41,7 +41,7 @@ export class ConsultarPedidosComponent implements OnInit {
   resumen = { finalizados: 0, pendientes: 0 };
 
   constructor(
-    private readonly consultarPedidosService: ConsultarPedidosService
+    private readonly consultarPedidosService: UpdatePedidosService
   ) {}
 
   async ngOnInit() {

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { SidebarCasherComponent } from "../../../sidebar/features/sidebar-casher/sidebar-casher.component";
+import { SidebarCookerComponent } from "../../../sidebar/features/sidebar-casher/sidebar-casher.component";
 import { NgClass } from '@angular/common';
 import { ApiPeruService } from '../../../shared/data-access/api-peru.service';
 import { catchError, throwError } from 'rxjs';
@@ -11,7 +11,7 @@ import { RegistrarCobroService } from '../../../services/data-access/registrar-c
 @Component({
   selector: 'app-registrar-cobro',
   imports: [
-    SidebarCasherComponent,
+    SidebarCookerComponent,
     NgClass,
     FormsModule,
     CommonModule,

@@ -16,13 +16,14 @@ import { FormsModule } from '@angular/forms';
 })
 export class TablaUpdatePedidosComponent implements OnChanges {
   @Input() pedidos: any[] = [];
+  @Output() verDetalle = new EventEmitter<any>();
   @Output() estadoActualizado = new EventEmitter<{
     pedido: any;
     nuevoEstado: string;
   }>();
 
   pagina = 1;
-  elementosPorPagina = 5;
+  elementosPorPagina = 8;
   paginaActual: any[] = [];
   totalPaginas = 1;
 
@@ -59,6 +60,12 @@ export class TablaUpdatePedidosComponent implements OnChanges {
   confirmarCambioEstado(pedido: any) {
     if (pedido.estado !== pedido.estadoTemp) {
       this.estadoActualizado.emit({ pedido, nuevoEstado: pedido.estadoTemp });
+    } else {
+      alert('Este pedido ya tiene el estado seleccionado');
     }
+  }
+
+  abrirDetalle(pedido: any) {
+    this.verDetalle.emit(pedido);
   }
 }

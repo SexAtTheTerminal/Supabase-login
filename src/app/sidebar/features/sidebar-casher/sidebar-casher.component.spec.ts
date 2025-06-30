@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SidebarCasherComponent } from './sidebar-casher.component';
+import { SidebarCookerComponent } from './sidebar-casher.component';
 
 describe('SidebarCasherComponent', () => {
-  let component: SidebarCasherComponent;
-  let fixture: ComponentFixture<SidebarCasherComponent>;
+  let component: SidebarCookerComponent;
+  let fixture: ComponentFixture<SidebarCookerComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SidebarCasherComponent]
+      imports: [SidebarCookerComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(SidebarCasherComponent);
+    fixture = TestBed.createComponent(SidebarCookerComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

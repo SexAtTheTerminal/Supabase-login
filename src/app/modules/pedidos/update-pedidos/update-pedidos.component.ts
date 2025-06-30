@@ -2,9 +2,10 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { SidebarCookerComponent } from '../../../sidebar/features/sidebar-cooker/sidebar-cooker.component';
-import { ConsultarPedidosService } from '../../../services/data-access/consultar-pedidos/consultar-pedidos.service';
+import { UpdatePedidosService } from '../../../services/data-access/update-pedidos/update-pedidos.service';
 import { FiltrosPedidosComponent } from '../../../shared/modals/filtros-pedidos/filtros-pedidos.component';
 import { TablaUpdatePedidosComponent } from '../../../shared/modals/tabla-update-pedidos/tabla-update-pedidos.component';
+import { DetallesPedidoComponent } from '../../../shared/modals/detalles-pedido/detalles-pedido.component';
 
 @Component({
   selector: 'app-update-pedidos',
@@ -14,6 +15,7 @@ import { TablaUpdatePedidosComponent } from '../../../shared/modals/tabla-update
     SidebarCookerComponent,
     FiltrosPedidosComponent,
     TablaUpdatePedidosComponent,
+    DetallesPedidoComponent,
   ],
   templateUrl: './update-pedidos.component.html',
   styleUrl: './update-pedidos.component.scss',
@@ -29,14 +31,16 @@ export class UpdatePedidosComponent {
   // Datos
   pedidos: any[] = [];
   pedidosFiltrados: any[] = [];
+  pedidoSeleccionado: any = null;
 
   // Mensajes
   mensajeExito: string = '';
+  modalAbierto = false;
 
-  constructor(private consultarPedidosService: ConsultarPedidosService) {}
+  constructor(private UpdatePedidosService: UpdatePedidosService) {}
 
-  ngOnInit(): void {
-    this.pedidos = this.consultarPedidosService.obtenerPedidos();
+  async ngOnInit(): Promise<void> {
+    this.pedidos = await this.UpdatePedidosService.obtenerPedidos();
     this.aplicarFiltros();
   }
 
@@ -63,11 +67,11 @@ export class UpdatePedidosComponent {
     this.pedidosFiltrados = filtrados;
   }
 
-  reiniciarFiltros(): void {
+  async reiniciarFiltros(): Promise<void> {
     this.busquedaCodigo = '';
     this.estadoSeleccionado = '';
     this.ordenFecha = 'reciente';
-    this.pedidos = this.consultarPedidosService.obtenerPedidos();
+    this.pedidos = await this.UpdatePedidosService.obtenerPedidos();
     this.aplicarFiltros();
   }
 
@@ -76,11 +80,14 @@ export class UpdatePedidosComponent {
       (p) => p.codigo === event.pedido.codigo
     );
     if (index !== -1) {
-      this.pedidos[index].estado = event.nuevoEstado;
-      this.mostrarMensajeExito(
-        `Estado de pedido ${event.pedido.codigo} actualizado a "${event.nuevoEstado}"`
-      );
-      this.aplicarFiltros();
+        this.UpdatePedidosService.actualizarEstadoPedido(event.pedido);
+        this.mostrarMensajeExito(
+          `Estado de pedido ${event.pedido.codigo} actualizado a "${event.nuevoEstado}"`
+        );
+      setTimeout(() => {
+        alert('Pedido actualizado correctamente');
+        window.location.reload();
+      }, 2000);
     }
   }
 
@@ -91,5 +98,13 @@ export class UpdatePedidosComponent {
 
   onSidebarToggle(state: boolean): void {
     this.sidebarCollapsed = state;
+  }
+
+  abrirModal(pedido: any): void {
+    this.pedidoSeleccionado = pedido;
+    this.modalAbierto = true;
+  }
+  cerrarModal(): void {
+    this.modalAbierto = false;
   }
 }

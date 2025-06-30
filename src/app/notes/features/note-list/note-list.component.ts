@@ -2,12 +2,12 @@ import { AfterViewInit, Component, inject } from '@angular/core';
 import { AuthService } from '../../../auth/data-access/auth.service';
 import { Router, RouterLink } from '@angular/router';
 import { NotesService } from '../../data-access/notes.service';
-import { SidebarCasherComponent } from "../../../sidebar/features/sidebar-casher/sidebar-casher.component";
+import { SidebarCookerComponent } from "../../../sidebar/features/sidebar-casher/sidebar-casher.component";
 
 @Component({
   selector: 'app-note-list',
   standalone: true,
-  imports: [SidebarCasherComponent],
+  imports: [SidebarCookerComponent],
   templateUrl: './note-list.component.html',
 })
 export default class NoteListComponent implements AfterViewInit{
@@ -22,7 +22,7 @@ export default class NoteListComponent implements AfterViewInit{
     await this._authService.signOut();
     this._router.navigateByUrl('/auth/log-in');
   }
-  
+
   ngAfterViewInit() {
     this.notesService.getAllNotes();
   }

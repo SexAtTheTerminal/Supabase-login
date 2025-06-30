@@ -10,7 +10,7 @@ import { CommonModule } from '@angular/common';
   templateUrl: './sidebar-casher.component.html',
   styleUrl: './sidebar-casher.component.scss',
 })
-export class SidebarCasherComponent {
+export class SidebarCookerComponent {
   private _authService = inject(AuthService);
 
   private _router = inject(Router);

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { SidebarCasherComponent } from '../../../sidebar/features/sidebar-casher/sidebar-casher.component';
+import { SidebarCookerComponent } from '../../../sidebar/features/sidebar-casher/sidebar-casher.component';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -28,7 +28,7 @@ interface Modalidad {
 @Component({
   selector: 'app-registrar-pedidos',
   imports: [
-    SidebarCasherComponent,
+    SidebarCookerComponent,
     CommonModule,
     RouterLink,
     FormsModule,
@@ -78,13 +78,13 @@ export class RegistrarPedidosComponent implements OnInit {
       this.mesaSeleccionada!.idMesa,
       this.modalidadSeleccionada!.idModalidad,
       montoTotal,
-      false, 
+      false,
       this.items
     );
 
     if (exito) {
       alert('Pedido registrado correctamente');
-      this.limpiarVentana(); 
+      this.limpiarVentana();
     } else {
       alert('Ocurrió un error al registrar el pedido');
     }

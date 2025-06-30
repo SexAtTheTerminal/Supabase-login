@@ -90,19 +90,7 @@
           class="overflow-hidden transition-all duration-400 ease-in-out"
           [style.maxHeight]="isPedidosOpen ? '250px' : '0px'"
         >
-          <ul id="dropdown-menu" class="list-none pl-[10px] h-[87px]">
-            <li id="nav-item" class="mt-2 mb-1">
-              <a
-                routerLink="/cashier/pedidos/consultar-pedidos"
-                class="nav-link w-[200px] h-[40px] flex gap-[12px] items-center text-indigo-500 rounded-[8px] hover:bg-gray-200 focus:outline-2 focus:outline-offset-2 transition"
-                onclick="this.blur()"
-              >
-                <span class="material-symbols-rounded pl-2"
-                  >content_paste_search</span
-                >
-                <span class="nav-label">Consultar Pedidos</span>
-              </a>
-            </li>
+          <ul id="dropdown-menu" class="list-none pl-[10px] py-1">
             <li id="nav-item" class="">
               <a
                 routerLink="/cashier/pedidos/registrar-pedidos"
