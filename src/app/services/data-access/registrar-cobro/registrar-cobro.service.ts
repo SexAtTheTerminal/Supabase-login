@@ -55,7 +55,7 @@ export class RegistrarCobroService {
 
     const pedidosAgrupados = data.map((pedido: any) =>
       pedido.DetallePedido.map((detalle: any) => ({
-        nombre: detalle.Producto?.nombreProducto || 'Producto desconocido',
+        nombre: detalle.Producto?.nombreProducto ?? 'Producto desconocido',
         cantidad: detalle.cantidad,
         precio: detalle.Producto?.precio,
       }))

@@ -33,10 +33,12 @@ export class UpdatePedidosComponent {
   // Mensajes
   mensajeExito: string = '';
 
-  constructor(private consultarPedidosService: ConsultarPedidosService) {}
+  constructor(
+    private readonly consultarPedidosService: ConsultarPedidosService
+  ) {}
 
-  ngOnInit(): void {
-    this.pedidos = this.consultarPedidosService.obtenerPedidos();
+  async ngOnInit(): Promise<void> {
+    this.pedidos = await this.consultarPedidosService.obtenerPedidosDesdeDB();
     this.aplicarFiltros();
   }
 
@@ -63,11 +65,11 @@ export class UpdatePedidosComponent {
     this.pedidosFiltrados = filtrados;
   }
 
-  reiniciarFiltros(): void {
+  async reiniciarFiltros(): Promise<void> {
     this.busquedaCodigo = '';
     this.estadoSeleccionado = '';
     this.ordenFecha = 'reciente';
-    this.pedidos = this.consultarPedidosService.obtenerPedidos();
+    this.pedidos = await this.consultarPedidosService.obtenerPedidosDesdeDB();
     this.aplicarFiltros();
   }
 

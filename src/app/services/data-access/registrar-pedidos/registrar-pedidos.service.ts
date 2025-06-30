@@ -1,11 +1,23 @@
 import { Injectable, inject } from '@angular/core';
 import { SupabaseService } from '../../../shared/data-access/supabase.service';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class RegistrarPedidosService {
-  private _supabaseClient = inject(SupabaseService).supabaseClient;
+  private readonly _supabaseClient = inject(SupabaseService).supabaseClient;
+
+  // Notificador para nuevo pedido registrado
+  private readonly pedidoRegistradoSubject = new BehaviorSubject<void>(
+    undefined
+  );
+  pedidoRegistrado$ = this.pedidoRegistradoSubject.asObservable();
+
+  // Llamar cuando se registre un nuevo pedido
+  notificarNuevoPedido() {
+    this.pedidoRegistradoSubject.next();
+  }
 
   constructor() {}
 
@@ -66,21 +78,35 @@ export class RegistrarPedidosService {
       return false;
     }
 
+    // Actualizar estado de la mesa a ocupado (false)
+    const { error: errorMesa } = await this._supabaseClient
+      .from('Mesa')
+      .update({ estado: false })
+      .eq('idMesa', idMesa);
+    console.log('Actualizando mesa:', idMesa);
+
+    if (errorMesa) {
+      console.error('Error al actualizar el estado de la mesa:', errorMesa);
+      return false;
+    }
+
     console.log('Pedido y detalles registrados con éxito');
+    this.notificarNuevoPedido(); // Notificar a los suscriptores
     return true;
   }
 
   async obtenerMesas(): Promise<any[]> {
     const { data, error } = await this._supabaseClient
       .from('Mesa')
-      .select(`idMesa, numeroMesa `);
+      .select(`idMesa, numeroMesa`)
+      .eq('estado', true); // Solo mesas desocupadas
 
     if (error) {
       console.error('Error al obtener mesas:', error);
       return [];
-    } else {
-      return data as any[];
     }
+
+    return data as any[];
   }
 
   async obtenerModalidad(): Promise<any[]> {
@@ -115,12 +141,35 @@ export class RegistrarPedidosService {
       id: producto.idProducto,
       descripcion: producto.nombreProducto,
       precio: producto.precio,
-      tipo: producto.Categoria?.nombreCategoria || 'Sin categoría',
-      unidad: 'PLATO',
+      tipo: producto.Categoria?.nombreCategoria ?? 'Sin categoría',
+      unidad: 'CARTA',
       cantidad: 1,
       precioUnitario: producto.precio,
       subtotal: producto.precio,
       seleccionado: false,
     }));
+  }
+
+  async obtenerUltimoIdPedido(): Promise<number | null> {
+    const { data, error } = await this._supabaseClient
+      .from('Pedido')
+      .select('idPedido')
+      .order('idPedido', { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    if (error) {
+      console.error('Error al obtener el último ID de pedido:', error);
+      return null;
+    }
+
+    return data?.idPedido ?? null;
+  }
+
+  async generarNuevoCodigoPedido(): Promise<string> {
+    const ultimoId = await this.obtenerUltimoIdPedido();
+    const nuevoId = (ultimoId ?? 0) + 1;
+
+    return `PD-${nuevoId.toString().padStart(8, '0')}`;
   }
 }

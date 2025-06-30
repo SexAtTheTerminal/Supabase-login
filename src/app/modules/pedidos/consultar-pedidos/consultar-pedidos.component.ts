@@ -46,7 +46,6 @@ export class ConsultarPedidosComponent implements OnInit {
 
   async ngOnInit() {
     this.pedidos = await this.consultarPedidosService.obtenerPedidosDesdeDB();
-    console.log(this.pedidos);
     this.aplicarFiltros();
   }
 

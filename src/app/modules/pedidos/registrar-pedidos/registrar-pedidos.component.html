@@ -17,8 +17,10 @@
 
 <app-item-search
   *ngIf="showItemSearch"
+  [itemsYaSeleccionados]="items"
   (close)="showItemSearch = false"
   (itemSelected)="agregarItem($event)"
+  (itemsSeleccionados)="agregarItemsMultiples($event)"
 ></app-item-search>
 
 <section
@@ -57,16 +59,12 @@
         class="w-1/4 bg-[#F9FAFC] p-4 rounded-xl border border-[#E5EAF2] shadow-sm space-y-4"
       >
         <div>
-          <label class="block text-xs font-semibold text-[#546E7A]"
-            >Cod Pedido</label
-          >
-          <p class="text-sm text-[#90A4AE] italic">*Código automático*</p>
+          <p class="block text-xs font-semibold text-[#546E7A]">Cod Pedido</p>
+          <p class="text-sm text-[#90A4AE] italic">{{ nuevoCodigo }}</p>
         </div>
 
         <div>
-          <label class="block text-xs font-semibold text-[#546E7A] mb-1"
-            >Mesa</label
-          >
+          <p class="block text-xs font-semibold text-[#546E7A] mb-1">Mesa</p>
           <select
             [(ngModel)]="mesaSeleccionada"
             class="w-full border border-[#E0E0E0] bg-white rounded-md px-3 py-2 text-sm text-[#37474F] focus:outline-none focus:ring-2 focus:ring-[#90CAF9]"
@@ -79,14 +77,16 @@
         </div>
 
         <div>
-          <label class="block text-xs font-semibold text-[#546E7A] mb-1"
-            >Modalidad</label
-          >
+          <p class="block text-xs font-semibold text-[#546E7A] mb-1">
+            Modalidad
+          </p>
           <select
             [(ngModel)]="modalidadSeleccionada"
             class="w-full border border-[#E0E0E0] bg-white rounded-md px-3 py-2 text-sm text-[#37474F] focus:outline-none focus:ring-2 focus:ring-[#90CAF9]"
           >
-            <option value="null" disabled selected>Seleccione una modalidad</option>
+            <option value="null" disabled selected>
+              Seleccione una modalidad
+            </option>
             <option *ngFor="let modalidad of modalidades" [ngValue]="modalidad">
               {{ modalidad.nombreModalidad }}
             </option>
@@ -184,8 +184,9 @@
         </ng-template>
 
         <div
-          class="flex justify-between items-center p-4 bg-white border-t border-[#E5EAF2]"
+          class="flex gap-3 items-center p-4 bg-white border-t border-[#E5EAF2]"
         >
+          <!-- Botón: Limpiar lista -->
           <button
             (click)="limpiarItems()"
             [disabled]="items.length === 0"
@@ -193,6 +194,18 @@
           >
             Limpiar lista
           </button>
+
+          <!-- Botón: Agregar más ítems (solo si hay al menos un ítem) -->
+          <button
+            *ngIf="items.length > 0"
+            (click)="showItemSearch = true"
+            class="flex-1 px-4 py-2 rounded transition border border-[#90CAF9] text-[#1E88E5] bg-white hover:bg-[#E3F2FD] flex items-center justify-center"
+          >
+            <span class="material-symbols-rounded align-middle mr-1">add</span>
+            Agregar ítems
+          </button>
+
+          <!-- Botón: Confirmar selección -->
           <button
             (click)="registrarPedido()"
             [disabled]="items.length === 0"

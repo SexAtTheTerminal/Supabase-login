@@ -45,14 +45,37 @@ export class RegistrarPedidosComponent implements OnInit {
   showItemSearch = false;
   modalidadSeleccionada: Modalidad | null = null;
   mesaSeleccionada: Mesa | null = null;
+  ultimoId!: number | null;
+  nuevoCodigo: string = '';
 
   constructor(
     private readonly registrarPedidosService: RegistrarPedidosService
   ) {}
 
-  async ngOnInit() {
-    this.mesas = await this.registrarPedidosService.obtenerMesas();
-    this.modalidades = await this.registrarPedidosService.obtenerModalidad();
+  async ngOnInit(): Promise<void> {
+    try {
+      const [mesas, modalidades, ultimoId] = await Promise.all([
+        this.registrarPedidosService.obtenerMesas(),
+        this.registrarPedidosService.obtenerModalidad(),
+        this.registrarPedidosService.obtenerUltimoIdPedido(),
+      ]);
+
+      this.mesas = mesas;
+      this.modalidades = modalidades;
+      this.ultimoId = ultimoId;
+
+      this.nuevoCodigo =
+        await this.registrarPedidosService.generarNuevoCodigoPedido();
+
+      // Suscribirse para actualizar automáticamente el código
+      this.registrarPedidosService.pedidoRegistrado$.subscribe(async () => {
+        this.nuevoCodigo =
+          await this.registrarPedidosService.generarNuevoCodigoPedido();
+      });
+    } catch (error) {
+      console.error('Error en ngOnInit:', error);
+      this.nuevoCodigo = 'PD-????????';
+    }
   }
 
   onSidebarToggle(state: boolean): void {
@@ -71,6 +94,21 @@ export class RegistrarPedidosComponent implements OnInit {
     }
   }
 
+  agregarItemsMultiples(itemsPopup: any[]) {
+    const idsPopup = new Set(itemsPopup.map((item) => item.id));
+
+    // Elimina los que ya no están seleccionados
+    this.items = this.items.filter((item) => idsPopup.has(item.id));
+
+    // Agrega los nuevos
+    for (const nuevo of itemsPopup) {
+      const yaExiste = this.items.find((item) => item.id === nuevo.id);
+      if (!yaExiste) {
+        this.items.push({ ...nuevo });
+      }
+    }
+  }
+
   async registrarPedido() {
     const montoTotal = this.items.reduce((acc, item) => acc + item.subtotal, 0);
     console.log(montoTotal);
@@ -78,13 +116,13 @@ export class RegistrarPedidosComponent implements OnInit {
       this.mesaSeleccionada!.idMesa,
       this.modalidadSeleccionada!.idModalidad,
       montoTotal,
-      false, 
+      false,
       this.items
     );
 
     if (exito) {
       alert('Pedido registrado correctamente');
-      this.limpiarVentana(); 
+      await this.limpiarVentana();
     } else {
       alert('Ocurrió un error al registrar el pedido');
     }
@@ -95,7 +133,7 @@ export class RegistrarPedidosComponent implements OnInit {
   }
 
   incrementarCantidad(item: any) {
-    if (item.cantidad == null) item.cantidad = 0;
+    item.cantidad ??= 0;
     item.cantidad++;
   }
 
@@ -108,9 +146,20 @@ export class RegistrarPedidosComponent implements OnInit {
     this.items = [];
   }
 
-  limpiarVentana() {
+  async limpiarVentana(): Promise<void> {
     this.items = [];
     this.mesaSeleccionada = null;
     this.modalidadSeleccionada = null;
+
+    try {
+      this.mesas = await this.registrarPedidosService.obtenerMesas(); // Actualiza mesas desocupadas
+      this.ultimoId =
+        await this.registrarPedidosService.obtenerUltimoIdPedido();
+      this.nuevoCodigo =
+        await this.registrarPedidosService.generarNuevoCodigoPedido();
+    } catch (error) {
+      console.error('Error al reiniciar datos del pedido:', error);
+      this.nuevoCodigo = 'PD-????????';
+    }
   }
 }
