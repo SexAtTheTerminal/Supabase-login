@@ -11,6 +11,7 @@ import { RedirectComponent } from '../../../shared/components/redirect/redirect.
 import { ViewAdminComponent } from '../view-admin/view-admin.component';
 import { DetailsComponent } from '../../../modules/comprobantes/details/details.component';
 import { ReceiptsComponent } from '../../../modules/comprobantes/receipts/receipts.component';
+import { RecordComponent } from '../../../modules/comprobantes/record/record.component';
 
 export default [
   {
@@ -62,6 +63,10 @@ export default [
     path: 'admin/receipts',
     canActivate: [roleGuard(['Administrador'])],
     component: ReceiptsComponent,
+  },
+  {
+    path: 'admin/record',
+    component: RecordComponent,
   },
   {
     path: '**',

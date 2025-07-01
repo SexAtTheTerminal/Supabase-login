@@ -1,0 +1,194 @@
+  <div class="fixed inset-0 flex items-center justify-center z-50 bg-black/50">
+    <div class="bg-[#4F959D] rounded-xl border p-6 w-full max-w-4xl mx-4 shadow-lg">
+      <!-- Encabezado -->
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-semibold text-white">{{titulo}}</h2>
+        <button (click)="closeModal()" class="text-white hover:text-gray-200">
+          <span class="material-symbols-rounded text-2xl">close</span>
+        </button>
+      </div>
+    <!-- Mensaje de error -->
+    <div *ngIf="errorMessage" class="mb-4 p-3 bg-red-100 text-red-700 rounded-lg">
+      {{errorMessage}}
+    </div>
+
+    <!-- Formulario -->
+    <form (ngSubmit)="onSubmit()" class="space-y-6">
+      <!-- Sección Datos Personales -->
+      <div class="bg-[#98D2C0] rounded-xl p-6">
+        <h3 class="text-lg font-medium text-gray-800 mb-4 border-b border-[#F6F8D5] pb-2">Datos personales</h3>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Columna izquierda -->
+          <div class="space-y-5">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Nombres *</label>
+              <input 
+                type="text" 
+                [(ngModel)]="usuarioData.nombre" 
+                name="nombre"
+                class="w-full p-2.5 border border-[#F6F8D5] rounded-lg bg-white text-sm text-gray-700" 
+                placeholder="Ingresar nombres">
+            </div>
+            
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Apellido Paterno *</label>
+              <input 
+                type="text" 
+                [(ngModel)]="usuarioData.apellidoPaterno" 
+                name="apellidoPaterno"
+                class="w-full p-2.5 border border-[#F6F8D5] rounded-lg bg-white text-sm text-gray-700" 
+                placeholder="Ingresar apellido">
+            </div>
+            
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Fecha de Nacimiento</label>
+              <input 
+                type="date" 
+                [(ngModel)]="usuarioData.fechaNacimiento" 
+                name="fechaNacimiento"
+                class="w-full p-2.5 border border-[#F6F8D5] rounded-lg bg-white text-sm text-gray-700">
+            </div>
+          </div>
+          
+          <!-- Columna derecha -->
+          <div class="space-y-5">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Apellido Materno</label>
+              <input 
+                type="text" 
+                [(ngModel)]="usuarioData.apellidoMaterno" 
+                name="apellidoMaterno"
+                class="w-full p-2.5 border border-[#F6F8D5] rounded-lg bg-white text-sm text-gray-700" 
+                placeholder="Ingresar apellido">
+            </div>
+            
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Email *</label>
+              <input 
+                type="email" 
+                [(ngModel)]="usuarioData.email" 
+                name="email"
+                class="w-full p-2.5 border border-[#F6F8D5] rounded-lg bg-white text-sm text-gray-700" 
+                placeholder="Ingresar correo">
+            </div>
+            
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Teléfono</label>
+              <input 
+                type="tel" 
+                [(ngModel)]="usuarioData.telefono" 
+                name="telefono"
+                class="w-full p-2.5 border border-[#F6F8D5] rounded-lg bg-white text-sm text-gray-700" 
+                placeholder="Ingresar números">
+            </div>
+          </div>
+        </div>
+
+        <!-- Fila inferior (DNI y Cargo) -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-5">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">DNI *</label>
+            <input 
+              type="text" 
+              [(ngModel)]="usuarioData.dni" 
+              name="dni"
+              class="w-full p-2.5 border border-[#F6F8D5] rounded-lg bg-white text-sm text-gray-700" 
+              placeholder="Ingresar DNI">
+          </div>
+          
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Cargo *</label>
+            <select 
+              [(ngModel)]="usuarioData.idCargo" 
+              name="idCargo"
+              class="w-full p-2.5 border border-[#F6F8D5] rounded-lg bg-white text-sm text-gray-700">
+              <option [value]="null">Seleccionar cargo</option>
+              <option *ngFor="let cargo of cargos" [value]="cargo.idCargo">{{cargo.nombreCargo}}</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Línea divisoria -->
+      <div class="border-t border-[#F6F8D5] my-4"></div>
+
+      <!-- Sección Datos del Usuario -->
+      <div class="bg-[#98D2C0] rounded-xl p-6">
+        <h3 class="text-lg font-medium text-gray-800 mb-4 border-b border-[#F6F8D5] pb-2">Datos del usuario</h3>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div class="md:col-span-2">
+            <label class="block text-sm font-medium text-gray-700 mb-1">Email (usuario) *</label>
+            <input 
+              type="email" 
+              [(ngModel)]="usuarioData.email" 
+              name="email"
+              class="w-full p-2.5 border border-[#F6F8D5] rounded-lg bg-white text-sm text-gray-700" 
+              placeholder="Ingresar email">
+          </div>
+          
+          <div *ngIf="!isEditing">
+            <label class="block text-sm font-medium text-gray-700 mb-1">Contraseña *</label>
+            <input 
+              type="password" 
+              [(ngModel)]="usuarioData.password" 
+              name="password"
+              class="w-full p-2.5 border border-[#F6F8D5] rounded-lg bg-white text-sm text-gray-700" 
+              placeholder="Ingresar contraseña">
+          </div>
+
+          <div *ngIf="!isEditing">
+            <label class="block text-sm font-medium text-gray-700 mb-1">Confirmar Contraseña *</label>
+            <input 
+              type="password" 
+              [(ngModel)]="usuarioData.confirmPassword" 
+              name="confirmPassword"
+              class="w-full p-2.5 border border-[#F6F8D5] rounded-lg bg-white text-sm text-gray-700" 
+              placeholder="Confirmar contraseña">
+          </div>
+          
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Rol *</label>
+            <select 
+              [(ngModel)]="usuarioData.idRol" 
+              name="idRol"
+              class="w-full p-2.5 border border-[#F6F8D5] rounded-lg bg-white text-sm text-gray-700">
+              <option [value]="null">Seleccionar rol</option>
+              <option *ngFor="let rol of roles" [value]="rol.idRol">{{rol.nombreRol}}</option>
+            </select>
+          </div>
+
+          <div *ngIf="isEditing">
+            <label class="block text-sm font-medium text-gray-700 mb-1">Estado</label>
+            <select 
+              [(ngModel)]="usuarioData.estado" 
+              name="estado"
+              class="w-full p-2.5 border border-[#F6F8D5] rounded-lg bg-white text-sm text-gray-700">
+              <option [value]="true">Activo</option>
+              <option [value]="false">Inactivo</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Botones de acción -->
+      <div class="flex justify-end gap-4 pt-4">
+        <button 
+          type="button" 
+          (click)="closeModal()"
+          class="px-6 py-2.5 bg-gray-500 text-white text-sm font-medium rounded-lg shadow hover:bg-gray-600 transition duration-400 ease-in-out">
+          Cancelar
+        </button>
+        <button 
+          type="submit" 
+          [disabled]="loading"
+          class="px-6 py-2.5 bg-indigo-500 text-white text-sm font-medium rounded-lg shadow hover:bg-indigo-600 transition duration-400 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed">
+          <span *ngIf="loading">Procesando...</span>
+          <span *ngIf="!loading">{{isEditing ? 'Actualizar' : 'Guardar'}}</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+ 
