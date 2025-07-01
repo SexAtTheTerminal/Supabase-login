@@ -4,7 +4,7 @@
 <link rel="preconnect" preconnect href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;700&display=swap" rel="stylesheet">
 
-<section class="flex inset-0 -z-10 h-screen w-screen bg-[#205781] bg-[radial-gradient(#2d6b8f_1px,transparent_1px)] [background-size:16px_16px]">
+<section class="flex inset-0 -z-10 h-screen w-screen bg-gray-200 bg-[radial-gradient(#B8B8B8_1px,transparent_1px)] [background-size:16px_16px]">
   <app-sidebar-admin
     (sidebarStateChange)="onSidebarToggle($event)"
   ></app-sidebar-admin>
@@ -16,15 +16,15 @@
     }">
     
     <div class="flex-1 p-6 overflow-y-auto">
-      <nav class="text-sm text-white mb-2">
-        <span routerLink="/admin" class="text-white font-normal">Inicio</span>
-        > <span class="text-white font-normal">Usuarios</span> >
-        <span class="text-white text-xl font-medium">Registro</span>
+      <nav class="text-sm text-gray-700 mb-2">
+        <span routerLink="/admin" class="text-gray-700 font-normal">Inicio</span>
+        > <span class="text-gray-700 font-normal">Usuarios</span> >
+        <span class="text-gray-800 text-xl font-medium">Registro</span>
       </nav>
 
       <div class="mb-6">
-        <h1 class="text-2xl font-bold text-white mb-1">Registro de Usuarios</h1>
-        <p class="text-[#bec1c5]">Gestión de usuarios del sistema</p>
+        <h1 class="text-2xl font-bold text-gray-800 mb-1">Registro de Usuarios</h1>
+        <p class="text-gray-600">Gestión de usuarios del sistema</p>
       </div>
 
       <div
@@ -60,10 +60,8 @@
             (close)="cerrarModal()"
             (usuarioGuardado)="onUsuarioGuardado()">
           </app-user-registration>
-
         </div>
       </div>
     </div>
   </div>
 </section>
-

@@ -64,7 +64,37 @@ export class AuthService {
 
     return { session: data.session, rol };
   }
+  // auth.service.ts
 
+// ... (mantén todo el código existente)
+
+async getUserProfile(userId: string) {
+  const { data, error } = await this._supabaseClient
+    .from('Usuario')
+    .select(`
+      email,
+      Empleado: idEmpleado (
+        nombreEmpleado,
+        apellPaternEmpleado,
+        apellMaternEmpleado,
+        telefono
+      ),
+      Rol: idRol (nombreRol)
+    `)
+    .eq('idAuth', userId)
+    .single();
+
+  if (error) throw error;
+
+  return {
+    email: data.email,
+    nombreEmpleado: data.Empleado?.nombreEmpleado,
+    apellPaternEmpleado: data.Empleado?.apellPaternEmpleado,
+    apellMaternEmpleado: data.Empleado?.apellMaternEmpleado,
+    telefono: data.Empleado?.telefono,
+    nombreRol: data.Rol?.nombreRol
+  };
+}
   signUp(credentials: SignUpWithPasswordCredentials) {
     return this._supabaseClient.auth.signUp(credentials);
   }

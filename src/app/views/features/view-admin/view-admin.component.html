@@ -64,23 +64,41 @@
         </div>
         
       </div>
-      <div class="relative bg-[#4F959D] rounded-xl border p-6 h-fit mt-8">
-        <span class="absolute top-0 left-0 mt-4 ml-4 text-lg font-semibold">
-          Gestión de Usuarios
+
+
+
+
+
+
+      <div
+        class="relative bg-white rounded-xl border border-gray-200 p-6 shadow-sm mt-8"
+      >
+        <span
+          class="absolute top-0 left-0 mt-4 ml-4 text-lg font-semibold text-gray-800"
+        >
+          Gestión de Comprobantes
         </span>
 
-        <div class="mt-10 bg-[#98D2C0] rounded-xl p-6 flex items-center justify-between shadow-sm w-full">
+        <div
+          class="mt-10 bg-[#e6f0f4] rounded-xl p-6 flex items-center justify-between shadow-sm w-full"
+        >
           <div class="flex items-center gap-4 mr-5">
-            <span class="material-symbols-rounded text-2xl text-gray-600">group</span>
-            <span class="text-base font-medium text-gray-800">Visualizar Usuarios</span>
+            <span class="material-symbols-rounded text-2xl text-blue-500">
+              receipt_long
+            </span>
+            <span class="text-base font-medium text-gray-800">
+              Visualizar Usuarios
+            </span>
           </div>
           <button
-            class="flex items-center gap-2 bg-indigo-500 text-white text-sm font-medium px-4 py-2 rounded-lg shadow hover:bg-indigo-600 transition duration-400 ease-in-out"
-            routerLink="/admin/record">
+            class="flex items-center gap-2 bg-white text-gray-700 text-sm font-medium px-4 py-2 rounded-lg shadow border border-gray-200 hover:bg-gray-300 transition duration-400 ease-in-out"
+            routerLink="/admin/record"
+          >
             <span class="material-symbols-rounded text-base">visibility</span>
             Ver
           </button>
         </div>
+        
       </div>
     </div>
 
@@ -114,31 +132,48 @@
       <div
         class="rounded-xl border border-gray-200 p-6 space-y-4 bg-white shadow-sm"
       >
+
+  <!-- Nombre Completo -->
+  <div>
+    <label class="text-sm text-gray-500">Nombre Completo</label>
+    <input
+      type="text"
+      [value]="userData?.nombreEmpleado + ' ' + userData?.apellPaternEmpleado + ' ' + userData?.apellMaternEmpleado"
+      readonly
+      class="w-full mt-1 p-2 border border-gray-300 rounded-lg bg-gray-50 text-sm text-gray-700"
+    />
+  </div>
+
+  <!-- Teléfono -->
+  <div>
+    <label class="text-sm text-gray-500">Teléfono</label>
+    <input
+      type="tel"
+      [value]="userData?.telefono"
+      readonly
+      class="w-full mt-1 p-2 border border-gray-300 rounded-lg bg-gray-50 text-sm text-gray-700"
+    />
+  </div>
+
+  <!-- Rol -->
+  <div>
+    <label class="text-sm text-gray-500">Rol</label>
+    <input
+      type="text"
+      [value]="userData?.nombreRol"
+      readonly
+      class="w-full mt-1 p-2 border border-gray-300 rounded-lg bg-gray-50 text-sm text-gray-700"
+    />
+  </div>
         <div>
-          <label class="text-sm text-gray-500">Nombre del Personal</label>
-          <input
-            type="text"
-            class="w-full mt-1 p-2 border border-gray-300 rounded-lg bg-gray-50 text-sm text-gray-700"
-            placeholder="*Nombre del Personal*"
-          />
-        </div>
-        <div>
-          <label class="text-sm text-gray-500">Cargo del Personal</label>
-          <input
-            type="text"
-            class="w-full mt-1 p-2 border border-gray-300 rounded-lg bg-gray-50 text-sm text-gray-700"
-            placeholder="*Cargo del Personal*"
-          />
-        </div>
-        <div>
-          <label class="text-sm text-gray-500">Correo Electrónico</label>
-          <input
-            type="email"
-            class="w-full mt-1 p-2 border border-gray-300 rounded-lg bg-gray-50 text-sm text-gray-700"
-            placeholder="*Correo del Personal*"
-            readonly
-          />
-        </div>
+    <label class="text-sm text-gray-500">Correo Electrónico</label>
+    <input
+      type="email"
+      [value]="userData?.email"
+      readonly
+      class="w-full mt-1 p-2 border border-gray-300 rounded-lg bg-gray-50 text-sm text-gray-700"
+    />
+  </div>
       </div>
     </div>
   </div>

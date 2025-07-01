@@ -1,22 +1,23 @@
-  <div class="fixed inset-0 flex items-center justify-center z-50 bg-black/50">
-    <div class="bg-[#4F959D] rounded-xl border p-6 w-full max-w-4xl mx-4 shadow-lg">
-      <!-- Encabezado -->
-      <div class="flex justify-between items-center mb-6">
-        <h2 class="text-2xl font-semibold text-white">{{titulo}}</h2>
-        <button (click)="closeModal()" class="text-white hover:text-gray-200">
-          <span class="material-symbols-rounded text-2xl">close</span>
-        </button>
-      </div>
+<div class="fixed inset-0 flex items-center justify-center z-50 bg-black/50">
+  <div class="bg-white rounded-xl border border-gray-200 p-6 w-full max-w-4xl mx-4 shadow-lg">
+    <!-- Encabezado -->
+    <div class="flex justify-between items-center mb-6">
+      <h2 class="text-2xl font-semibold text-gray-800">{{titulo}}</h2>
+      <button (click)="closeModal()" class="text-gray-500 hover:text-gray-700">
+        <span class="material-symbols-rounded text-2xl">close</span>
+      </button>
+    </div>
+
     <!-- Mensaje de error -->
-    <div *ngIf="errorMessage" class="mb-4 p-3 bg-red-100 text-red-700 rounded-lg">
+    <div *ngIf="errorMessage" class="mb-4 p-3 bg-red-100 border border-red-200 text-red-700 rounded-lg">
       {{errorMessage}}
     </div>
 
     <!-- Formulario -->
     <form (ngSubmit)="onSubmit()" class="space-y-6">
       <!-- Sección Datos Personales -->
-      <div class="bg-[#98D2C0] rounded-xl p-6">
-        <h3 class="text-lg font-medium text-gray-800 mb-4 border-b border-[#F6F8D5] pb-2">Datos personales</h3>
+      <div class="bg-[#e6f0f4] rounded-xl p-6">
+        <h3 class="text-lg font-medium text-gray-800 mb-4 border-b border-gray-200 pb-2">Datos personales</h3>
         
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <!-- Columna izquierda -->
@@ -27,7 +28,7 @@
                 type="text" 
                 [(ngModel)]="usuarioData.nombre" 
                 name="nombre"
-                class="w-full p-2.5 border border-[#F6F8D5] rounded-lg bg-white text-sm text-gray-700" 
+                class="w-full p-2.5 border border-gray-200 rounded-lg bg-white text-sm text-gray-700" 
                 placeholder="Ingresar nombres">
             </div>
             
@@ -37,7 +38,7 @@
                 type="text" 
                 [(ngModel)]="usuarioData.apellidoPaterno" 
                 name="apellidoPaterno"
-                class="w-full p-2.5 border border-[#F6F8D5] rounded-lg bg-white text-sm text-gray-700" 
+                class="w-full p-2.5 border border-gray-200 rounded-lg bg-white text-sm text-gray-700" 
                 placeholder="Ingresar apellido">
             </div>
             
@@ -47,7 +48,7 @@
                 type="date" 
                 [(ngModel)]="usuarioData.fechaNacimiento" 
                 name="fechaNacimiento"
-                class="w-full p-2.5 border border-[#F6F8D5] rounded-lg bg-white text-sm text-gray-700">
+                class="w-full p-2.5 border border-gray-200 rounded-lg bg-white text-sm text-gray-700">
             </div>
           </div>
           
@@ -59,7 +60,7 @@
                 type="text" 
                 [(ngModel)]="usuarioData.apellidoMaterno" 
                 name="apellidoMaterno"
-                class="w-full p-2.5 border border-[#F6F8D5] rounded-lg bg-white text-sm text-gray-700" 
+                class="w-full p-2.5 border border-gray-200 rounded-lg bg-white text-sm text-gray-700" 
                 placeholder="Ingresar apellido">
             </div>
             
@@ -69,7 +70,7 @@
                 type="email" 
                 [(ngModel)]="usuarioData.email" 
                 name="email"
-                class="w-full p-2.5 border border-[#F6F8D5] rounded-lg bg-white text-sm text-gray-700" 
+                class="w-full p-2.5 border border-gray-200 rounded-lg bg-white text-sm text-gray-700" 
                 placeholder="Ingresar correo">
             </div>
             
@@ -79,7 +80,7 @@
                 type="tel" 
                 [(ngModel)]="usuarioData.telefono" 
                 name="telefono"
-                class="w-full p-2.5 border border-[#F6F8D5] rounded-lg bg-white text-sm text-gray-700" 
+                class="w-full p-2.5 border border-gray-200 rounded-lg bg-white text-sm text-gray-700" 
                 placeholder="Ingresar números">
             </div>
           </div>
@@ -93,7 +94,7 @@
               type="text" 
               [(ngModel)]="usuarioData.dni" 
               name="dni"
-              class="w-full p-2.5 border border-[#F6F8D5] rounded-lg bg-white text-sm text-gray-700" 
+              class="w-full p-2.5 border border-gray-200 rounded-lg bg-white text-sm text-gray-700" 
               placeholder="Ingresar DNI">
           </div>
           
@@ -102,7 +103,7 @@
             <select 
               [(ngModel)]="usuarioData.idCargo" 
               name="idCargo"
-              class="w-full p-2.5 border border-[#F6F8D5] rounded-lg bg-white text-sm text-gray-700">
+              class="w-full p-2.5 border border-gray-200 rounded-lg bg-white text-sm text-gray-700">
               <option [value]="null">Seleccionar cargo</option>
               <option *ngFor="let cargo of cargos" [value]="cargo.idCargo">{{cargo.nombreCargo}}</option>
             </select>
@@ -111,11 +112,11 @@
       </div>
 
       <!-- Línea divisoria -->
-      <div class="border-t border-[#F6F8D5] my-4"></div>
+      <div class="border-t border-gray-200 my-4"></div>
 
       <!-- Sección Datos del Usuario -->
-      <div class="bg-[#98D2C0] rounded-xl p-6">
-        <h3 class="text-lg font-medium text-gray-800 mb-4 border-b border-[#F6F8D5] pb-2">Datos del usuario</h3>
+      <div class="bg-[#e6f0f4] rounded-xl p-6">
+        <h3 class="text-lg font-medium text-gray-800 mb-4 border-b border-gray-200 pb-2">Datos del usuario</h3>
         
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div class="md:col-span-2">
@@ -124,7 +125,7 @@
               type="email" 
               [(ngModel)]="usuarioData.email" 
               name="email"
-              class="w-full p-2.5 border border-[#F6F8D5] rounded-lg bg-white text-sm text-gray-700" 
+              class="w-full p-2.5 border border-gray-200 rounded-lg bg-white text-sm text-gray-700" 
               placeholder="Ingresar email">
           </div>
           
@@ -134,7 +135,7 @@
               type="password" 
               [(ngModel)]="usuarioData.password" 
               name="password"
-              class="w-full p-2.5 border border-[#F6F8D5] rounded-lg bg-white text-sm text-gray-700" 
+              class="w-full p-2.5 border border-gray-200 rounded-lg bg-white text-sm text-gray-700" 
               placeholder="Ingresar contraseña">
           </div>
 
@@ -144,7 +145,7 @@
               type="password" 
               [(ngModel)]="usuarioData.confirmPassword" 
               name="confirmPassword"
-              class="w-full p-2.5 border border-[#F6F8D5] rounded-lg bg-white text-sm text-gray-700" 
+              class="w-full p-2.5 border border-gray-200 rounded-lg bg-white text-sm text-gray-700" 
               placeholder="Confirmar contraseña">
           </div>
           
@@ -153,7 +154,7 @@
             <select 
               [(ngModel)]="usuarioData.idRol" 
               name="idRol"
-              class="w-full p-2.5 border border-[#F6F8D5] rounded-lg bg-white text-sm text-gray-700">
+              class="w-full p-2.5 border border-gray-200 rounded-lg bg-white text-sm text-gray-700">
               <option [value]="null">Seleccionar rol</option>
               <option *ngFor="let rol of roles" [value]="rol.idRol">{{rol.nombreRol}}</option>
             </select>
@@ -164,7 +165,7 @@
             <select 
               [(ngModel)]="usuarioData.estado" 
               name="estado"
-              class="w-full p-2.5 border border-[#F6F8D5] rounded-lg bg-white text-sm text-gray-700">
+              class="w-full p-2.5 border border-gray-200 rounded-lg bg-white text-sm text-gray-700">
               <option [value]="true">Activo</option>
               <option [value]="false">Inactivo</option>
             </select>
@@ -177,13 +178,13 @@
         <button 
           type="button" 
           (click)="closeModal()"
-          class="px-6 py-2.5 bg-gray-500 text-white text-sm font-medium rounded-lg shadow hover:bg-gray-600 transition duration-400 ease-in-out">
+          class="px-6 py-2.5 bg-white text-gray-700 text-sm font-medium rounded-lg shadow hover:bg-gray-100 transition duration-400 ease-in-out border border-gray-200">
           Cancelar
         </button>
         <button 
           type="submit" 
           [disabled]="loading"
-          class="px-6 py-2.5 bg-indigo-500 text-white text-sm font-medium rounded-lg shadow hover:bg-indigo-600 transition duration-400 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed">
+          class="px-6 py-2.5 bg-blue-500 text-white text-sm font-medium rounded-lg shadow hover:bg-blue-600 transition duration-400 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed">
           <span *ngIf="loading">Procesando...</span>
           <span *ngIf="!loading">{{isEditing ? 'Actualizar' : 'Guardar'}}</span>
         </button>
@@ -191,4 +192,3 @@
     </form>
   </div>
 </div>
- 
