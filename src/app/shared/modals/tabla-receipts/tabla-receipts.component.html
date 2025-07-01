@@ -1,0 +1,87 @@
+<div
+  class="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-200 font-[Ubuntu]"
+>
+  <!-- Tabla -->
+  <table *ngIf="paginaActual.length > 0" class="w-full table-auto text-sm">
+    <thead>
+      <tr class="bg-gray-100 text-gray-800 text-left">
+        <th class="px-6 py-3 font-semibold">Código</th>
+        <th class="px-6 py-3 font-semibold">Método de Pago</th>
+        <th class="px-6 py-3 font-semibold">Cliente</th>
+        <th class="px-6 py-3 font-semibold">Monto</th>
+        <th class="px-6 py-3 font-semibold">Mesa</th>
+        <th class="px-6 py-3 text-center font-semibold">Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        *ngFor="let pago of paginaActual"
+        class="border-t border-gray-200 hover:bg-gray-50 transition duration-150"
+      >
+        <td class="px-6 py-4 font-mono text-gray-900">{{ pago.codigo }}</td>
+        <td class="px-6 py-4 text-gray-700">{{ pago.metodoPago }}</td>
+        <td class="px-6 py-4 text-gray-700">{{ pago.cliente }}</td>
+        <td class="px-6 py-4 text-gray-700">S/ {{ pago.monto.toFixed(2) }}</td>
+        <td class="px-6 py-4 text-gray-700">{{ pago.mesa }}</td>
+        <td class="px-6 py-4">
+          <div class="flex items-center justify-center gap-3">
+            <button
+              (click)="abrirDetalle(pago)"
+              class="text-blue-500 hover:text-blue-700 transition"
+              title="Ver detalles"
+            >
+              <span class="material-symbols-rounded">visibility</span>
+            </button>
+            <button
+              (click)="eliminarPago(pago)"
+              class="text-red-500 hover:text-red-700 transition"
+              title="Eliminar pago"
+            >
+              <span class="material-symbols-rounded">delete</span>
+            </button>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Estado vacío -->
+  <div
+    *ngIf="paginaActual.length === 0"
+    class="flex flex-col items-center justify-center text-gray-500 p-8 bg-gray-50"
+  >
+    <span class="material-symbols-rounded text-6xl text-gray-400 mb-2">
+      receipt_long
+    </span>
+    <p class="text-lg font-medium">No se encontraron comprobantes</p>
+    <p class="text-sm text-gray-400 text-center max-w-sm">
+      Intenta con otro código o cambia el método de pago en el filtro.
+    </p>
+  </div>
+
+  <!-- Paginación -->
+  <div
+    *ngIf="totalPaginas > 1"
+    class="flex justify-between items-center p-4 bg-gray-100 border-t border-gray-200"
+  >
+    <button
+      class="px-4 py-2 rounded-lg bg-white border border-gray-300 text-gray-800 hover:bg-gray-200 transition"
+      (click)="paginaAnterior()"
+      [disabled]="pagina === 1"
+    >
+      Anterior
+    </button>
+
+    <p class="text-gray-700 font-medium">
+      Página {{ pagina }} de {{ totalPaginas }}
+    </p>
+
+    <button
+      class="px-4 py-2 rounded-lg bg-white border border-gray-300 text-gray-800 hover:bg-gray-200 transition"
+      (click)="paginaSiguiente()"
+      [disabled]="pagina === totalPaginas"
+    >
+      Siguiente
+    </button>
+  </div>
+</div>

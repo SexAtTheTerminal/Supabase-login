@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { SidebarCasherComponent } from '../../../sidebar/features/sidebar-casher/sidebar-casher.component';
+import { SidebarCookerComponent } from '../../../sidebar/features/sidebar-cooker/sidebar-cooker.component';
 import { CommonModule } from '@angular/common';
 import { DetallesPedidoComponent } from '../../../shared/modals/detalles-pedido/detalles-pedido.component';
 import { FormsModule } from '@angular/forms';
@@ -11,6 +12,7 @@ import { FiltrosPedidosComponent } from '../../../shared/modals/filtros-pedidos/
   selector: 'app-consultar-pedidos',
   imports: [
     SidebarCasherComponent,
+    SidebarCookerComponent,
     CommonModule,
     DetallesPedidoComponent,
     FormsModule,
@@ -31,6 +33,7 @@ export class ConsultarPedidosComponent implements OnInit {
   // Datos
   pedidos: any[] = [];
   pedidosFiltrados: any[] = [];
+  userRole: string | null = null;
 
   // UI
   mensajeExito = '';
@@ -44,9 +47,14 @@ export class ConsultarPedidosComponent implements OnInit {
     private readonly consultarPedidosService: ConsultarPedidosService
   ) {}
 
-  async ngOnInit() {
-    this.pedidos = await this.consultarPedidosService.obtenerPedidosDesdeDB();
-    this.aplicarFiltros();
+  ngOnInit(): void {
+    this.userRole = localStorage.getItem('user-role');
+    console.log(this.userRole);
+
+    this.consultarPedidosService.obtenerPedidosDesdeDB().then((pedidos) => {
+      this.pedidos = pedidos;
+      this.aplicarFiltros();
+    });
   }
 
   aplicarFiltros(): void {

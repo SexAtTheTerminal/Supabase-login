@@ -1,9 +1,14 @@
 import { Component, inject } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import { FormBuilder, Validators, FormControl, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormBuilder,
+  Validators,
+  FormControl,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { AuthService } from '../../data-access/auth.service';
 
-interface LogInForm{
+interface LogInForm {
   email: FormControl<string | null>;
   password: FormControl<string | null>;
 }
@@ -13,22 +18,19 @@ interface LogInForm{
   standalone: true,
   imports: [RouterLink, ReactiveFormsModule],
   templateUrl: `./auth-log-in.component.html`,
-  styleUrl: './auth-log-in.component.scss'
+  styleUrl: './auth-log-in.component.scss',
 })
-  
-
 export default class AuthLogInComponent {
-  
-  private _formBuilder = inject(FormBuilder);
+  private readonly _formBuilder = inject(FormBuilder);
 
-  private _authService = inject(AuthService);
+  private readonly _authService = inject(AuthService);
 
-  private _router = inject(Router)
-  //FormBuilder Instance wasaa
+  private readonly _router = inject(Router);
+
   form = this._formBuilder.group<LogInForm>({
     email: this._formBuilder.control(null, [
       Validators.required,
-      Validators.email
+      Validators.email,
     ]),
 
     password: this._formBuilder.control(null, [Validators.required]),
@@ -40,17 +42,33 @@ export default class AuthLogInComponent {
     if (this.form.invalid) return;
 
     try {
-      const { error} = await this._authService.logIn({
+      const { session, rol } = await this._authService.logIn({
         email: this.form.value.email ?? '',
-        password: this.form.value.password ?? ''
+        password: this.form.value.password ?? '',
       });
-      
-      if (error) throw error;
 
-      this._router.navigateByUrl('/cashier');
+      if (!session) throw new Error('Sesión no válida.');
+
+      console.log('Rol:', rol);
+
+      // Redirigir según rol
+      switch (rol) {
+        case 'Cocinero':
+          this._router.navigateByUrl('/cooker');
+          break;
+        case 'Cajero':
+          this._router.navigateByUrl('/cashier');
+          break;
+        case 'Administrador':
+          this._router.navigateByUrl('/admin');
+          break;
+        default:
+          this._router.navigateByUrl('/');
+          break;
+      }
     } catch (error) {
       if (error instanceof Error) {
-        console.log(error);
+        console.error(error);
       }
     }
   }

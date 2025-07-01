@@ -18,8 +18,18 @@
 <section
   class="flex w-screen h-screen bg-gray-200 bg-[radial-gradient(#B8B8B8_1px,transparent_1px)] [background-size:16px_16px]"
 >
-  <app-sidebar-casher (sidebarStateChange)="onSidebarToggle($event)">
+  <app-sidebar-casher
+    *ngIf="userRole === 'Cajero'"
+    (sidebarStateChange)="onSidebarToggle($event)"
+  >
   </app-sidebar-casher>
+
+  <app-sidebar-cooker
+    *ngIf="userRole === 'Cocinero'"
+    (sidebarStateChange)="onSidebarToggle($event)"
+  >
+  </app-sidebar-cooker>
+
   <div
     [ngClass]="{
       'ml-[90px]': sidebarCollapsed,
