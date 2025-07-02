@@ -17,8 +17,8 @@ export class ViewAdminComponent {
   userData: any;
 
   constructor(
-    private authService: AuthService,
-    private supabase: SupabaseService
+    private readonly authService: AuthService,
+    private readonly supabase: SupabaseService
   ) {}
 
   async ngOnInit() {
@@ -28,8 +28,10 @@ export class ViewAdminComponent {
   private async loadUserData() {
     try {
       // Obtener la sesión actual
-      const { data: { session } } = await this.supabase.supabaseClient.auth.getSession();
-      
+      const {
+        data: { session },
+      } = await this.supabase.supabaseClient.auth.getSession();
+
       if (session?.user?.id) {
         // Usar el nuevo método para obtener los datos del usuario
         this.userData = await this.authService.getUserProfile(session.user.id);

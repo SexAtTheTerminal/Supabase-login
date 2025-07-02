@@ -1,61 +1,72 @@
-<section class="absolute inset-0 -z-10 h-full w-full bg-white bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px]">
-    <div class="flex flex-col md:flex-wrap-reverse items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
-        <div class= "flex justify-center">
-            <a routerLink="/" class="flex items-center">
-                <img class= "md:w-[397px]" src="https://raw.githubusercontent.com/SexAtTheTerminal/mis-imagenes/refs/heads/main/logo_corregido.svg" alt="logo">
-            </a>
-        </div>
-        <div
-            class="w-full max-w-md p-6 bg-slate-100 rounded-lg shadow">
-            <div class="p-6 space-y-4 md:space-y-6 sm:p-8 ">
-                <h1 class="text-xl font-bold leading-tight tracking-tight text-slate-900 md:text-2xl">
-                    Sign in to your account
-                </h1>
-                <form class=" space-y-4 md:space-y-6" [formGroup]="form" (ngSubmit)="submit()">
-
-                    <div>
-                        <label for="email" class="block mb-2 text-sm font-medium text-slate-700">Your
-                            email</label>
-                        <input type="email" name="email" id="email"
-                            class="bg-white border border-slate-300 rounded-md text-gray-900 rounded-lg block w-full p-2.5 placeholder-gray-400"
-                            placeholder="user@email.com" required="" formControlName="email">
-
-                    </div>
-
-                    <div>
-                        <label for="password"
-                            class="block mb-2 text-sm font-medium text-slate-700">Password</label>
-                        <input type="password" name="password" id="password" placeholder="••••••••"
-                            class="bg-white border border-slate-300 rounded-md text-gray-900 rounded-lg focus:ring-emerald-600 focus:border-emerald-600 block w-full p-2.5 placeholder-gray-400"
-                            required="" formControlName="password">
-                    </div>
-
-                    <div class="flex items-center justify-between text-slate-600">
-                        <div class="flex items-start">
-                            <div class="flex items-center h-5">
-                                <input id="remember" aria-describedby="remember" type="checkbox"
-                                    class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800"
-                                    required="">
-                            </div>
-                            <div class="ml-3 text-sm">
-                                <label for="remember" class="text-slate-600">Remember me</label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <button type="submit"
-                        class="w-full text-white bg-amber-400 hover:bg-amber-500 focus:ring-4 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
-                        Sign in
-                    </button>
-
-                    <p class="text-sm font-light text-gray-500">
-                        Don’t have an account yet? 
-                        <a routerLink="/auth/sign-up"  class="font-medium text-slate-700 hover:underline">
-                            Sign up
-                        </a>
-                    </p>
-                </form>
-            </div>
-        </div>
+<section
+  class="absolute inset-0 -z-10 h-full w-full bg-white bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px]"
+>
+  <div
+    class="flex flex-col md:flex-wrap-reverse items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0"
+  >
+    <div class="flex justify-center">
+      <a routerLink="/" class="flex items-center">
+        <img
+          class="md:w-[397px]"
+          src="https://raw.githubusercontent.com/SexAtTheTerminal/mis-imagenes/refs/heads/main/logo_corregido.svg"
+          alt="logo"
+        />
+      </a>
     </div>
+    <div class="w-full max-w-md p-6 bg-slate-100 rounded-lg shadow">
+      <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
+        <h1
+          class="text-xl font-bold leading-tight tracking-tight text-slate-900 md:text-2xl"
+        >
+          Sign in to your account
+        </h1>
+        <form
+          class="space-y-4 md:space-y-6"
+          [formGroup]="form"
+          (ngSubmit)="submit()"
+        >
+          <div>
+            <label
+              for="email"
+              class="block mb-2 text-sm font-medium text-slate-700"
+              >Your email</label
+            >
+            <input
+              type="email"
+              name="email"
+              id="email"
+              class="bg-white border border-slate-300 rounded-md text-gray-900 rounded-lg block w-full p-2.5 placeholder-gray-400"
+              placeholder="user@email.com"
+              required=""
+              formControlName="email"
+            />
+          </div>
+
+          <div>
+            <label
+              for="password"
+              class="block mb-2 text-sm font-medium text-slate-700"
+              >Password</label
+            >
+            <input
+              type="password"
+              name="password"
+              id="password"
+              placeholder="••••••••"
+              class="bg-white border border-slate-300 rounded-md text-gray-900 rounded-lg focus:ring-emerald-600 focus:border-emerald-600 block w-full p-2.5 placeholder-gray-400"
+              required=""
+              formControlName="password"
+            />
+          </div>
+
+          <button
+            type="submit"
+            class="w-full text-white bg-amber-400 hover:bg-amber-500 focus:ring-4 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+          >
+            Sign in
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
 </section>
