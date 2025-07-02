@@ -1,11 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { SidebarCookerComponent } from '../../../sidebar/features/sidebar-cooker/sidebar-cooker.component';
 import { UpdatePedidosService } from '../../../services/data-access/update-pedidos/update-pedidos.service';
 import { FiltrosPedidosComponent } from '../../../shared/modals/filtros-pedidos/filtros-pedidos.component';
 import { TablaUpdatePedidosComponent } from '../../../shared/modals/tabla-update-pedidos/tabla-update-pedidos.component';
 import { DetallesPedidoComponent } from '../../../shared/modals/detalles-pedido/detalles-pedido.component';
+import { Router } from '@angular/router';
+import { AuthService } from '../../../auth/data-access/auth.service';
 
 @Component({
   selector: 'app-update-pedidos',
@@ -37,14 +39,27 @@ export class UpdatePedidosComponent {
   mensajeExito: string = '';
   modalAbierto = false;
 
+  private readonly _authService = inject(AuthService);
+  private readonly router = inject(Router);
+
   constructor(private readonly UpdatePedidosService: UpdatePedidosService) {}
 
   async ngOnInit(): Promise<void> {
+    this._authService.verifyRoleOrSignOut().then((isValid) => {
+      if (!isValid) {
+        this.router.navigate(['/auth/log-in']);
+      }
+    });
     this.pedidos = await this.UpdatePedidosService.obtenerPedidos();
     this.aplicarFiltros();
   }
 
   aplicarFiltros(): void {
+    this._authService.verifyRoleOrSignOut().then((isValid) => {
+      if (!isValid) {
+        this.router.navigate(['/auth/log-in']);
+      }
+    });
     const codigo = this.busquedaCodigo.toLowerCase();
     const estado = this.estadoSeleccionado;
 

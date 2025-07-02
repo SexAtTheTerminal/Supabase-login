@@ -1,10 +1,12 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { SidebarCasherComponent } from '../../../sidebar/features/sidebar-casher/sidebar-casher.component';
 import { NgClass, NgIf, CommonModule } from '@angular/common';
 import { ApiPeruService } from '../../../shared/data-access/api-peru.service';
 import { catchError, throwError } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 import { RegistrarCobroService } from '../../../services/data-access/registrar-cobro/registrar-cobro.service';
+import { AuthService } from '../../../auth/data-access/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-registrar-cobro',
@@ -28,9 +30,12 @@ export class RegistrarCobroComponent {
   datosAregistrar: { idPedido: number; idModalidad: number } | null = null;
   paginaActual: number = 0;
 
+  private readonly _authService = inject(AuthService);
+
   constructor(
-    private apiPeruService: ApiPeruService,
-    private registrarCobroService: RegistrarCobroService
+    private readonly apiPeruService: ApiPeruService,
+    private readonly registrarCobroService: RegistrarCobroService,
+    private readonly router: Router
   ) {}
 
   onSidebarToggle(state: boolean): void {
@@ -38,6 +43,11 @@ export class RegistrarCobroComponent {
   }
 
   async ngOnInit() {
+    this._authService.verifyRoleOrSignOut().then((isValid) => {
+      if (!isValid) {
+        this.router.navigate(['/auth/log-in']);
+      }
+    });
     this.mesas = await this.registrarCobroService.obtenerMesas();
   }
 

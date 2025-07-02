@@ -64,14 +64,12 @@ export class AuthService {
 
     return { session: data.session, rol };
   }
-  // auth.service.ts
 
-// ... (mantén todo el código existente)
-
-async getUserProfile(userId: string) {
-  const { data, error } = await this._supabaseClient
-    .from('Usuario')
-    .select(`
+  async getUserProfile(userId: string) {
+    const { data, error } = await this._supabaseClient
+      .from('Usuario')
+      .select(
+        `
       email,
       Empleado: idEmpleado (
         nombreEmpleado,
@@ -80,23 +78,60 @@ async getUserProfile(userId: string) {
         telefono
       ),
       Rol: idRol (nombreRol)
-    `)
-    .eq('idAuth', userId)
-    .single();
+    `
+      )
+      .eq('idAuth', userId)
+      .single();
 
-  if (error) throw error;
+    if (error) throw error;
 
-  return {
-    email: data.email,
-    nombreEmpleado: data.Empleado?.nombreEmpleado,
-    apellPaternEmpleado: data.Empleado?.apellPaternEmpleado,
-    apellMaternEmpleado: data.Empleado?.apellMaternEmpleado,
-    telefono: data.Empleado?.telefono,
-    nombreRol: data.Rol?.nombreRol
-  };
-}
+    return {
+      email: data.email,
+      nombreEmpleado: data.Empleado?.nombreEmpleado,
+      apellPaternEmpleado: data.Empleado?.apellPaternEmpleado,
+      apellMaternEmpleado: data.Empleado?.apellMaternEmpleado,
+      telefono: data.Empleado?.telefono,
+      nombreRol: data.Rol?.nombreRol,
+    };
+  }
   signUp(credentials: SignUpWithPasswordCredentials) {
     return this._supabaseClient.auth.signUp(credentials);
+  }
+
+  async verifyRoleOrSignOut(): Promise<boolean> {
+    try {
+      const { data: sessionData, error: sessionError } =
+        await this._supabaseClient.auth.getSession();
+
+      if (sessionError || !sessionData.session?.user?.id) {
+        throw new Error('No se encontró sesión activa.');
+      }
+
+      const userId = sessionData.session.user.id;
+
+      const { data: rolData, error: rolError } = await this._supabaseClient
+        .from('Usuario')
+        .select('Rol(nombreRol)')
+        .eq('idAuth', userId)
+        .eq('estado', true)
+        .single();
+
+      if (rolError) throw rolError;
+
+      const dbRole = rolData?.Rol?.nombreRol?.trim();
+      const localRole = localStorage.getItem(this._rolKey);
+
+      if (!dbRole || localRole !== dbRole) {
+        throw new Error('Rol inválido o manipulado');
+      }
+
+      this.currentRole = dbRole; // sincroniza el valor real
+      return true;
+    } catch (error) {
+      console.warn('Verificación fallida, cerrando sesión:', error);
+      this.signOut();
+      return false;
+    }
   }
 
   signOut() {

@@ -1,19 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { SidebarCasherComponent } from '../../../sidebar/features/sidebar-casher/sidebar-casher.component';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { RouterLink, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ItemSearchComponent } from '../../../shared/modals/item-search/item-search.component';
 import { RegistrarPedidosService } from '../../../services/data-access/registrar-pedidos/registrar-pedidos.service';
-
-interface Producto {
-  descripcion: string;
-  tipo: string;
-  unidad: string;
-  cantidad: number;
-  precioUnitario: number;
-  subtotal: number;
-}
+import { AuthService } from '../../../auth/data-access/auth.service';
 
 interface Mesa {
   idMesa: number;
@@ -48,34 +40,41 @@ export class RegistrarPedidosComponent implements OnInit {
   ultimoId!: number | null;
   nuevoCodigo: string = '';
 
-  constructor(
-    private readonly registrarPedidosService: RegistrarPedidosService
-  ) {}
+  private readonly _authService = inject(AuthService);
+  private readonly router = inject(Router);
+  private readonly registrarPedidosService = inject(RegistrarPedidosService);
 
-  async ngOnInit(): Promise<void> {
-    try {
-      const [mesas, modalidades, ultimoId] = await Promise.all([
-        this.registrarPedidosService.obtenerMesas(),
-        this.registrarPedidosService.obtenerModalidad(),
-        this.registrarPedidosService.obtenerUltimoIdPedido(),
-      ]);
+  ngOnInit(): void {
+    this._authService.verifyRoleOrSignOut().then((isValid) => {
+      if (!isValid) {
+        this.router.navigate(['/auth/log-in']);
+      }
+    });
+    (async () => {
+      try {
+        const [mesas, modalidades, ultimoId] = await Promise.all([
+          this.registrarPedidosService.obtenerMesas(),
+          this.registrarPedidosService.obtenerModalidad(),
+          this.registrarPedidosService.obtenerUltimoIdPedido(),
+        ]);
 
-      this.mesas = mesas;
-      this.modalidades = modalidades;
-      this.ultimoId = ultimoId;
+        this.mesas = mesas;
+        this.modalidades = modalidades;
+        this.ultimoId = ultimoId;
 
-      this.nuevoCodigo =
-        await this.registrarPedidosService.generarNuevoCodigoPedido();
-
-      // Suscribirse para actualizar automáticamente el código
-      this.registrarPedidosService.pedidoRegistrado$.subscribe(async () => {
         this.nuevoCodigo =
           await this.registrarPedidosService.generarNuevoCodigoPedido();
-      });
-    } catch (error) {
-      console.error('Error en ngOnInit:', error);
-      this.nuevoCodigo = 'PD-????????';
-    }
+
+        // Suscribirse para actualizar automáticamente el código
+        this.registrarPedidosService.pedidoRegistrado$.subscribe(async () => {
+          this.nuevoCodigo =
+            await this.registrarPedidosService.generarNuevoCodigoPedido();
+        });
+      } catch (error) {
+        console.error('Error en ngOnInit:', error);
+        this.nuevoCodigo = 'PD-????????';
+      }
+    })();
   }
 
   onSidebarToggle(state: boolean): void {

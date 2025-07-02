@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { SidebarCasherComponent } from '../../../sidebar/features/sidebar-casher/sidebar-casher.component';
 import { SidebarCookerComponent } from '../../../sidebar/features/sidebar-cooker/sidebar-cooker.component';
 import { CommonModule } from '@angular/common';
@@ -7,6 +7,8 @@ import { FormsModule } from '@angular/forms';
 import { TablaPedidosComponent } from '../../../shared/modals/tabla-pedidos/tabla-pedidos.component';
 import { ConsultarPedidosService } from '../../../services/data-access/consultar-pedidos/consultar-pedidos.service';
 import { FiltrosPedidosComponent } from '../../../shared/modals/filtros-pedidos/filtros-pedidos.component';
+import { Router } from '@angular/router';
+import { AuthService } from '../../../auth/data-access/auth.service';
 
 @Component({
   selector: 'app-consultar-pedidos',
@@ -43,14 +45,19 @@ export class ConsultarPedidosComponent implements OnInit {
   // Resumen
   resumen = { finalizados: 0, pendientes: 0 };
 
+  private readonly _authService = inject(AuthService);
+  private readonly router = inject(Router);
+
   constructor(
     private readonly consultarPedidosService: ConsultarPedidosService
   ) {}
 
   ngOnInit(): void {
-    this.userRole = localStorage.getItem('user-role');
-    console.log(this.userRole);
-
+    this._authService.verifyRoleOrSignOut().then((isValid) => {
+      if (!isValid) {
+        this.router.navigate(['/auth/log-in']);
+      }
+    });
     this.consultarPedidosService.obtenerPedidosDesdeDB().then((pedidos) => {
       this.pedidos = pedidos;
       this.aplicarFiltros();

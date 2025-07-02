@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { ReceiptsService } from '../../../services/data-access/receipts-service/receipts-service.service';
 import { CommonModule } from '@angular/common';
 import { RouterLink, Router } from '@angular/router';
 import { SidebarAdminComponent } from '../../../sidebar/features/sidebar-admin/sidebar-admin.component';
 import { FiltrosReceiptsComponent } from '../../../shared/modals/filtros-receipts/filtros-receipts.component';
 import { TablaReceiptsComponent } from '../../../shared/modals/tabla-receipts/tabla-receipts.component';
+import { AuthService } from '../../../auth/data-access/auth.service';
 
 @Component({
   selector: 'app-receipts',
@@ -34,12 +35,19 @@ export class ReceiptsComponent implements OnInit {
   // UI
   mensajeExito = '';
 
+  private readonly _authService = inject(AuthService);
+
   constructor(
     private readonly receiptsService: ReceiptsService,
     private readonly router: Router
   ) {}
 
   ngOnInit(): void {
+    this._authService.verifyRoleOrSignOut().then((isValid) => {
+      if (!isValid) {
+        this.router.navigate(['/auth/log-in']);
+      }
+    });
     this.cargarPagos();
   }
 

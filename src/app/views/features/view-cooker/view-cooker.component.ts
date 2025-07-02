@@ -1,10 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { SidebarCookerComponent } from '../../../sidebar/features/sidebar-cooker/sidebar-cooker.component';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../auth/data-access/auth.service';
 import { SupabaseService } from '../../../shared/data-access/supabase.service';
-
 
 @Component({
   selector: 'app-view-cooker',
@@ -16,12 +15,16 @@ export class ViewCookerComponent {
   sidebarCollapsed = false;
   userData: any;
 
-  constructor(
-    private readonly authService: AuthService,
-    private readonly supabase: SupabaseService
-  ) {}
+  private readonly authService = inject(AuthService);
+  private readonly supabase = inject(SupabaseService);
+  private readonly router = inject(Router);
 
   async ngOnInit() {
+    this.authService.verifyRoleOrSignOut().then((isValid) => {
+      if (!isValid) {
+        this.router.navigate(['/auth/log-in']);
+      }
+    });
     await this.loadUserData();
   }
 
@@ -40,7 +43,7 @@ export class ViewCookerComponent {
       console.error('Error al cargar datos del usuario:', error);
     }
   }
-  
+
   onSidebarToggle(state: boolean): void {
     this.sidebarCollapsed = state;
   }

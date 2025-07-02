@@ -29,10 +29,7 @@ export class ReceiptsService {
       return [];
     }
 
-    console.log('Datos recibidos de Supabase:', data);
-
     return data.map((pago: any) => {
-      console.log('Procesando pago:', pago);
       const mappedPago = {
         idPago: pago.idPago,
         codigo: `PA-${pago.idPago.toString().padStart(8, '0')}`,
@@ -47,7 +44,6 @@ export class ReceiptsService {
         idPedido: pago.idPedido,
         dniCliente: pago.dniCliente,
       };
-      console.log('Pago mapeado:', mappedPago);
       return mappedPago;
     });
   }

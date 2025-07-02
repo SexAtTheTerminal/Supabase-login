@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { SidebarAdminComponent } from '../../../sidebar/features/sidebar-admin/sidebar-admin.component';
 import { CommonModule } from '@angular/common';
 import { RouterLink, Router } from '@angular/router';
 import { ReceiptsService } from '../../../services/data-access/receipts-service/receipts-service.service';
 import { ApiPeruService } from '../../../shared/data-access/api-peru.service';
+import { AuthService } from '../../../auth/data-access/auth.service';
 import { finalize } from 'rxjs';
 
 @Component({
@@ -21,6 +22,8 @@ export class DetailsComponent implements OnInit {
   cargandoCliente = false;
   nombreCliente: string = 'Cargando...';
 
+  private readonly _authService = inject(AuthService);
+
   constructor(
     private readonly router: Router,
     private readonly receiptsService: ReceiptsService,
@@ -33,6 +36,11 @@ export class DetailsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this._authService.verifyRoleOrSignOut().then((isValid) => {
+      if (!isValid) {
+        this.router.navigate(['/auth/log-in']);
+      }
+    });
     if (this.pago?.idPedido) {
       this.receiptsService
         .obtenerDetallePedido(this.pago.idPedido)

@@ -49,8 +49,6 @@ export default class AuthLogInComponent {
 
       if (!session) throw new Error('Sesión no válida.');
 
-      console.log('Rol:', rol);
-
       // Redirigir según rol
       switch (rol) {
         case 'Cocinero':
