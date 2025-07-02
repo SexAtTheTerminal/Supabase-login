@@ -1,7 +1,7 @@
 # Wallpa Sua System
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/SexAtTheTerminal/mis-imagenes/refs/heads/main/logo_corregido.svg" alt="Logo de Wallpa Sua System" width="200"/>
+  <img src="https://raw.githubusercontent.com/SexAtTheTerminal/mis-imagenes/refs/heads/main/logo_corregido.svg" alt="Logo de Wallpa Sua System" width="800"/>
 </p>
 
 ## 📋 Descripción
