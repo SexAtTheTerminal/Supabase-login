@@ -1,4 +1,6 @@
-# SupabaseLogin
+# Wallpa Sua System
+
+https://raw.githubusercontent.com/SexAtTheTerminal/mis-imagenes/refs/heads/main/logo_corregido.svg
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.10.
 
