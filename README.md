@@ -40,8 +40,8 @@
 
 ## 🚀 Tecnologías Utilizadas
 
-> Frameworks: Angular & TailwindCSS
-> Backend As A Service: Supabase
+> Frameworks: Angular & TailwindCSS \n
+> Backend As A Service: Supabase \n
 > Database Engine: PostgreSQL
 ---
 
