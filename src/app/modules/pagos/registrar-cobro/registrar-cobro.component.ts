@@ -10,7 +10,6 @@ import { Router } from '@angular/router';
 import { SupabaseService } from '../../../shared/data-access/supabase.service';
 
 
-
 @Component({
   selector: 'app-registrar-cobro',
   imports: [SidebarCasherComponent, NgClass, FormsModule, CommonModule, NgIf],
@@ -34,6 +33,7 @@ export class RegistrarCobroComponent {
   mensajeError: string | null = null;
   datosAregistrar: { idPedido: number; idModalidad: number } | null = null;
   paginaActual: number = 0;
+  botonUnico: boolean = false; // !! False - Sin clickear !!
 
   private readonly _authService = inject(AuthService);
 
@@ -167,6 +167,7 @@ export class RegistrarCobroComponent {
   montoTotal: number,
   dniCliente: string
   ) {
+    this.botonUnico = true; // !! True - Ya se dio click una vez !!
     if (!mesaSeleccionada) {
       this.mensajeError = 'Debe seleccionar una mesa.';
       return;
@@ -194,6 +195,7 @@ export class RegistrarCobroComponent {
 
         console.log('Registrando pago en Supabase:', pagoData);
         await this.supabaseService.registrarPago(pagoData);
+        await this.registrarCobroService.actualizarEstadoMesa(mesaSeleccionada.idMesa);
         console.log('Pago registrado en Supabase correctamente');
 
 
@@ -244,9 +246,4 @@ export class RegistrarCobroComponent {
     await this.registrarPago(this.mesaSeleccionada, this.totalPedido, this.dni);
 
   }
-
-
-
-
-
 }

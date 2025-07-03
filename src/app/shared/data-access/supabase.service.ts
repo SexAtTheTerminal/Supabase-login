@@ -58,34 +58,44 @@ export class SupabaseService {
     }
   }
 
-  // TODO: Se guarda el pago con relacion al cliente que se registro previamente.
-  async registrarPago(pagoData: any) {
-  try {
-    console.log('Datos del pago a registrar:', pagoData);
+    // TODO: Se guarda el pago con relacion al cliente que se registro previamente.
+    async registrarPago(pagoData: any) {
+    try {
+      console.log('Datos del pago a registrar:', pagoData);
 
-    // ```Insert``` para la tabla de pagos
-    const pagoParaInsertar = {
-      idPedido: pagoData.pedido_id,
-      idMetodoPago: pagoData.modalidad_id,
-      montoTotal: pagoData.monto_total,
-      dniCliente: pagoData.dni_cliente
-    };
+      // ```Insert``` para la tabla de pagos
+      const pagoParaInsertar = {
+        idPedido: pagoData.pedido_id,
+        idMetodoPago: pagoData.modalidad_id,
+        montoTotal: pagoData.monto_total,
+        dniCliente: pagoData.dni_cliente
+      };
 
-    const { data, error } = await this.supabaseClient
-      .from('Pago')
-      .insert([pagoParaInsertar])
-      .select();
+      const { data, error } = await this.supabaseClient
+        .from('Pago')
+        .insert([pagoParaInsertar])
+        .select();
 
-    if (error) {
-      console.error('Error detallado al registrar pago:', error);
-      throw new Error(`Error al registrar pago: ${error.message}`);
+      if (error) {
+        console.error('Error detallado al registrar pago:', error);
+        throw new Error(`Error al registrar pago: ${error.message}`);
+      }
+
+      const { error: pedidoError } = await this.supabaseClient
+        .from('Pedido')
+        .update({ estado: true }) // !! True - Pagado !!
+        .eq('idPedido', pagoParaInsertar.idPedido)
+        .select();
+
+      if (pedidoError) {
+        console.error('Error al actualizar el estado del pedido:', pedidoError);
+        return;
+      }
+      console.log('Pago registrado exitosamente:', data);
+      return data;
+    } catch (error) {
+      console.error('Error en registrarPago:', error);
+      throw error;
     }
-
-    console.log('Pago registrado exitosamente:', data);
-    return data;
-  } catch (error) {
-    console.error('Error en registrarPago:', error);
-    throw error;
   }
-}
 }

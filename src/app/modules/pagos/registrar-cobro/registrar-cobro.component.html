@@ -66,10 +66,16 @@
               />
               <div class="flex flex-col sm:flex-row gap-4 justify-center">
                 <button
-                  class="bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-cyan-600 hover:to-blue-600 text-white font-semibold py-2 px-4 rounded-xl transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
+                  [disabled] = 'clienteNombres'
+                  class = "text-white font-semibold py-2 px-4 rounded-xl"
+                  [ngClass]="{
+                  'bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-cyan-600 hover:to-blue-600  transition-all duration-300 transform hover:scale-105 hover:shadow-lg': !clienteNombres,
+                  ' bg-gray-400 cursor-not-allowed ': clienteNombres
+                  }"
+
                   (click)="buscarClientePorDni()"
                 >
-                  Search
+                  Buscar
                 </button>
               </div>
             </div>
@@ -131,11 +137,11 @@
 
         <!-- Botón Confirmar -->
         <button
-          [disabled]="!clienteNombres"
+          [disabled]="(!clienteNombres || botonUnico)"
           (click)="confirmarPagoConCliente()"
           [ngClass]="{
-            'bg-gray-400 cursor-not-allowed': !clienteNombres,
-            'bg-green-600 hover:bg-green-700': clienteNombres
+            'bg-gray-400 cursor-not-allowed': (!clienteNombres || botonUnico),
+            'bg-green-600 hover:bg-green-700': (clienteNombres && !botonUnico)
           }"
           class="w-full py-3 px-6 text-white font-semibold rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
         >
@@ -185,7 +191,7 @@
               alt="Sin ítems"
               class="w-24 h-24 opacity-70 mb-2"
             />
-            <p>Seleccione una Mesa</p>
+            <p>No existen pedidos pendientes para esta mesa</p>
           </div>
         </div>
 
