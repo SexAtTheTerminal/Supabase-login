@@ -208,7 +208,7 @@
           <!-- Botón: Confirmar selección -->
           <button
             (click)="registrarPedido()"
-            [disabled]="items.length === 0"
+            [disabled]="items.length === 0 || registrandoPedido"
             class="px-4 py-2 rounded transition text-white bg-[#1E88E5] hover:bg-[#1565C0] disabled:bg-gray-300 disabled:text-gray-600 disabled:cursor-not-allowed"
           >
             Confirmar selección

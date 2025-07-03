@@ -5,7 +5,7 @@ import { SupabaseService } from '../../../shared/data-access/supabase.service';
   providedIn: 'root',
 })
 export class RegistrarCobroService {
-  private _supabaseClient = inject(SupabaseService).supabaseClient;
+  private readonly _supabaseClient = inject(SupabaseService).supabaseClient;
 
   //Obtiene solo las ocupadas, me dio weba cambiarle el nombre de la funcion xdd
   async obtenerMesas(): Promise<any[]> {
@@ -55,7 +55,7 @@ export class RegistrarCobroService {
 
     const pedidosAgrupados = data.map((pedido: any) =>
       pedido.DetallePedido.map((detalle: any) => ({
-        nombre: detalle.Producto?.nombreProducto ?? 'Producto desconocido',
+        nombre: detalle.Producto?.nombreProducto || 'Producto desconocido',
         cantidad: detalle.cantidad,
         precio: detalle.Producto?.precio,
       }))
