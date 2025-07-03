@@ -9,25 +9,28 @@ export class RegistrarCobroService {
 
   //Obtiene solo las ocupadas, me dio weba cambiarle el nombre de la funcion xdd
   //Ya usa la tabla Mesa xd
-  async obtenerMesas(): Promise<any[]> {
+  async obtenerMesas(): Promise<{ idMesa: number }[]> {
     const { data, error } = await this._supabaseClient
-      .from('Mesa')
-      .select('idMesa')
-      .eq('estado', false) // !! False -> Ocupada !!
-      .order('idMesa', { ascending: true });
+      .from('Pedido')
+      .select('idMesa, Mesa(estado)')
+      .eq('estado', true); // solo pedidos activos
 
-    if (error) {
-      console.error('Error al obtener mesas:', error);
+    if (error || !data) {
+      console.error('Error al obtener mesas ocupadas:', error);
       return [];
     }
 
-    // Tipar item para evitar el error de "implicitly has an any type"
-    const mesasUnicas = Array.from(
-      new Set(data!.map((item: any) => item.idMesa))
-    ).map((idMesa) => ({ idMesa }));
+    const mesas = new Set<number>();
 
-    return mesasUnicas;
+    for (const pedido of data) {
+      if (pedido.Mesa?.estado === false) {
+        mesas.add(pedido.idMesa);
+      }
+    }
+
+    return Array.from(mesas).map(idMesa => ({ idMesa }));
   }
+
 
   async obtenerPedidosdelaMesa(mesa: number): Promise<any[]> {
     const { data, error } = await this._supabaseClient

@@ -81,16 +81,6 @@ export class SupabaseService {
         throw new Error(`Error al registrar pago: ${error.message}`);
       }
 
-      const { error: pedidoError } = await this.supabaseClient
-        .from('Pedido')
-        .update({ estado: true }) // !! True - Pagado !!
-        .eq('idPedido', pagoParaInsertar.idPedido)
-        .select();
-
-      if (pedidoError) {
-        console.error('Error al actualizar el estado del pedido:', pedidoError);
-        return;
-      }
       console.log('Pago registrado exitosamente:', data);
       return data;
     } catch (error) {
