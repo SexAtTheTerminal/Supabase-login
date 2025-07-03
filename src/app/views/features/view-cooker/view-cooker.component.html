@@ -30,7 +30,7 @@
       'ml-[240px]': !sidebarCollapsed
     }"
   >
-    <div class="relative bg-white rounded-xl border p-6">
+    <div class="relative bg-white rounded-xl border border-gray-200 p-6">
       <span class="absolute top-0 left-0 mt-4 ml-4 text-lg font-semibold">
         Gestión de Pedidos
       </span>
@@ -82,43 +82,80 @@
   </div>
 
   <!-- Columna derecha (Perfil del Personal) -->
-  <div class="flex-1 overflow-auto p-6 space-y-6">
+  <div class="flex-1 p-6 overflow-y-auto space-y-6">
     <!-- Tarjeta de perfil -->
     <div
-      class="rounded-xl border p-6 flex gap-4 items-center bg-white shadow-sm"
+      class="rounded-xl border border-gray-200 p-6 flex gap-4 items-center bg-white shadow-sm"
     >
       <!-- Círculo con ícono centrado -->
       <div
         class="w-16 h-16 bg-gray-300 rounded-full flex items-center justify-center"
       >
-        <span class="material-symbols-rounded">face</span>
+        <span class="material-symbols-rounded text-3xl">account_circle</span>
       </div>
 
       <!-- Frase personalizada -->
       <div
         class="flex-1 rounded bg-gray-100 p-3 flex justify-between items-center"
       >
-        <span class="text-sm text-gray-700 font-medium italic"
-          >*Frase Personalizada*</span
-        >
+        <span class="text-sm text-gray-700 font-medium italic">
+          Lorem ipsum dolor, sit amet consectetur adipisicing elit...
+        </span>
+        <button class="text-blue-500 hover:text-gray-700">
+          <span class="material-symbols-rounded">settings</span>
+        </button>
       </div>
     </div>
 
     <!-- Información del personal -->
-    <div class="rounded-xl border p-6 space-y-4 bg-white shadow-sm">
+    <div
+      class="rounded-xl border border-gray-200 p-6 space-y-4 bg-white shadow-sm"
+    >
+      <!-- Nombre Completo -->
       <div>
-        <p class="font-semibold text-gray-800 text-base">
-          *Nombre del Personal*
-        </p>
-        <p class="text-gray-600 text-sm">*Cargo del Personal*</p>
+        <label class="text-sm text-gray-500">Nombre Completo</label>
+        <input
+          type="text"
+          [value]="
+            userData?.nombreEmpleado +
+            ' ' +
+            userData?.apellPaternEmpleado +
+            ' ' +
+            userData?.apellMaternEmpleado
+          "
+          readonly
+          class="w-full mt-1 p-2 border border-gray-300 rounded-lg bg-gray-50 text-sm text-gray-700"
+        />
+      </div>
+
+      <!-- Teléfono -->
+      <div>
+        <label class="text-sm text-gray-500">Teléfono</label>
+        <input
+          type="tel"
+          [value]="userData?.telefono"
+          readonly
+          class="w-full mt-1 p-2 border border-gray-300 rounded-lg bg-gray-50 text-sm text-gray-700"
+        />
+      </div>
+
+      <!-- Rol -->
+      <div>
+        <label class="text-sm text-gray-500">Rol</label>
+        <input
+          type="text"
+          [value]="userData?.nombreRol"
+          readonly
+          class="w-full mt-1 p-2 border border-gray-300 rounded-lg bg-gray-50 text-sm text-gray-700"
+        />
       </div>
       <div>
         <label class="text-sm text-gray-500">Correo Electrónico</label>
         <input
-          type="text"
-          class="w-full mt-1 p-2 border border-gray-300 rounded-lg bg-gray-50 text-sm text-gray-700"
-          value="*Correo del Personal*"
+          type="email"
+          [value]="userData?.email"
           readonly
+          class="w-full mt-1 p-2 border border-gray-300 rounded-lg bg-gray-50 text-sm text-gray-700"
         />
       </div>
     </div>

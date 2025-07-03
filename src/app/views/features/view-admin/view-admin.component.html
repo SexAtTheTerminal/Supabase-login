@@ -1,1 +1,178 @@
-<p>view-admin works!</p>
+<!-- Material Symbols -->
+<link
+  rel="stylesheet"
+  href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0"
+/>
+<link
+  rel="stylesheet"
+  href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+/>
+
+<!-- Fuente Ubuntu -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;700&display=swap"
+  rel="stylesheet"
+/>
+
+<section
+  class="flex inset-0 -z-10 h-screen w-screen bg-gray-200 bg-[radial-gradient(#B8B8B8_1px,transparent_1px)] [background-size:16px_16px] font-[Ubuntu]"
+>
+  <!-- Sidebar -->
+  <app-sidebar-admin
+    (sidebarStateChange)="onSidebarToggle($event)"
+  ></app-sidebar-admin>
+
+  <!-- Contenido principal -->
+  <div
+    class="flex h-full w-full transition-all duration-300"
+    [ngClass]="{
+      'ml-[90px]': sidebarCollapsed,
+      'ml-[240px]': !sidebarCollapsed
+    }"
+  >
+    <!-- Columna izquierda (Gestión de Comprobantes) -->
+    <div class="w-[400px] p-6 overflow-y-auto">
+      <div
+        class="relative bg-white rounded-xl border border-gray-200 p-6 shadow-sm"
+      >
+        <span
+          class="absolute top-0 left-0 mt-4 ml-4 text-lg font-semibold text-gray-800"
+        >
+          Gestión de Comprobantes
+        </span>
+
+        <div
+          class="mt-10 bg-[#e6f0f4] rounded-xl p-6 flex items-center justify-between shadow-sm w-full"
+        >
+          <div class="flex items-center gap-4 mr-5">
+            <span class="material-symbols-rounded text-2xl text-blue-500">
+              receipt_long
+            </span>
+            <span class="text-base font-medium text-gray-800">
+              Visualizar Comprobantes
+            </span>
+          </div>
+          <button
+            class="flex items-center gap-2 bg-white text-gray-700 text-sm font-medium px-4 py-2 rounded-lg shadow border border-gray-200 hover:bg-gray-300 transition duration-400 ease-in-out"
+            routerLink="/admin/receipts"
+          >
+            <span class="material-symbols-rounded text-base">visibility</span>
+            Ver
+          </button>
+        </div>
+      </div>
+
+      <div
+        class="relative bg-white rounded-xl border border-gray-200 p-6 shadow-sm mt-8"
+      >
+        <span
+          class="absolute top-0 left-0 mt-4 ml-4 text-lg font-semibold text-gray-800"
+        >
+          Gestión de Usuarios
+        </span>
+
+        <div
+          class="mt-10 bg-[#e6f0f4] rounded-xl p-6 flex items-center justify-between shadow-sm w-full"
+        >
+          <div class="flex items-center gap-4 mr-5">
+            <span class="material-symbols-rounded text-2xl text-blue-500">
+              receipt_long
+            </span>
+            <span class="text-base font-medium text-gray-800">
+              Registro de Usuarios
+            </span>
+          </div>
+          <button
+            class="flex items-center gap-2 bg-white text-gray-700 text-sm font-medium px-4 py-2 rounded-lg shadow border border-gray-200 hover:bg-gray-300 transition duration-400 ease-in-out"
+            routerLink="/admin/record"
+          >
+            <span class="material-symbols-rounded text-base">visibility</span>
+            Ver
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Columna derecha (Perfil del Personal) -->
+    <div class="flex-1 p-6 overflow-y-auto space-y-6">
+      <!-- Tarjeta de perfil -->
+      <div
+        class="rounded-xl border border-gray-200 p-6 flex gap-4 items-center bg-white shadow-sm"
+      >
+        <!-- Círculo con ícono centrado -->
+        <div
+          class="w-16 h-16 bg-gray-300 rounded-full flex items-center justify-center"
+        >
+          <span class="material-symbols-rounded text-3xl">account_circle</span>
+        </div>
+
+        <!-- Frase personalizada -->
+        <div
+          class="flex-1 rounded bg-gray-100 p-3 flex justify-between items-center"
+        >
+          <span class="text-sm text-gray-700 font-medium italic">
+            Lorem ipsum dolor, sit amet consectetur adipisicing elit...
+          </span>
+          <button class="text-blue-500 hover:text-gray-700">
+            <span class="material-symbols-rounded">settings</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Información del personal -->
+      <div
+        class="rounded-xl border border-gray-200 p-6 space-y-4 bg-white shadow-sm"
+      >
+        <!-- Nombre Completo -->
+        <div>
+          <label class="text-sm text-gray-500">Nombre Completo</label>
+          <input
+            type="text"
+            [value]="
+              userData?.nombreEmpleado +
+              ' ' +
+              userData?.apellPaternEmpleado +
+              ' ' +
+              userData?.apellMaternEmpleado
+            "
+            readonly
+            class="w-full mt-1 p-2 border border-gray-300 rounded-lg bg-gray-50 text-sm text-gray-700"
+          />
+        </div>
+
+        <!-- Teléfono -->
+        <div>
+          <label class="text-sm text-gray-500">Teléfono</label>
+          <input
+            type="tel"
+            [value]="userData?.telefono"
+            readonly
+            class="w-full mt-1 p-2 border border-gray-300 rounded-lg bg-gray-50 text-sm text-gray-700"
+          />
+        </div>
+
+        <!-- Rol -->
+        <div>
+          <label class="text-sm text-gray-500">Rol</label>
+          <input
+            type="text"
+            [value]="userData?.nombreRol"
+            readonly
+            class="w-full mt-1 p-2 border border-gray-300 rounded-lg bg-gray-50 text-sm text-gray-700"
+          />
+        </div>
+        <div>
+          <label class="text-sm text-gray-500">Correo Electrónico</label>
+          <input
+            type="email"
+            [value]="userData?.email"
+            readonly
+            class="w-full mt-1 p-2 border border-gray-300 rounded-lg bg-gray-50 text-sm text-gray-700"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

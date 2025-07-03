@@ -1,17 +1,20 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { SidebarCasherComponent } from '../../../sidebar/features/sidebar-casher/sidebar-casher.component';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { RouterLink, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ItemSearchComponent } from '../../../shared/modals/item-search/item-search.component';
+import { RegistrarPedidosService } from '../../../services/data-access/registrar-pedidos/registrar-pedidos.service';
+import { AuthService } from '../../../auth/data-access/auth.service';
 
-interface Producto {
-  descripcion: string;
-  tipo: string;
-  unidad: string;
-  cantidad: number;
-  precioUnitario: number;
-  subtotal: number;
+interface Mesa {
+  idMesa: number;
+  numeroMesa: string;
+}
+
+interface Modalidad {
+  idModalidad: number;
+  nombreModalidad: string;
 }
 
 @Component({
@@ -26,25 +29,60 @@ interface Producto {
   templateUrl: './registrar-pedidos.component.html',
   styleUrl: './registrar-pedidos.component.scss',
 })
-export class RegistrarPedidosComponent {
+export class RegistrarPedidosComponent implements OnInit {
   sidebarCollapsed = false;
   items: any[] = [];
-  mesas: any[] = ['Mesa #1', 'Mesa #2', 'Mesa #3'];
-  modalidades: any[] = ['En Mesa', 'Delivery'];
-  cocineros: any[] = ['Cocinero #1', 'Cocinero #2', 'Cocinero #3'];
+  mesas: any[] = [];
+  modalidades: any[] = [];
   showItemSearch = false;
-  modalidadSeleccionada: string = '';
-  cocineroSeleccionado: string = '';
-  mesaSeleccionada: string = '';
+  modalidadSeleccionada: Modalidad | null = null;
+  mesaSeleccionada: Mesa | null = null;
+  ultimoId!: number | null;
+  nuevoCodigo: string = '';
+
+  private readonly _authService = inject(AuthService);
+  private readonly router = inject(Router);
+  private readonly registrarPedidosService = inject(RegistrarPedidosService);
+
+  ngOnInit(): void {
+    this._authService.verifyRoleOrSignOut().then((isValid) => {
+      if (!isValid) {
+        this.router.navigate(['/auth/log-in']);
+      }
+    });
+    (async () => {
+      try {
+        const [mesas, modalidades, ultimoId] = await Promise.all([
+          this.registrarPedidosService.obtenerMesas(),
+          this.registrarPedidosService.obtenerModalidad(),
+          this.registrarPedidosService.obtenerUltimoIdPedido(),
+        ]);
+
+        this.mesas = mesas;
+        this.modalidades = modalidades;
+        this.ultimoId = ultimoId;
+
+        this.nuevoCodigo =
+          await this.registrarPedidosService.generarNuevoCodigoPedido();
+
+        // Suscribirse para actualizar automáticamente el código
+        this.registrarPedidosService.pedidoRegistrado$.subscribe(async () => {
+          this.nuevoCodigo =
+            await this.registrarPedidosService.generarNuevoCodigoPedido();
+        });
+      } catch (error) {
+        console.error('Error en ngOnInit:', error);
+        this.nuevoCodigo = 'PD-????????';
+      }
+    })();
+  }
 
   onSidebarToggle(state: boolean): void {
     this.sidebarCollapsed = state;
   }
 
-  agregarItem2(item: any) {
-    // Aquí agregas el ítem a tu tabla dinámica
+  agregarItem(item: any) {
     const isCopy = this.items.some((i) => i.id === item.id);
-
     if (!isCopy) {
       const nuevo = {
         ...item,
@@ -55,12 +93,46 @@ export class RegistrarPedidosComponent {
     }
   }
 
+  agregarItemsMultiples(itemsPopup: any[]) {
+    const idsPopup = new Set(itemsPopup.map((item) => item.id));
+
+    // Elimina los que ya no están seleccionados
+    this.items = this.items.filter((item) => idsPopup.has(item.id));
+
+    // Agrega los nuevos
+    for (const nuevo of itemsPopup) {
+      const yaExiste = this.items.find((item) => item.id === nuevo.id);
+      if (!yaExiste) {
+        this.items.push({ ...nuevo });
+      }
+    }
+  }
+
+  async registrarPedido() {
+    const montoTotal = this.items.reduce((acc, item) => acc + item.subtotal, 0);
+    console.log(montoTotal);
+    const exito = await this.registrarPedidosService.agregarPedidoConDetalles(
+      this.mesaSeleccionada!.idMesa,
+      this.modalidadSeleccionada!.idModalidad,
+      montoTotal,
+      false,
+      this.items
+    );
+
+    if (exito) {
+      alert('Pedido registrado correctamente');
+      await this.limpiarVentana();
+    } else {
+      alert('Ocurrió un error al registrar el pedido');
+    }
+  }
+
   eliminarItem(item: any) {
     this.items = this.items.filter((i) => i !== item);
   }
 
   incrementarCantidad(item: any) {
-    if (item.cantidad == null) item.cantidad = 0;
+    item.cantidad ??= 0;
     item.cantidad++;
   }
 
@@ -71,5 +143,22 @@ export class RegistrarPedidosComponent {
 
   limpiarItems() {
     this.items = [];
+  }
+
+  async limpiarVentana(): Promise<void> {
+    this.items = [];
+    this.mesaSeleccionada = null;
+    this.modalidadSeleccionada = null;
+
+    try {
+      this.mesas = await this.registrarPedidosService.obtenerMesas(); // Actualiza mesas desocupadas
+      this.ultimoId =
+        await this.registrarPedidosService.obtenerUltimoIdPedido();
+      this.nuevoCodigo =
+        await this.registrarPedidosService.generarNuevoCodigoPedido();
+    } catch (error) {
+      console.error('Error al reiniciar datos del pedido:', error);
+      this.nuevoCodigo = 'PD-????????';
+    }
   }
 }

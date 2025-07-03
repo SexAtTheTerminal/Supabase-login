@@ -1,36 +1,31 @@
-import { inject } from "@angular/core"
-import { AuthService } from "../auth.service";
-import { CanActivateFn, Router } from "@angular/router";
+import { inject } from '@angular/core';
+import { AuthService } from '../auth.service';
+import { CanActivateFn, Router } from '@angular/router';
 
 const routerInjection = () => inject(Router);
 
 const authService = () => inject(AuthService);
 
 export const privateGuard: CanActivateFn = async () => {
-    const router = routerInjection();
+  const router = routerInjection();
 
-    const {data} = await authService().session();
+  const { data } = await authService().session();
 
-    console.log(data);
+  if (!data.session) {
+    router.navigateByUrl('/auth/log-in');
+  }
 
-    if (!data.session) {
-        router.navigateByUrl('/auth/log-in');
-    }
-
-    return !!data.session;
-}
-
+  return !!data.session;
+};
 
 export const publicGuard: CanActivateFn = async () => {
-    const router = routerInjection();
+  const router = routerInjection();
 
-    const {data} = await authService().session();
+  const { data } = await authService().session();
 
-    console.log(data);
+  if (data.session) {
+    router.navigateByUrl('/');
+  }
 
-    if (data.session) {
-        router.navigateByUrl('/');
-    }
-
-    return !data.session;
- }
+  return !data.session;
+};

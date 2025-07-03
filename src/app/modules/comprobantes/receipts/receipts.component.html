@@ -1,0 +1,88 @@
+<link
+  rel="stylesheet"
+  href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0"
+/>
+<link
+  rel="stylesheet"
+  href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+/>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link
+  rel="preconnect"
+  preconnect
+  href="https://fonts.gstatic.com"
+  crossorigin
+/>
+<link
+  href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;700&display=swap"
+  rel="stylesheet"
+/>
+
+<!-- Estilo limpio y moderno -->
+<section
+  class="flex inset-0 -z-10 h-screen w-screen bg-gray-200 bg-[radial-gradient(#B8B8B8_1px,transparent_1px)] [background-size:16px_16px] font-[Ubuntu]"
+>
+  <app-sidebar-admin
+    (sidebarStateChange)="onSidebarToggle($event)"
+  ></app-sidebar-admin>
+
+  <div
+    class="flex h-full w-full transition-all duration-300"
+    [ngClass]="{
+      'ml-[90px]': sidebarCollapsed,
+      'ml-[240px]': !sidebarCollapsed
+    }"
+  >
+    <div class="flex-1 p-6 overflow-y-auto">
+      <!-- Breadcrumb -->
+      <nav class="text-sm text-gray-600 mb-2">
+        <span routerLink="/admin" class="text-gray-800 hover:underline"
+          >Inicio</span
+        >
+        > <span class="text-gray-800">Comprobantes</span> >
+        <span class="text-gray-900 text-xl font-semibold"
+          >Visualizar Comprobantes</span
+        >
+      </nav>
+
+      <!-- Título -->
+      <div class="mb-6">
+        <h1 class="text-2xl font-bold text-gray-800 mb-1">
+          Visualizar Comprobantes de Pago
+        </h1>
+        <p class="text-gray-600">
+          Comprobantes de pago generados en base a los cobros de pedidos.
+        </p>
+      </div>
+
+      <!-- Mensaje de éxito -->
+      <div
+        *ngIf="mensajeExito"
+        class="fixed top-5 right-5 z-50 bg-green-100 border border-green-300 text-green-800 px-4 py-2 rounded-lg shadow-md animate-fade-in"
+      >
+        {{ mensajeExito }}
+      </div>
+
+      <!-- Filtros y tabla -->
+      <div class="flex flex-col space-y-6">
+        <app-filtros-receipts
+          [busquedaCodigo]="busquedaCodigo"
+          [metodoSeleccionado]="metodoSeleccionado"
+          [ordenFecha]="ordenFecha"
+          (busquedaCodigoChange)="busquedaCodigo = $event; aplicarFiltros()"
+          (metodoSeleccionadoChange)="
+            metodoSeleccionado = $event; aplicarFiltros()
+          "
+          (ordenFechaChange)="ordenFecha = $event; aplicarFiltros()"
+          (reiniciar)="reiniciarFiltros()"
+        ></app-filtros-receipts>
+
+        <app-tabla-receipts
+          [pagos]="pagosFiltrados"
+          (verDetalle)="verDetalle($event)"
+          (eliminar)="eliminarPago($event)"
+        ></app-tabla-receipts>
+      </div>
+    </div>
+  </div>
+</section>

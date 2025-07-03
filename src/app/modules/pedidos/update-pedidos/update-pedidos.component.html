@@ -27,7 +27,7 @@
     class="flex-1 p-6 space-y-4 transition-all duration-300"
   >
     <nav class="text-sm text-gray-500">
-      <span routerLink="/cashier" class="text-[#6A7282] font-normal"
+      <span routerLink="/cooker" class="text-[#6A7282] font-normal"
         >Inicio</span
       >
       > <span class="text-[#6A7282] font-normal">Pedidos</span> >
@@ -61,8 +61,15 @@
       <!-- Tabla editable de pedidos -->
       <app-tabla-update-pedidos
         [pedidos]="pedidosFiltrados"
+        (verDetalle)="abrirModal($event)"
         (estadoActualizado)="actualizarEstadoPedido($event)"
       ></app-tabla-update-pedidos>
+
+      <app-detalles-pedido
+        *ngIf="modalAbierto"
+        [pedido]="pedidoSeleccionado"
+        (cerrar)="cerrarModal()"
+      ></app-detalles-pedido>
     </div>
   </div>
 </section>

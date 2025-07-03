@@ -108,6 +108,10 @@
     }
   },
   "cli": {
+<<<<<<< HEAD
     "analytics": "574e6e07-57df-4814-bcaa-01a7d83b4b88"
+=======
+    "analytics": "dca7ed8c-7db5-4ef4-83db-1c544b9d672d"
+>>>>>>> main
   }
 }

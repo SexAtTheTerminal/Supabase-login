@@ -1,0 +1,54 @@
+<div class="flex flex-col md:flex-row flex-wrap gap-4 items-center justify-between mb-6 p-4 rounded-xl shadow-sm bg-[#e6f0f4] border border-gray-200">
+  <!-- Contenedor de filtros -->
+  <div class="flex flex-col md:flex-row flex-wrap gap-4 items-center flex-1">
+    <!-- Buscar por código -->
+    <div class="relative w-full md:w-auto">
+      <span class="material-symbols-rounded absolute left-3 top-2.5 text-gray-600">
+        search
+      </span>
+      <input
+        [value]="busquedaCodigo"
+        (input)="emitirBusquedaCodigo($event)"
+        type="text"
+        placeholder="Buscar por"
+        class="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg shadow-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800"
+      />
+    </div>
+
+    <!-- Filtro por cargo -->
+    <div class="relative w-full md:w-auto">
+      <span class="material-symbols-rounded absolute left-3 top-2.5 text-gray-600">
+        work
+      </span>
+      <select
+        [value]="filtroCargo"
+        (change)="emitirFiltroCargo($event)"
+        class="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg shadow-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800"
+      >
+        <option value="">Buscar Por</option>
+        <option *ngFor="let estados of estados" [value]="estados">
+          {{ estados }}
+        </option>   
+      </select>
+    </div>
+
+    <!-- Botón reiniciar -->
+    <button
+      *ngIf="busquedaCodigo || busquedaNombre || filtroCargo"
+      (click)="reiniciarFiltros()"
+      class="w-full md:w-auto px-4 py-2 bg-white text-gray-700 rounded-lg hover:bg-gray-300 transition duration-200 shadow-md flex items-center gap-2 border border-gray-200"
+    >
+      <span class="material-symbols-rounded text-gray-600">restart_alt</span>
+      Reiniciar
+    </button>
+  </div>
+
+  <!-- Botón Crear Usuario -->
+  <button
+    (click)="onCrearUsuario()"
+    class="w-full md:w-auto px-4 py-2 bg-white text-gray-700 rounded-lg hover:bg-gray-300 transition duration-200 shadow-md flex items-center gap-2 border border-gray-200"
+  >
+    <span class="material-symbols-rounded text-gray-600">add</span>
+    Crear Usuario
+  </button>
+</div>

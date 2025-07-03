@@ -1,32 +1,121 @@
 <div
-  class="fixed inset-0 bg-black/30 flex items-center justify-center z-50 transition-opacity duration-300"
+  class="fixed inset-0 bg-black/30 flex items-center justify-center z-50"
+  (click)="onBackdropClick($event)"
 >
   <div
-    class="bg-white w-full max-w-md rounded-xl shadow-lg p-6 space-y-4 animate-scaleIn"
+    #modalContent
+    [ngClass]="{
+      'animate-scaleIn': !cerrando,
+      'animate-scaleOut': cerrando
+    }"
+    class="bg-white w-full max-w-md rounded-xl shadow-xl p-6 animate-scaleIn space-y-4"
+    (click)="$event.stopPropagation()"
   >
-    <div class="flex justify-between items-center mb-2">
-      <h2 class="text-lg font-semibold text-gray-800">Buscar ítems</h2>
-      <button (click)="close.emit()" class="text-gray-400 hover:text-gray-600">
+    <!-- Encabezado -->
+    <div class="flex justify-between items-center">
+      <h2 class="text-lg font-semibold text-gray-800">Buscar productos</h2>
+      <button (click)="salir()" class="text-gray-500 hover:text-gray-800">
         <span class="material-symbols-rounded">close</span>
       </button>
     </div>
 
+    <!-- Buscador -->
     <input
       type="text"
       [(ngModel)]="searchTerm"
       placeholder="Buscar por nombre..."
-      class="w-full border px-4 py-2 rounded focus:ring focus:ring-blue-300"
+      class="w-full border border-gray-300 px-4 py-2 rounded-md focus:ring focus:ring-purple-200 text-sm"
     />
 
-    <ul class="max-h-60 overflow-y-auto divide-y text-sm">
-      <li
-        *ngFor="let item of filteredItems"
-        (click)="seleccionar(item)"
-        class="py-2 px-2 cursor-pointer hover:bg-blue-50 rounded flex justify-between"
+    <!-- Filtros de categoría -->
+    <div class="flex flex-wrap gap-2 text-sm">
+      <button
+        *ngFor="let cat of categorias"
+        (click)="cambiarCategoria(cat)"
+        [class.bg-purple-400]="selectedCategory === cat"
+        [class.text-white]="selectedCategory === cat"
+        class="px-3 py-1 rounded-full border border-purple-400 hover:bg-purple-300 hover:text-white transition-all"
       >
-        <span>{{ item.descripcion }}</span>
-        <span class="text-gray-500">s/. {{ item.precio.toFixed(2) }}</span>
+        {{ cat }}
+      </button>
+    </div>
+
+    <!-- Lista de productos con checkbox -->
+    <ul class="max-h-60 overflow-y-auto divide-y divide-gray-100 text-sm mt-2">
+      <li
+        *ngFor="let item of paginatedItems"
+        (click)="toggleSeleccion(item)"
+        [ngClass]="{
+          'bg-purple-100 border border-purple-300': item.seleccionado,
+          'hover:bg-purple-50': !item.seleccionado
+        }"
+        class="py-2 px-2 flex items-center gap-3 rounded transition cursor-pointer select-none"
+      >
+        <input
+          type="checkbox"
+          [checked]="item.seleccionado"
+          (click)="$event.stopPropagation()"
+          (change)="item.seleccionado = !item.seleccionado"
+          class="form-checkbox text-purple-600"
+        />
+
+        <div class="flex justify-between items-center w-full">
+          <div>
+            <p
+              class="font-medium"
+              [ngClass]="{
+                'text-purple-800': item.seleccionado,
+                'text-gray-700': !item.seleccionado
+              }"
+            >
+              {{ item.descripcion }}
+            </p>
+            <p class="text-xs text-gray-400">
+              {{ item.tipo }} - {{ item.unidad }}
+            </p>
+          </div>
+          <span
+            class="text-sm font-semibold"
+            [ngClass]="{
+              'text-purple-800': item.seleccionado,
+              'text-gray-600': !item.seleccionado
+            }"
+          >
+            S/ {{ item.precio.toFixed(2) }}
+          </span>
+        </div>
       </li>
     </ul>
+
+    <!-- Paginación -->
+    <div class="flex justify-between items-center pt-4 text-sm text-gray-700">
+      <button
+        (click)="irPaginaAnterior()"
+        [disabled]="currentPage === 1"
+        class="px-3 py-1 rounded border border-gray-300 hover:bg-purple-100 disabled:opacity-40"
+      >
+        Anterior
+      </button>
+
+      <span>Página {{ currentPage }} de {{ totalPages }}</span>
+
+      <button
+        (click)="irPaginaSiguiente()"
+        [disabled]="currentPage === totalPages"
+        class="px-3 py-1 rounded border border-gray-300 hover:bg-purple-100 disabled:opacity-40"
+      >
+        Siguiente
+      </button>
+    </div>
+
+    <!-- Botón para agregar ítems seleccionados -->
+    <div class="flex justify-end pt-4">
+      <button
+        (click)="agregarSeleccionados()"
+        class="bg-indigo-500 text-white px-4 py-2 rounded hover:bg-indigo-400 transition"
+      >
+        Agregar seleccionados
+      </button>
+    </div>
   </div>
 </div>

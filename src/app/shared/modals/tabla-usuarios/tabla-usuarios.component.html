@@ -1,0 +1,82 @@
+<div class="bg-white rounded-lg shadow overflow-hidden border border-gray-200">
+
+  <!-- Tabla -->
+  <table
+    *ngIf="paginaActual.length > 0"
+    class="w-full table-auto"
+  >
+    <thead>
+      <tr class="bg-[#e6f0f4] text-gray-800">
+        <th class="px-6 py-3 text-left font-medium">Código</th>
+        <th class="px-6 py-3 text-left font-medium">Nombre y Apellidos</th>
+        <th class="px-6 py-3 text-left font-medium">DNI</th>
+        <th class="px-6 py-3 text-left font-medium">Correo Electrónico</th>
+        <th class="px-6 py-3 text-left font-medium">Cargo</th>
+        <th class="px-6 py-3 text-center font-medium">Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        *ngFor="let usuario of paginaActual"
+        class="border-t border-gray-200 hover:bg-gray-100 transition duration-150"
+      >
+        <td class="px-6 py-4 font-mono text-sm text-gray-800">
+        {{ usuario.codigo }}
+        </td>
+        <td class="px-6 py-4 text-sm text-gray-700">{{ usuario["Nombre y Apellido"] }}</td>
+        <td class="px-6 py-4 text-sm text-gray-700">{{ usuario.DNI }}</td>
+        <td class="px-6 py-4 text-sm text-gray-700">{{ usuario["Correo Electrónico"] }}</td>
+        <td class="px-6 py-4 text-sm text-gray-700">{{ usuario.Cargo }}</td>
+        <td class="px-6 py-4 flex items-center justify-center gap-4">
+            <button
+            (click)="editarUsuario.emit(usuario)"
+            class="text-blue-500 hover:text-blue-700"
+            title="Editar usuario"
+          >
+            <span class="material-symbols-rounded">edit</span>
+          </button>
+          <button
+            (click)="eliminarUsuario.emit(usuario)"
+            class="text-red-500 hover:text-red-700"
+            title="Eliminar usuario"
+          >
+            <span class="material-symbols-rounded">delete</span>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Estado vacío -->
+  <div
+    *ngIf="paginaActual.length === 0"
+    class="flex flex-col items-center justify-center text-gray-500 p-8"
+  >
+    <span class="material-symbols-rounded text-6xl text-gray-400 mb-2"
+      >group</span
+    >
+    <p class="text-lg font-medium">No se encontraron usuarios</p>
+    <p class="text-sm text-gray-400">
+      Intenta con otro filtro o crea un nuevo usuario.
+    </p>
+  </div>
+
+  <!-- Paginación -->
+  <div class="flex justify-between items-center p-4 bg-[#e6f0f4]" *ngIf="totalPaginas > 1">
+    <button
+      class="px-3 py-1 bg-white rounded hover:bg-gray-300 text-gray-800 border border-gray-200"
+      (click)="paginaAnterior()"
+      [disabled]="pagina === 1"
+    >
+      Anterior
+    </button>
+    <p class="text-gray-800">Página {{ pagina }} de {{ totalPaginas }}</p>
+    <button
+      class="px-3 py-1 bg-white rounded hover:bg-gray-300 text-gray-800 border border-gray-200"
+      (click)="paginaSiguiente()"
+      [disabled]="pagina === totalPaginas"
+    >
+      Siguiente
+    </button>
+  </div>
+</div>
