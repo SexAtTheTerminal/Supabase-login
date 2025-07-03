@@ -7,6 +7,9 @@ import { FormsModule } from '@angular/forms';
 import { RegistrarCobroService } from '../../../services/data-access/registrar-cobro/registrar-cobro.service';
 import { AuthService } from '../../../auth/data-access/auth.service';
 import { Router } from '@angular/router';
+import { SupabaseService } from '../../../shared/data-access/supabase.service';
+
+
 
 @Component({
   selector: 'app-registrar-cobro',
@@ -19,6 +22,8 @@ export class RegistrarCobroComponent {
   sidebarCollapsed = false;
   dni: string = '';
   clienteNombres: string = '';
+  // TODO:
+  clienteCompleto: any = null;
   loading: boolean = false;
   error: string | null = null;
   mesas: any[] = [];
@@ -35,6 +40,7 @@ export class RegistrarCobroComponent {
   constructor(
     private readonly apiPeruService: ApiPeruService,
     private readonly registrarCobroService: RegistrarCobroService,
+    private readonly supabaseService: SupabaseService, // Servicio para manejar las consultas a la base de datos Supabase
     private readonly router: Router
   ) {}
 
@@ -53,7 +59,7 @@ export class RegistrarCobroComponent {
 
   // DNI API
 
-  buscarClientePorDni(): void {
+  async buscarClientePorDni(): Promise<void> {
     this.clienteNombres = '';
     this.error = null;
 
@@ -69,41 +75,65 @@ export class RegistrarCobroComponent {
 
     this.loading = true;
 
-    this.apiPeruService
-      .buscarPorDni(this.dni)
-      .pipe(
+    try {
+      // TODO: Vamos a verificar si el cliente se encuentra registrado en Supabase
+      const clienteExistente = await this.supabaseService.verificarClienteExiste(this.dni);
+
+      if (clienteExistente) {
+        this.clienteCompleto = clienteExistente;
+        this.clienteNombres = `${clienteExistente.nombreCliente} ${clienteExistente.apellPaterno} ${clienteExistente.apellMaterno || ''}`;
+        this.loading = false;
+        console.log('Cliente con historial de Compras en Supabase');
+        return;
+      }
+
+      // TODO: Si el cliente no se encuentra en Supabase, buscar en la API de Perú
+      this.apiPeruService.buscarPorDni(this.dni).pipe(
         catchError((err) => {
           this.loading = false;
           this.error = 'Error al buscar el DNI. Por favor, intente de nuevo';
           console.error('Error en la llamada a la API:', err);
           return throwError(() => new Error('Error al buscar DNI'));
         })
-      )
-      .subscribe((response) => {
+      ).subscribe(async (response) => {
         this.loading = false;
-        console.log(`Respuesta COMPLETA de la API: ${response}`);
 
-        const apiData = response.data;
+        if (response && response.success && response.data) {
+          const apiData = response.data;
 
-        console.log('Valor de apiData:', apiData);
+          // TODO: Guardar un nuevo cliente en nuestra base de datos Supabase, para evitar consumir las posibilidad de llamar a la API.
+          try {
+            const clienteParaGuardar = {
+              dni: this.dni,
+              nombres: apiData.nombres,
+              apellido_paterno: apiData.apellido_paterno,
+              apellido_materno: apiData.apellido_materno || ''
+            };
 
-        if (
-          response &&
-          response.success &&
-          apiData &&
-          apiData.nombres &&
-          apiData.apellido_paterno
-        ) {
-          this.clienteNombres = `${apiData.nombres} ${
-            apiData.apellido_paterno
-          } ${apiData.apellido_materno || ''}`;
-          this.error = null;
-          console.log('Cliente encontrado:', this.clienteNombres);
+            const clienteGuardado = await this.supabaseService.guardarCliente(clienteParaGuardar);
+
+            this.clienteCompleto = clienteGuardado[0];
+            this.clienteNombres = `${apiData.nombres} ${apiData.apellido_paterno} ${apiData.apellido_materno || ''}`;
+            this.error = null;
+
+            console.log('Cliente guardado en Supabase');
+            alert('Cliente registrado en Supabase exitosamente');
+
+          } catch (supabaseError) {
+            console.error('Error al guardar en Supabase:', supabaseError);
+            this.error = 'Error al guardar cliente en la base de datos';
+          }
         } else {
           this.error = 'No se encontró información para el DNI proporcionado';
           this.clienteNombres = '';
         }
       });
+
+    } catch (error) {
+        this.loading = false;
+        this.error = 'Error al verificar cliente';
+        console.error('Error:', error);
+    }
   }
 
   async mostrarPedidosMesas(
@@ -133,9 +163,9 @@ export class RegistrarCobroComponent {
   }
 
   async registrarPago(
-    mesaSeleccionada: { idMesa: number; numeroMesa: string } | null,
-    montoTotal: number,
-    dniCliente: string
+  mesaSeleccionada: { idMesa: number; numeroMesa: string } | null,
+  montoTotal: number,
+  dniCliente: string
   ) {
     if (!mesaSeleccionada) {
       this.mensajeError = 'Debe seleccionar una mesa.';
@@ -155,18 +185,25 @@ export class RegistrarCobroComponent {
 
     try {
       if (this.datosAregistrar) {
-        await this.registrarCobroService.registrarPagoConPedidoCompleto(
-          this.datosAregistrar.idPedido,
-          this.datosAregistrar.idModalidad,
-          montoTotal,
-          dniCliente
-        );
+        const pagoData = {
+          pedido_id: this.datosAregistrar.idPedido,
+          modalidad_id: this.datosAregistrar.idModalidad,
+          monto_total: montoTotal,
+          dni_cliente: dniCliente
+        };
+
+        console.log('Registrando pago en Supabase:', pagoData);
+        await this.supabaseService.registrarPago(pagoData);
+        console.log('Pago registrado en Supabase correctamente');
+
+
       } else {
         this.mensajeError = 'No hay pedidos para registrar.';
         return;
       }
     } catch (error) {
       console.error('Error al registrar cobro', error);
+      this.mensajeError = 'Error al registrar el pago: ' + error;
       return;
     }
 
@@ -192,4 +229,24 @@ export class RegistrarCobroComponent {
     this.paginaActual = this.paginaActual + 1;
     this.mostrarPedidosMesas(mesaSeleccionada, this.paginaActual - 1);
   }
+
+  // TODO: Con esta función se confirma el pago con el cliente seleccionado.
+  async confirmarPagoConCliente(): Promise<void> {
+    if (!this.mesaSeleccionada) {
+      this.mensajeError = 'Debe seleccionar una mesa.';
+      return;
+    }
+
+    if (!this.clienteCompleto) {
+      this.mensajeError = 'Debe buscar un cliente primero.';
+      return;
+    }
+    await this.registrarPago(this.mesaSeleccionada, this.totalPedido, this.dni);
+
+  }
+
+
+
+
+
 }

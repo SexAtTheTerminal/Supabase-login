@@ -132,7 +132,7 @@
         <!-- Botón Confirmar -->
         <button
           [disabled]="!clienteNombres"
-          (click)="registrarPago(mesaSeleccionada, totalPedido, dni)"
+          (click)="confirmarPagoConCliente()"
           [ngClass]="{
             'bg-gray-400 cursor-not-allowed': !clienteNombres,
             'bg-green-600 hover:bg-green-700': clienteNombres
