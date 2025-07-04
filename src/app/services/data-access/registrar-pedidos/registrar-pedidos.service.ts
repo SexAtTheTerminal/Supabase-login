@@ -84,10 +84,10 @@ export class RegistrarPedidosService {
       return false;
     }
 
-    // Actualizar estado de la mesa a ocupado (true)
+    // Actualizar estado de la mesa a ocupado
     const { error: errorMesa } = await this._supabaseClient
       .from('Mesa')
-      .update({ estado: true })
+      .update({ estado: false })
       .eq('idMesa', idMesa);
     console.log('Actualizando mesa:', idMesa);
 
