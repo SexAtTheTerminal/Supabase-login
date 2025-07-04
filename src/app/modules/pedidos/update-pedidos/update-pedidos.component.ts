@@ -34,6 +34,7 @@ export class UpdatePedidosComponent {
   pedidos: any[] = [];
   pedidosFiltrados: any[] = [];
   pedidoSeleccionado: any = null;
+  botonUnico: boolean = false; // !! False - Sin clickear !!
 
   // Mensajes
   mensajeExito: string = '';
@@ -91,6 +92,7 @@ export class UpdatePedidosComponent {
   }
 
   actualizarEstadoPedido(event: { pedido: any; nuevoEstado: string }): void {
+    this.botonUnico = true; // !! True - Clickeado !!
     const index = this.pedidos.findIndex(
       (p) => p.codigo === event.pedido.codigo
     );

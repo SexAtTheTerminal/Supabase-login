@@ -39,12 +39,17 @@ export class RegistrarPedidosService {
       unidad: string;
     }[]
   ): Promise<boolean> {
+    const fechaLocal = new Date();
+    const fechaFormateada = fechaLocal
+      .toISOString()
+      .slice(0, 19)
+      .replace('T', ' ');
     const { data: pedidoInsertado, error: errorPedido } =
       await this._supabaseClient
         .from('Pedido')
         .insert([
           {
-            fecha: new Date().toISOString(),
+            fecha: fechaFormateada,
             idMesa,
             idModalidad,
             montoTotal: montoTotal,
