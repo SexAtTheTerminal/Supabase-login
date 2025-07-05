@@ -31,9 +31,11 @@ export class RegistrarCobroComponent {
   datosAregistrar: { idPedido: number; idModalidad: number } | null = null;
   paginaActual: number = 0;
   botonUnico: boolean = false;
+  tiposPago: { id: number; nombre: string }[] = [];
+  tipoPagoSeleccionado: { id: number; nombre: string } | null = null;
 
   private readonly _authService = inject(AuthService);
-  private readonly registrarCobroService = inject(RegistrarCobroService)
+  private readonly registrarCobroService = inject(RegistrarCobroService);
 
   constructor(
     private readonly apiPeruService: ApiPeruService,
@@ -44,6 +46,10 @@ export class RegistrarCobroComponent {
     this.sidebarCollapsed = state;
   }
 
+  onTipoPagoChange(tipo: { id: number; nombre: string } | null): void {
+    this.tipoPagoSeleccionado = tipo;
+  }
+
   async ngOnInit() {
     this._authService.verifyRoleOrSignOut().then((isValid) => {
       if (!isValid) {
@@ -51,6 +57,9 @@ export class RegistrarCobroComponent {
       }
     });
     this.mesas = await this.registrarCobroService.obtenerMesas();
+
+    // Inicializar tipos de pago
+    this.tiposPago = await this.registrarCobroService.obtenerTiposPago();
   }
 
   // DNI API
@@ -81,7 +90,6 @@ export class RegistrarCobroComponent {
           clienteExistente.apellPaterno
         } ${clienteExistente.apellMaterno || ''}`;
         this.loading = false;
-        console.log('Cliente con historial de Compras en Supabase');
         return;
       }
 
@@ -120,7 +128,6 @@ export class RegistrarCobroComponent {
               } ${apiData.apellido_materno || ''}`;
               this.error = null;
 
-              console.log('Cliente guardado en Supabase');
               alert('Cliente registrado en Supabase exitosamente');
             } catch (supabaseError) {
               console.error('Error al guardar en Supabase:', supabaseError);
@@ -157,7 +164,6 @@ export class RegistrarCobroComponent {
       this.paginaActual = nPedido + 1;
       this.totalPaginas = resultado.length;
 
-      console.log('Pedido seleccionado:', this.pedidoSeleccionado);
     } catch (error) {
       console.error('Error al mostrar pedidos:', error);
       this.pedidoSeleccionado = [];
@@ -175,12 +181,18 @@ export class RegistrarCobroComponent {
       return;
     }
 
+    // TODO: Condicional para seleccionar el tipo de pago
+    if (!this.tipoPagoSeleccionado) {
+      this.mensajeError = 'Debe seleccionar un tipo de pago.';
+      this.botonUnico = false;
+      return;
+    }
+
     try {
       const resultado = await this.registrarCobroService.obtenerIds(
         mesaSeleccionada.idMesa
       );
       this.datosAregistrar = resultado?.[this.paginaActual - 1] || null;
-      console.log('Ids a registrar', this.datosAregistrar);
     } catch (error) {
       console.error('Error al obtener datos:', error);
       return;
@@ -193,9 +205,9 @@ export class RegistrarCobroComponent {
           modalidad_id: this.datosAregistrar.idModalidad,
           monto_total: montoTotal,
           dni_cliente: dniCliente,
+          tipo_pago_id: this.tipoPagoSeleccionado.id, // Usar el ID del tipo de pago seleccionado
         };
 
-        console.log('Registrando pago en Supabase:', pagoData);
         await this.registrarCobroService.registrarPago(pagoData);
         await this.registrarCobroService.actualizarEstadoMesa(
           mesaSeleccionada.idMesa
@@ -234,7 +246,6 @@ export class RegistrarCobroComponent {
     this.mostrarPedidosMesas(mesaSeleccionada, this.paginaActual - 1);
   }
 
-  // TODO: Con esta función se confirma el pago con el cliente seleccionado.
   async confirmarPagoConCliente(): Promise<void> {
     if (!this.mesaSeleccionada) {
       this.mensajeError = 'Debe seleccionar una mesa.';
@@ -245,6 +256,11 @@ export class RegistrarCobroComponent {
       this.mensajeError = 'Debe buscar un cliente primero.';
       return;
     }
+    if (!this.tipoPagoSeleccionado) {
+      this.mensajeError = 'Debe seleccionar un tipo de pago.';
+      return;
+    }
+
     await this.registrarPago(this.mesaSeleccionada, this.totalPedido, this.dni);
   }
 }

@@ -28,7 +28,9 @@ export class RegistrarCobroService {
       }
     }
 
-    return Array.from(mesas).map((idMesa) => ({ idMesa }));
+    return Array.from(mesas)
+      .sort((a, b) => a - b)
+      .map((idMesa) => ({ idMesa }));
   }
 
   async obtenerPedidosdelaMesa(mesa: number): Promise<any[]> {
@@ -173,13 +175,15 @@ export class RegistrarCobroService {
     try {
       console.log('Datos del pago a registrar:', pagoData);
 
-      // ```Insert``` para la tabla de pagos
+      // Insert para la tabla de pagos
       const pagoParaInsertar = {
         idPedido: pagoData.pedido_id,
-        idMetodoPago: pagoData.modalidad_id,
+        idMetodoPago: pagoData.tipo_pago_id ?? pagoData.modalidad_id ?? 1,
         montoTotal: pagoData.monto_total,
         dniCliente: pagoData.dni_cliente,
       };
+
+      console.log('Objeto a insertar en tabla Pago:', pagoParaInsertar);
 
       const { data, error } = await this._supabaseClient
         .from('Pago')
@@ -196,6 +200,33 @@ export class RegistrarCobroService {
     } catch (error) {
       console.error('Error en registrarPago:', error);
       throw error;
+    }
+  }
+
+  async obtenerTiposPago(): Promise<{ id: number; nombre: string }[]> {
+    try {
+      const { data, error } = await this._supabaseClient
+        .from('MétodoPago')
+        .select('idMetodoPago, nombreMetodo')
+        .order('idMetodoPago');
+
+      if (error) {
+        console.error(`Error al obtener tipos de pago: ${error}`);
+      }
+
+      const tiposPago = data.map((tipo: any) => ({
+        id: tipo.idMetodoPago,
+        nombre: tipo.nombreMetodo,
+      }));
+      return tiposPago;
+    } catch (error) {
+      console.error(`Error en obtenerTiposPago: ${error}`);
+      // Fallback a datos estáticos en caso de error, si algo falla completamente, devolvera datos predeterminados.
+      return [
+        { id: 1, nombre: 'Efectivo' },
+        { id: 2, nombre: 'Billetera Digital' },
+        { id: 3, nombre: 'Tarjeta' },
+      ];
     }
   }
 }
