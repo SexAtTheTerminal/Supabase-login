@@ -135,13 +135,37 @@
           </select>
         </div>
 
+        <!-- todo: COPIA Y PEGA DEL BOTON DE MESA -> PERO PARA TIPO DE PAGOS -->
+        <div class="border border-gray-300 rounded-lg p-4 bg-white shadow-sm">
+          <label class="block text-xs font-semibold text-[#546E7A] mb-1"
+            >Tipo de Pago</label
+          >
+          <select
+            [(ngModel)]="tipoPagoSeleccionado"
+            (ngModelChange)="onTipoPagoChange($event)"
+            class="w-full border border-[#E0E0E0] bg-white rounded-md px-3 py-2 text-sm text-[#37474F] focus:outline-none focus:ring-2 focus:ring-[#90CAF9]"
+          >
+            <option [ngValue]="null" disabled>Seleccione tipo de pago</option>
+            <option *ngFor="let tipo of tiposPago" [ngValue]="tipo">
+              {{ tipo.nombre }}
+            </option>
+          </select>
+          <div *ngIf="tiposPago.length === 0" class="text-sm text-gray-500 mt-1">
+            Cargando tipos de pago...
+          </div>
+          <div *ngIf="tipoPagoSeleccionado" class="text-sm text-green-600 mt-1">
+            Seleccionaste: {{ tipoPagoSeleccionado.nombre }}
+          </div>
+        </div>
+
         <!-- Botón Confirmar -->
+         <!-- TODO: Cambio para que el boton confirmar espere a rellenar el tipo de pago -->
         <button
-          [disabled]="!clienteNombres || botonUnico"
+          [disabled]="!clienteNombres || !tipoPagoSeleccionado || botonUnico"
           (click)="confirmarPagoConCliente()"
           [ngClass]="{
-            'bg-gray-400 cursor-not-allowed': !clienteNombres || botonUnico,
-            'bg-green-600 hover:bg-green-700': clienteNombres && !botonUnico
+            'bg-gray-400 cursor-not-allowed': !clienteNombres || !tipoPagoSeleccionado || botonUnico,
+            'bg-green-600 hover:bg-green-700': clienteNombres && tipoPagoSeleccionado && !botonUnico
           }"
           class="w-full py-3 px-6 text-white font-semibold rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
         >

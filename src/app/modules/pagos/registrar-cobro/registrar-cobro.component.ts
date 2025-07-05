@@ -31,6 +31,8 @@ export class RegistrarCobroComponent {
   datosAregistrar: { idPedido: number; idModalidad: number } | null = null;
   paginaActual: number = 0;
   botonUnico: boolean = false;
+  tiposPago: { id: number; nombre: string }[] = [];
+  tipoPagoSeleccionado: { id: number; nombre: string } | null = null;
 
   private readonly _authService = inject(AuthService);
   private readonly registrarCobroService = inject(RegistrarCobroService)
@@ -44,6 +46,11 @@ export class RegistrarCobroComponent {
     this.sidebarCollapsed = state;
   }
 
+  onTipoPagoChange(tipo: { id: number; nombre: string } | null): void {
+    console.log('Tipo de pago seleccionado:', tipo);
+    this.tipoPagoSeleccionado = tipo;
+  }
+
   async ngOnInit() {
     this._authService.verifyRoleOrSignOut().then((isValid) => {
       if (!isValid) {
@@ -51,6 +58,10 @@ export class RegistrarCobroComponent {
       }
     });
     this.mesas = await this.registrarCobroService.obtenerMesas();
+
+    // Inicializar tipos de pago
+    this.tiposPago = await this.registrarCobroService.obtenerTiposPago();
+    console.log('Tipos de pago cargados:', this.tiposPago);
   }
 
   // DNI API
@@ -175,6 +186,13 @@ export class RegistrarCobroComponent {
       return;
     }
 
+    // TODO: Condicional para seleccionar el tipo de pago
+    if (!this.tipoPagoSeleccionado) {
+      this.mensajeError = 'Debe seleccionar un tipo de pago.';
+      this.botonUnico = false;
+      return;
+    }
+
     try {
       const resultado = await this.registrarCobroService.obtenerIds(
         mesaSeleccionada.idMesa
@@ -193,6 +211,7 @@ export class RegistrarCobroComponent {
           modalidad_id: this.datosAregistrar.idModalidad,
           monto_total: montoTotal,
           dni_cliente: dniCliente,
+          tipo_pago_id: this.tipoPagoSeleccionado.id, // Usar el ID del tipo de pago seleccionado
         };
 
         console.log('Registrando pago en Supabase:', pagoData);
@@ -245,6 +264,12 @@ export class RegistrarCobroComponent {
       this.mensajeError = 'Debe buscar un cliente primero.';
       return;
     }
+    // TODO: Condicional para seleccionar el tipo de pago
+    if (!this.tipoPagoSeleccionado) {
+      this.mensajeError = 'Debe seleccionar un tipo de pago.';
+      return;
+    }
+
     await this.registrarPago(this.mesaSeleccionada, this.totalPedido, this.dni);
   }
 }
