@@ -5,7 +5,7 @@ import { SupabaseService } from '../../../shared/data-access/supabase.service';
   providedIn: 'root',
 })
 export class RegistrarCobroService {
-  private _supabaseClient = inject(SupabaseService).supabaseClient;
+  private readonly _supabaseClient = inject(SupabaseService).supabaseClient;
 
   //Obtiene solo las ocupadas, me dio weba cambiarle el nombre de la funcion xdd
   //Ya usa la tabla Mesa xd
@@ -28,9 +28,8 @@ export class RegistrarCobroService {
       }
     }
 
-    return Array.from(mesas).map(idMesa => ({ idMesa }));
+    return Array.from(mesas).map((idMesa) => ({ idMesa }));
   }
-
 
   async obtenerPedidosdelaMesa(mesa: number): Promise<any[]> {
     const { data, error } = await this._supabaseClient
@@ -48,7 +47,7 @@ export class RegistrarCobroService {
       `
       )
       .eq('idMesa', mesa)
-      .eq('estado', false); // !! False -> Pendiente !!
+      .eq('estado', true);
 
     if (error) {
       console.error('Error al obtener pedidos:', error);
@@ -78,7 +77,7 @@ export class RegistrarCobroService {
       `
       )
       .eq('idMesa', mesa)
-      .eq('estado', false);
+      .eq('estado', true);
 
     if (error) {
       console.error('Error al obtener pedidos:', error);
@@ -94,7 +93,7 @@ export class RegistrarCobroService {
   }
 
   //Invierte el estado nomas pero siempre va a estar en false asi que real y epico
-  async actualizarEstadoMesa(mesa:number): Promise<void> {
+  async actualizarEstadoMesa(mesa: number): Promise<void> {
     const { data: pedidoActual, error: errorSelect } =
       await this._supabaseClient
         .from('Mesa')
@@ -124,4 +123,113 @@ export class RegistrarCobroService {
 
     console.log('Estado actualizado correctamente:', data);
   }
+
+  //Metodos ultimo COMMIT BURROS
+  // Verificar si el cliente ya existe
+  async verificarClienteExiste(dni: string) {
+    try {
+      const { data, error } = await this._supabaseClient
+        .from('Cliente')
+        .select('*')
+        .eq('dniCliente', dni);
+
+      if (error) {
+        console.error('Error al verificar cliente:', error);
+        throw error;
+      }
+      return data && data.length > 0 ? data[0] : null;
+    } catch (error) {
+      console.error('Error en verificarCliente si existe:', error);
+      return null;
+    }
+  }
+
+  async guardarCliente(clienteData: any) {
+    try {
+      const { data, error } = await this._supabaseClient
+        .from('Cliente')
+        .insert([
+          {
+            dniCliente: clienteData.dni,
+            nombreCliente: clienteData.nombres,
+            apellPaterno: clienteData.apellido_paterno,
+            apellMaterno: clienteData.apellido_materno ?? '',
+          },
+        ])
+        .select();
+
+      if (error) {
+        console.error('Error al guardar cliente en Supabase:', error);
+        throw error;
+      }
+      return data;
+    } catch (error) {
+      console.error('Error al guardar clientes:', error);
+      throw error;
+    }
+  }
+
+  async registrarPago(pagoData: any) {
+    try {
+      console.log('Datos del pago a registrar:', pagoData);
+
+      // Insert para la tabla de pagos
+      const pagoParaInsertar = {
+        idPedido: pagoData.pedido_id,
+        idMetodoPago: pagoData.tipo_pago_id || pagoData.modalidad_id || 1,
+        montoTotal: pagoData.monto_total,
+        dniCliente: pagoData.dni_cliente,
+      };
+
+      console.log('Objeto a insertar en tabla Pago:', pagoParaInsertar);
+
+      const { data, error } = await this._supabaseClient
+        .from('Pago')
+        .insert([pagoParaInsertar])
+        .select();
+
+      if (error) {
+        console.error('Error detallado al registrar pago:', error);
+        throw new Error(`Error al registrar pago: ${error.message}`);
+      }
+
+      console.log('Pago registrado exitosamente:', data);
+      return data;
+    } catch (error) {
+      console.error('Error en registrarPago:', error);
+      throw error;
+    }
+  }
+
+  async obtenerTiposPago(): Promise<{ id: number; nombre: string }[]> {
+    try {
+      const { data, error } = await this._supabaseClient
+        .from('MétodoPago')
+        .select('idMetodoPago, nombreMetodo')
+        .order('idMetodoPago');
+
+      if (error) {
+        console.error(`Error al obtener tipos de pago: ${error}`);
+      }
+
+      // console.log(`Datos obtenidos de MetodoPago: ${data}`);
+
+      const tiposPago = data.map((tipo: any) => ({
+        id: tipo.idMetodoPago,
+        nombre: tipo.nombreMetodo
+      }));
+      return tiposPago;
+
+    } catch (error) {
+      console.error(`Error en obtenerTiposPago: ${error}`);
+      // Fallback a datos estáticos en caso de error, si algo falla completamente, devolvera datos predeterminados.
+      return [
+        { id: 1, nombre: 'Efectivo' },
+        { id: 2, nombre: 'Billetera Digital' },
+        { id: 3, nombre: 'Tarjeta' }
+      ];
+    }
+  }
+
+
 }

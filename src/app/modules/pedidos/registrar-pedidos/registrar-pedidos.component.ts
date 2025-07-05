@@ -39,6 +39,7 @@ export class RegistrarPedidosComponent implements OnInit {
   mesaSeleccionada: Mesa | null = null;
   ultimoId!: number | null;
   nuevoCodigo: string = '';
+  registrandoPedido = false;
 
   private readonly _authService = inject(AuthService);
   private readonly router = inject(Router);
@@ -109,11 +110,22 @@ export class RegistrarPedidosComponent implements OnInit {
   }
 
   async registrarPedido() {
+    if (this.registrandoPedido) return;
+
+    // Validación de campos obligatorios
+    if (!this.mesaSeleccionada || !this.modalidadSeleccionada) {
+      alert(
+        'Por favor, selecciona una mesa y una modalidad antes de continuar.'
+      );
+      return;
+    }
+
+    this.registrandoPedido = true;
+
     const montoTotal = this.items.reduce((acc, item) => acc + item.subtotal, 0);
-    console.log(montoTotal);
     const exito = await this.registrarPedidosService.agregarPedidoConDetalles(
-      this.mesaSeleccionada!.idMesa,
-      this.modalidadSeleccionada!.idModalidad,
+      this.mesaSeleccionada.idMesa,
+      this.modalidadSeleccionada.idModalidad,
       montoTotal,
       false,
       this.items
@@ -125,6 +137,8 @@ export class RegistrarPedidosComponent implements OnInit {
     } else {
       alert('Ocurrió un error al registrar el pedido');
     }
+
+    this.registrandoPedido = false; // Asegúrate de volver a habilitar el botón
   }
 
   eliminarItem(item: any) {

@@ -12,6 +12,7 @@ export class RegistrarPedidosService {
   private readonly pedidoRegistradoSubject = new BehaviorSubject<void>(
     undefined
   );
+
   pedidoRegistrado$ = this.pedidoRegistradoSubject.asObservable();
 
   // Llamar cuando se registre un nuevo pedido
@@ -38,12 +39,17 @@ export class RegistrarPedidosService {
       unidad: string;
     }[]
   ): Promise<boolean> {
+    const fechaLocal = new Date();
+    const fechaFormateada = fechaLocal
+      .toISOString()
+      .slice(0, 19)
+      .replace('T', ' ');
     const { data: pedidoInsertado, error: errorPedido } =
       await this._supabaseClient
         .from('Pedido')
         .insert([
           {
-            fecha: new Date().toISOString(),
+            fecha: fechaFormateada,
             idMesa,
             idModalidad,
             montoTotal: montoTotal,
@@ -78,7 +84,7 @@ export class RegistrarPedidosService {
       return false;
     }
 
-    // Actualizar estado de la mesa a ocupado (false)
+    // Actualizar estado de la mesa a ocupado
     const { error: errorMesa } = await this._supabaseClient
       .from('Mesa')
       .update({ estado: false })
@@ -99,7 +105,8 @@ export class RegistrarPedidosService {
     const { data, error } = await this._supabaseClient
       .from('Mesa')
       .select(`idMesa, numeroMesa`)
-      .eq('estado', true); // Solo mesas desocupadas
+      .eq('estado', true) // Solo mesas desocupadas
+      .order('idMesa', { ascending: true }); // Ordenar por idMesa ascendente
 
     if (error) {
       console.error('Error al obtener mesas:', error);

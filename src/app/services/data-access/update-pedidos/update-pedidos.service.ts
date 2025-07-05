@@ -15,7 +15,7 @@ export class UpdatePedidosService {
       .select(
         `
         idPedido,
-        fecha,
+        created_at,
         idMesa,
         estado,
         DetallePedido (
@@ -25,7 +25,7 @@ export class UpdatePedidosService {
         )
       `
       )
-      .order('fecha', { ascending: false });
+      .order('created_at', { ascending: false });
 
     if (error) {
       console.error('Error al obtener pedidos:', error);
@@ -37,7 +37,7 @@ export class UpdatePedidosService {
         idPedido: pedido.idPedido,
         codigo: `PD-${pedido.idPedido.toString().padStart(8, '0')}`,
         mesa: pedido.idMesa.toString().padStart(2, '0'),
-        fecha: new Date(pedido.fecha),
+        fecha: new Date(pedido.created_at), // ✅ Usa la fecha de creación en hora local
         estado: pedido.estado ? 'finalizado' : 'pendiente',
         items: pedido.DetallePedido.map((detalle: any) => ({
           nombre: detalle.Producto?.nombreProducto ?? 'Producto desconocido',

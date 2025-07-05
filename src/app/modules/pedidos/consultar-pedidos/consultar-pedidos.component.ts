@@ -53,6 +53,7 @@ export class ConsultarPedidosComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.userRole = localStorage.getItem('user-role');
     this._authService.verifyRoleOrSignOut().then((isValid) => {
       if (!isValid) {
         this.router.navigate(['/auth/log-in']);

@@ -21,7 +21,6 @@ export class RegistrarCobroComponent {
   sidebarCollapsed = false;
   dni: string = '';
   clienteNombres: string = '';
-  // TODO:
   clienteCompleto: any = null;
   loading: boolean = false;
   error: string | null = null;
@@ -33,19 +32,25 @@ export class RegistrarCobroComponent {
   mensajeError: string | null = null;
   datosAregistrar: { idPedido: number; idModalidad: number } | null = null;
   paginaActual: number = 0;
-  botonUnico: boolean = false; // !! False - Sin clickear !!
+  botonUnico: boolean = false;
+  tiposPago: { id: number; nombre: string }[] = [];
+  tipoPagoSeleccionado: { id: number; nombre: string } | null = null;
 
   private readonly _authService = inject(AuthService);
+  private readonly registrarCobroService = inject(RegistrarCobroService)
 
   constructor(
     private readonly apiPeruService: ApiPeruService,
-    private readonly registrarCobroService: RegistrarCobroService,
-    private readonly supabaseService: SupabaseService, // Servicio para manejar las consultas a la base de datos Supabase
     private readonly router: Router
   ) {}
 
   onSidebarToggle(state: boolean): void {
     this.sidebarCollapsed = state;
+  }
+
+  onTipoPagoChange(tipo: { id: number; nombre: string } | null): void {
+    console.log('Tipo de pago seleccionado:', tipo);
+    this.tipoPagoSeleccionado = tipo;
   }
 
   async ngOnInit() {
@@ -55,6 +60,10 @@ export class RegistrarCobroComponent {
       }
     });
     this.mesas = await this.registrarCobroService.obtenerMesas();
+
+    // Inicializar tipos de pago
+    this.tiposPago = await this.registrarCobroService.obtenerTiposPago();
+    console.log('Tipos de pago cargados:', this.tiposPago);
   }
 
   // DNI API
@@ -76,63 +85,69 @@ export class RegistrarCobroComponent {
     this.loading = true;
 
     try {
-      // TODO: Vamos a verificar si el cliente se encuentra registrado en Supabase
-      const clienteExistente = await this.supabaseService.verificarClienteExiste(this.dni);
+      const clienteExistente =
+        await this.registrarCobroService.verificarClienteExiste(this.dni);
 
       if (clienteExistente) {
         this.clienteCompleto = clienteExistente;
-        this.clienteNombres = `${clienteExistente.nombreCliente} ${clienteExistente.apellPaterno} ${clienteExistente.apellMaterno || ''}`;
+        this.clienteNombres = `${clienteExistente.nombreCliente} ${
+          clienteExistente.apellPaterno
+        } ${clienteExistente.apellMaterno || ''}`;
         this.loading = false;
         console.log('Cliente con historial de Compras en Supabase');
         return;
       }
 
-      // TODO: Si el cliente no se encuentra en Supabase, buscar en la API de Perú
-      this.apiPeruService.buscarPorDni(this.dni).pipe(
-        catchError((err) => {
+      this.apiPeruService
+        .buscarPorDni(this.dni)
+        .pipe(
+          catchError((err) => {
+            this.loading = false;
+            this.error = 'Error al buscar el DNI. Por favor, intente de nuevo';
+            console.error('Error en la llamada a la API:', err);
+            return throwError(() => new Error('Error al buscar DNI'));
+          })
+        )
+        .subscribe(async (response) => {
           this.loading = false;
-          this.error = 'Error al buscar el DNI. Por favor, intente de nuevo';
-          console.error('Error en la llamada a la API:', err);
-          return throwError(() => new Error('Error al buscar DNI'));
-        })
-      ).subscribe(async (response) => {
-        this.loading = false;
 
-        if (response && response.success && response.data) {
-          const apiData = response.data;
+          if (response && response.success && response.data) {
+            const apiData = response.data;
 
-          // TODO: Guardar un nuevo cliente en nuestra base de datos Supabase, para evitar consumir las posibilidad de llamar a la API.
-          try {
-            const clienteParaGuardar = {
-              dni: this.dni,
-              nombres: apiData.nombres,
-              apellido_paterno: apiData.apellido_paterno,
-              apellido_materno: apiData.apellido_materno || ''
-            };
+            try {
+              const clienteParaGuardar = {
+                dni: this.dni,
+                nombres: apiData.nombres,
+                apellido_paterno: apiData.apellido_paterno,
+                apellido_materno: apiData.apellido_materno || '',
+              };
 
-            const clienteGuardado = await this.supabaseService.guardarCliente(clienteParaGuardar);
+              const clienteGuardado =
+                await this.registrarCobroService.guardarCliente(
+                  clienteParaGuardar
+                );
 
-            this.clienteCompleto = clienteGuardado[0];
-            this.clienteNombres = `${apiData.nombres} ${apiData.apellido_paterno} ${apiData.apellido_materno || ''}`;
-            this.error = null;
+              this.clienteCompleto = clienteGuardado[0];
+              this.clienteNombres = `${apiData.nombres} ${
+                apiData.apellido_paterno
+              } ${apiData.apellido_materno || ''}`;
+              this.error = null;
 
-            console.log('Cliente guardado en Supabase');
-            alert('Cliente registrado en Supabase exitosamente');
-
-          } catch (supabaseError) {
-            console.error('Error al guardar en Supabase:', supabaseError);
-            this.error = 'Error al guardar cliente en la base de datos';
+              console.log('Cliente guardado en Supabase');
+              alert('Cliente registrado en Supabase exitosamente');
+            } catch (supabaseError) {
+              console.error('Error al guardar en Supabase:', supabaseError);
+              this.error = 'Error al guardar cliente en la base de datos';
+            }
+          } else {
+            this.error = 'No se encontró información para el DNI proporcionado';
+            this.clienteNombres = '';
           }
-        } else {
-          this.error = 'No se encontró información para el DNI proporcionado';
-          this.clienteNombres = '';
-        }
-      });
-
+        });
     } catch (error) {
-        this.loading = false;
-        this.error = 'Error al verificar cliente';
-        console.error('Error:', error);
+      this.loading = false;
+      this.error = 'Error al verificar cliente';
+      console.error('Error:', error);
     }
   }
 
@@ -167,9 +182,16 @@ export class RegistrarCobroComponent {
   montoTotal: number,
   dniCliente: string
   ) {
-    this.botonUnico = true; // !! True - Ya se dio click una vez !!
+    this.botonUnico = true;
     if (!mesaSeleccionada) {
       this.mensajeError = 'Debe seleccionar una mesa.';
+      return;
+    }
+
+    // TODO: Condicional para seleccionar el tipo de pago
+    if (!this.tipoPagoSeleccionado) {
+      this.mensajeError = 'Debe seleccionar un tipo de pago.';
+      this.botonUnico = false;
       return;
     }
 
@@ -190,15 +212,16 @@ export class RegistrarCobroComponent {
           pedido_id: this.datosAregistrar.idPedido,
           modalidad_id: this.datosAregistrar.idModalidad,
           monto_total: montoTotal,
-          dni_cliente: dniCliente
+          dni_cliente: dniCliente,
+          tipo_pago_id: this.tipoPagoSeleccionado.id, // Usar el ID del tipo de pago seleccionado
         };
 
         console.log('Registrando pago en Supabase:', pagoData);
-        await this.supabaseService.registrarPago(pagoData);
-        await this.registrarCobroService.actualizarEstadoMesa(mesaSeleccionada.idMesa);
+        await this.registrarCobroService.registrarPago(pagoData);
+        await this.registrarCobroService.actualizarEstadoMesa(
+          mesaSeleccionada.idMesa
+        );
         console.log('Pago registrado en Supabase correctamente');
-
-
       } else {
         this.mensajeError = 'No hay pedidos para registrar.';
         return;
@@ -243,7 +266,12 @@ export class RegistrarCobroComponent {
       this.mensajeError = 'Debe buscar un cliente primero.';
       return;
     }
-    await this.registrarPago(this.mesaSeleccionada, this.totalPedido, this.dni);
+    // TODO: Condicional para seleccionar el tipo de pago
+    if (!this.tipoPagoSeleccionado) {
+      this.mensajeError = 'Debe seleccionar un tipo de pago.';
+      return;
+    }
 
+    await this.registrarPago(this.mesaSeleccionada, this.totalPedido, this.dni);
   }
 }
