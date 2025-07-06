@@ -13,7 +13,7 @@ export class RegistrarCobroService {
     const { data, error } = await this._supabaseClient
       .from('Pedido')
       .select('idMesa, Mesa(estado)')
-      .eq('estado', true); // solo pedidos activos
+      .eq('estado', true); // solo pedidos finalizados
 
     if (error || !data) {
       console.error('Error al obtener mesas ocupadas:', error);
@@ -28,7 +28,7 @@ export class RegistrarCobroService {
       }
     }
 
-    return Array.from(mesas).map((idMesa) => ({ idMesa }));
+    return Array.from(mesas).sort((a, b) => a - b).map((idMesa) => ({ idMesa }));
   }
 
   async obtenerPedidosdelaMesa(mesa: number): Promise<any[]> {
@@ -47,7 +47,8 @@ export class RegistrarCobroService {
       `
       )
       .eq('idMesa', mesa)
-      .eq('estado', true);
+      .eq('estado', true)
+      .eq('estadoPagado', false); // Obtiene los pedidos que - Mesa ocupada / Estado Finalizado / No se ha pagado
 
     if (error) {
       console.error('Error al obtener pedidos:', error);
@@ -55,6 +56,7 @@ export class RegistrarCobroService {
     }
 
     console.log('Pedidos encontrados:', data);
+
 
     const pedidosAgrupados = data.map((pedido: any) =>
       pedido.DetallePedido.map((detalle: any) => ({
@@ -77,7 +79,8 @@ export class RegistrarCobroService {
       `
       )
       .eq('idMesa', mesa)
-      .eq('estado', true);
+      .eq('estado', true)
+      .eq('estadoPagado', false); // Obtener las IDs de los pedidos no pagados (misma logica a la anterior si hay 2+)
 
     if (error) {
       console.error('Error al obtener pedidos:', error);
@@ -114,6 +117,36 @@ export class RegistrarCobroService {
       .from('Mesa')
       .update({ estado: nuevoEstado })
       .eq('idMesa', mesa)
+      .select();
+
+    if (errorUpdate) {
+      console.error('Error al actualizar el estado:', errorUpdate);
+      return;
+    }
+
+    console.log('Estado actualizado correctamente:', data);
+  }
+
+  // Lo mismo de arriba pero en vez de Mesa es Pedido
+  async actualizarEstadoPedido(idPedido: number): Promise<void> {
+    const { data: pedidoActual, error: errorSelect } =
+      await this._supabaseClient
+        .from('Pedido')
+        .select('estadoPagado')
+        .eq('idPedido', idPedido)
+        .single();
+
+    if (errorSelect) {
+      console.error('Error al obtener el pedido:', errorSelect);
+      return;
+    }
+
+    const nuevoEstado = !pedidoActual.estado;
+
+    const { data, error: errorUpdate } = await this._supabaseClient
+      .from('Pedido')
+      .update({ estadoPagado: nuevoEstado })
+      .eq('idPedido', idPedido)
       .select();
 
     if (errorUpdate) {

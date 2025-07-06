@@ -217,10 +217,9 @@ export class RegistrarCobroComponent {
         };
 
         console.log('Registrando pago en Supabase:', pagoData);
-        await this.registrarCobroService.registrarPago(pagoData);
-        await this.registrarCobroService.actualizarEstadoMesa(
-          mesaSeleccionada.idMesa
-        );
+        await this.registrarCobroService.registrarPago(pagoData); // Registra el pago
+        await this.registrarCobroService.actualizarEstadoMesa(mesaSeleccionada.idMesa); // Cambia la mesa de ocupada a desocupada
+        await this.registrarCobroService.actualizarEstadoPedido(pagoData.pedido_id); // Cambia el estado del pedido de no pagado a pagado
         console.log('Pago registrado en Supabase correctamente');
       } else {
         this.mensajeError = 'No hay pedidos para registrar.';
