@@ -7,6 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { RegistrarCobroService } from '../../../services/data-access/registrar-cobro/registrar-cobro.service';
 import { AuthService } from '../../../auth/data-access/auth.service';
 import { Router } from '@angular/router';
+import { SupabaseService } from '../../../shared/data-access/supabase.service';
 
 @Component({
   selector: 'app-registrar-cobro',
@@ -47,6 +48,7 @@ export class RegistrarCobroComponent {
   }
 
   onTipoPagoChange(tipo: { id: number; nombre: string } | null): void {
+    console.log('Tipo de pago seleccionado:', tipo);
     this.tipoPagoSeleccionado = tipo;
   }
 
@@ -60,6 +62,7 @@ export class RegistrarCobroComponent {
 
     // Inicializar tipos de pago
     this.tiposPago = await this.registrarCobroService.obtenerTiposPago();
+    console.log('Tipos de pago cargados:', this.tiposPago);
   }
 
   // DNI API
@@ -90,6 +93,7 @@ export class RegistrarCobroComponent {
           clienteExistente.apellPaterno
         } ${clienteExistente.apellMaterno || ''}`;
         this.loading = false;
+        console.log('Cliente con historial de Compras en Supabase');
         return;
       }
 
@@ -128,6 +132,7 @@ export class RegistrarCobroComponent {
               } ${apiData.apellido_materno || ''}`;
               this.error = null;
 
+              console.log('Cliente guardado en Supabase');
               alert('Cliente registrado en Supabase exitosamente');
             } catch (supabaseError) {
               console.error('Error al guardar en Supabase:', supabaseError);
@@ -164,6 +169,7 @@ export class RegistrarCobroComponent {
       this.paginaActual = nPedido + 1;
       this.totalPaginas = resultado.length;
 
+      console.log('Pedido seleccionado:', this.pedidoSeleccionado);
     } catch (error) {
       console.error('Error al mostrar pedidos:', error);
       this.pedidoSeleccionado = [];
@@ -181,7 +187,6 @@ export class RegistrarCobroComponent {
       return;
     }
 
-    // TODO: Condicional para seleccionar el tipo de pago
     if (!this.tipoPagoSeleccionado) {
       this.mensajeError = 'Debe seleccionar un tipo de pago.';
       this.botonUnico = false;
@@ -193,6 +198,7 @@ export class RegistrarCobroComponent {
         mesaSeleccionada.idMesa
       );
       this.datosAregistrar = resultado?.[this.paginaActual - 1] || null;
+      console.log('Ids a registrar', this.datosAregistrar);
     } catch (error) {
       console.error('Error al obtener datos:', error);
       return;
@@ -208,10 +214,14 @@ export class RegistrarCobroComponent {
           tipo_pago_id: this.tipoPagoSeleccionado.id, // Usar el ID del tipo de pago seleccionado
         };
 
-        await this.registrarCobroService.registrarPago(pagoData);
+        console.log('Registrando pago en Supabase:', pagoData);
+        await this.registrarCobroService.registrarPago(pagoData); // Registra el pago
         await this.registrarCobroService.actualizarEstadoMesa(
           mesaSeleccionada.idMesa
-        );
+        ); // Cambia la mesa de ocupada a desocupada
+        await this.registrarCobroService.actualizarEstadoPedido(
+          pagoData.pedido_id
+        ); // Cambia el estado del pedido de no pagado a pagado
         console.log('Pago registrado en Supabase correctamente');
       } else {
         this.mensajeError = 'No hay pedidos para registrar.';

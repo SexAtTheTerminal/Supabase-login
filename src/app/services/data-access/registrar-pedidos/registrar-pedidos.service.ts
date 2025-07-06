@@ -54,6 +54,7 @@ export class RegistrarPedidosService {
             idModalidad,
             montoTotal: montoTotal,
             estado,
+            estadoPagado: false,
           },
         ])
         .select('idPedido');
